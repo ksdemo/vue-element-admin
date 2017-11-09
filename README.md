@@ -1,3 +1,4 @@
+# 回退到echarts 3.6.2 和zrender 3.5.2 必须echarts和zrender同时回退
 # vue-element-admin #
 
 [![vue](https://img.shields.io/badge/vue-2.4.2-brightgreen.svg)](https://github.com/vuejs/vue)
