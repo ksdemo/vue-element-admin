@@ -27,15 +27,15 @@ export const constantRouterMap = [
     name: '首页',
     hidden: true,
     children: [{ path: 'dashboard', component: _import('dashboard/index') }]
-  },
-  {
+  }
+/*  ,{
     path: '/introduction',
     component: Layout,
     redirect: '/introduction/index',
     icon: 'people',
     noDropdown: true,
     children: [{ path: 'index', component: _import('introduction/index'), name: '简述' }]
-  }
+  }*/
 ]
 
 export default new Router({
@@ -45,6 +45,16 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  {
+    path: '/customer',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '用户管理',
+    icon: 'example',
+    children: [
+      { path: 'list', component: _import('customer/list'), name: '用户列表', meta: { role: ['admin'] }}
+    ]
+  },
   {
     path: '/permission',
     component: Layout,
@@ -62,6 +72,7 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: _import('svg-icons/index'), name: 'icons' }]
   },
+  
   {
     path: '/components',
     component: Layout,
@@ -181,6 +192,6 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: _import('clipboard/index'), name: 'clipboard' }]
   },
-
+  /* */
   { path: '*', redirect: '/404', hidden: true }
 ]
