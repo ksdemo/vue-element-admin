@@ -11,6 +11,7 @@ export default {
   name: 'AppMain',
   computed: {
     key() {
+      // hack 同引用模块可刷新
       return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
     }
   }

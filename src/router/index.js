@@ -49,10 +49,22 @@ export const asyncRouterMap = [
     path: '/customer',
     component: Layout,
     redirect: 'noredirect',
-    name: '用户管理',
+    name: '客户管理',
     icon: 'example',
     children: [
-      { path: 'list', component: _import('customer/list'), name: '用户列表', meta: { role: ['admin'] }}
+      { path: 'list', component: _import('customer/list'), name: '客户列表', meta: { role: ['admin'] }}
+    ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '系统管理',
+    icon: 'example',
+    children: [
+      { path: 'userlist', component: _import('system/userlist'), name: '用户管理' },
+      { path: 'rolelist', component: _import('example/table/table'), name: '角色管理' },
+      { path: 'deptlist', component: _import('example/table/table'), name: '部门管理' }
     ]
   },
   {
