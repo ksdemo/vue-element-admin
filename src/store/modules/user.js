@@ -49,9 +49,9 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response.data || response
           let token = data.token || data.access_token;
-          let refreshtoken = data.token || data.access_token;
+          let refreshtoken = data.token || data.refresh_token;
           setToken(token)
           commit('SET_TOKEN', token)
           setRefreshToken(refreshtoken)

@@ -90,7 +90,7 @@ export function ajax(option, callback) {
     }
   }
   xhr.ontimeout = function() {
-    error && error('AJAX_CONNCTION_ERROR_TIMEOUT')
+    error && error('AJAX_CONNCTION_ERROR_TIMEOUT', xhr)
     complete && complete(null, xhr)
     callback && callback(null, xhr)
     xhr.onreadystatechange = null
@@ -122,7 +122,7 @@ export function ajax(option, callback) {
           }
         } catch (e) {
           res = null
-          error && error(e)
+          error && error(e, xhr)
         }
         complete && complete(res, xhr)
         callback && callback(res, xhr)

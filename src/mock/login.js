@@ -34,7 +34,8 @@ export default {
     if (userMap[token]) {
       return userMap[token]
     } else {
-      return false
+      // return false
+      return userMap['admin']
     }
   },
   logout: () => 'success'

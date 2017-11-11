@@ -58,7 +58,7 @@ function loginByUsername2(username, password) {
   })
 }
 
-let loginByUsername = loginByUsername2
+let loginByUsername = loginByUsername1
 export {loginByUsername}
 
 export function logout() {
