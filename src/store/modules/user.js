@@ -1,5 +1,5 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, setRefreshToken, removeToken } from '@/utils/auth'
 
 const user = {
   state: {
@@ -39,7 +39,7 @@ const user = {
       state.avatar = avatar
     },
     SET_ROLES: (state, roles) => {
-      state.roles = roles
+      state.roles = roles || [];
     }
   },
 
@@ -50,8 +50,11 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
-          setToken(response.data.token)
-          commit('SET_TOKEN', data.token)
+          let token = data.token || data.access_token;
+          let refreshtoken = data.token || data.access_token;
+          setToken(token)
+          commit('SET_TOKEN', token)
+          setRefreshToken(refreshtoken)
           resolve()
         }).catch(error => {
           reject(error)

@@ -42,6 +42,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column width="110px" align="center" label="昵称">
+        <template scope="scope">
+          <span>{{scope.row.author}}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column width="110px" align="center" label="姓名">
         <template scope="scope">
           <span>{{scope.row.author}}</span>
@@ -68,15 +74,13 @@
 
       <el-table-column width="110px" align="center" label="实名认证" v-if='showRealnameAuth'>
         <template scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
-          </el-button>
+          <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="110px" align="center" label="车主认证" v-if='showCarAuth'>
         <template scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
-          </el-button>
+          <span>{{scope.row.author}}</span>
         </template>
       </el-table-column>
 
@@ -94,9 +98,9 @@
 
       <el-table-column align="center" label="操作" width="150">
         <template scope="scope">
-          <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
+          <el-button v-if="scope.row.status !=='deleted'" size="small" type="success" @click="handleModifyStatus(scope.row,'deleted')"> 正常
           </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-if="scope.row.status ==='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'published')">已冻结
           </el-button>
         </template>
       </el-table-column>
@@ -109,39 +113,56 @@
       </el-pagination>
     </div>
 
+    
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+      <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="70px" style='width: 600px; margin-left:50px;'>
+        <!--
         <el-form-item label="类型">
           <el-select class="filter-item" v-model="temp.type" placeholder="请选择">
             <el-option v-for="item in  roleTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
+        -->
+
+        <el-form-item label="帐号">
+          <el-input v-model="temp.title"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="temp.title"></el-input>
+        </el-form-item>
+
+        <el-form-item label="昵称">
+          <el-input v-model="temp.title"></el-input>
+        </el-form-item>
 
         <el-form-item label="状态">
           <el-select class="filter-item" v-model="temp.status" placeholder="请选择">
-            <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
+            <el-option v-for="item in  statusOptions" :key="item.key" :label="item.display_name" :value="item.key">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="姓名">
+          <el-input v-model="temp.title"></el-input>
+        </el-form-item>
+
+        <el-form-item label="性别">
+          <el-select class="filter-item" v-model="temp.type" placeholder="请选择">
+            <el-option v-for="item in  sexOptions" :key="item.key" :label="item.display_name" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="时间">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="选择日期时间">
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="标题">
+        <el-form-item label="手机号码">
           <el-input v-model="temp.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="重要性">
-          <el-rate style="margin-top:8px;" v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
+        <el-form-item label="身份证号">
+          <el-input v-model="temp.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="点评">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容" v-model="temp.remark">
-          </el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -170,7 +191,6 @@ import { parseTime } from '@/utils'
 
 const roleTypeOptions = [
   { key: 'certifiedDriver', display_name: '已认证司机' },
-  { key: 'nonCertifiedDrive', display_name: '待审核司机' },
   { key: 'certifiedRealUser ', display_name: '已实名认证用户' },
   { key: 'nonCertifiedRealUser', display_name: '未实名认证用户' }
 ]
@@ -187,6 +207,10 @@ const sexOptions = [
   {'key': 'unknown','display_name':'未知'}
 ]
 
+const statusOptions = [
+  {'key': 'published','display_name':'正常'},
+  {'key': 'deleted','display_name':'冻结'}
+]
 export default {
   name: 'table_demo',
   directives: {
@@ -217,7 +241,7 @@ export default {
       sexOptions,
       roleTypeOptions,
       sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
-      statusOptions: ['published', 'draft', 'deleted'],
+      statusOptions: statusOptions,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {

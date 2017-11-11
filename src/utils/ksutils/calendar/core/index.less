@@ -1,0 +1,346 @@
+/*
+ * base css
+ * #2eb6a8;
+ */
+@color: #2684fb;
+@borderColor: #d9d9d9;
+.vue-calendar-backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    tap-highlight-color: rgba(0, 0, 0, 0);
+    z-index: -1;
+    transition: opacity 400ms;
+    z-index: 999;
+}
+.one-px-line() {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid @borderColor;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.one-px-line-top() {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid @borderColor;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.vue-calendar-content {
+    font-family: 'Nova Flat', cursive, '\5FAE\8F6F\96C5\9ED1', 'arial';
+    background: #fff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    top: 25%;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 1000;
+    font-size: 15px;
+    #scrollPanelWrapper{
+        position: relative;
+        width: 100%;
+        top: 0;
+    }
+    .vue-calendar-content-title-wrapper {
+        background: #fff;
+        z-index: 1003;
+        height: 45px;
+        line-height: 45px;
+        position: relative;
+        .text {
+            float: left;
+            padding-left: 10px;
+            color: #666666;
+            font-size: 16px;
+        }
+        .vue-component-calendar-complete-button {
+            float: right;
+            margin-right: 10px;
+            a {
+                display: inline-block;
+                color: @color;
+                font-size: 14px;
+                line-height: 28px;
+                height: 28px;
+                vertical-align: middle;
+                text-decoration: none;
+                padding: 0 20px;
+                border: 2px solid @color;
+                border-radius: 5px;
+            }
+        }
+        &:after {
+            .one-px-line
+        }
+    }
+    .month-bar-fixed {
+        overflow: visible;
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+        font-size: 16px;
+        width: 100%;
+        position: absolute;
+        background: #fafafa;
+        z-index: 1000;
+        &:after{
+            .one-px-line;
+        }
+    }
+    .week-bar {
+        height: 30px;
+        line-height: 30px;
+        position: relative;
+        background: #fff;
+        z-index: 1001;
+        .weekend {
+            color: #fa967f;
+        }
+        &:after {
+            .one-px-line
+        }
+        ul {
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: -webkit-box;
+            display: flex;
+            li {
+                color: #666666;
+                -webkit-flex: auto;
+                -ms-flex: auto;
+                -webkit-box-flex: 1;
+                flex: auto;
+                list-style: none;
+                text-align: center;
+            }
+        }
+    }
+    .vue-calendar-date-wrapper {
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        overflow: auto;
+        position: relative;
+        -webkit-transform:translate3d(0,0,0);
+        // margin-top: -6px;
+        .month-bar {
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+            font-size: 16px;
+            width: 100%;
+            position: relative;
+            background: #fafafa;
+            &:before {
+                // .one-px-line-top;
+            }
+            &:after {
+                .one-px-line;
+            }
+        }
+        // .first-month-bar{
+        //     visibility: hidden;
+        // }
+        // .first-month-bar {
+        //     position: fixed;
+        //     top: 1.5rem;
+        //     z-index: 100;
+        // }
+        .month-list {
+            ul li {
+                list-style: none;
+            }
+            ul {
+                overflow: hidden;
+            }
+            li {
+                overflow: hidden;
+                display: block;
+                float: left;
+                width: 14.286%;
+                border-bottom: 1px solid #eee;
+                text-align: center;
+                position: relative;
+                height: 50px;
+                line-height: 50px;
+                color: #333333;
+                .dd {
+                    position: relative;
+                    display: inline-block;
+                    top: -10px;
+                }
+                &.disabled {
+                    color: #a2a2a2;
+                }
+                &:after {
+                    // .one-px-line;
+                }
+                &.without-text {
+                    i {
+                        &:after {
+                            content: ''!important;
+                        }
+                    }
+                }
+                &.is-holiday {
+                    .holiday {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        left: 0;
+                        bottom: 0;
+                        &:before {
+                            width: 0;
+                            height: 0;
+                            content: '';
+                            position: absolute;
+                            bottom: 0;
+                            right: 0;
+                            border-bottom: 25px solid #cccccc;
+                            border-left: 25px solid transparent;
+                        }
+                        &:after {
+                            content: '假';
+                            position: absolute;
+                            bottom: 5px;
+                            right: 2px;
+                            font-size: 10px;
+                            color: #fff;
+                            line-height: 10px;
+                        }
+                    }
+                }
+                &.is-work {
+                    .holiday {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        left: 0;
+                        bottom: 0;
+                        &:before {
+                            width: 0;
+                            height: 0;
+                            content: '';
+                            position: absolute;
+                            bottom: 0;
+                            right: 0;
+                            border-bottom: 35px solid #fa967f;
+                            border-left: 35px solid transparent;
+                        }
+                        &:after {
+                            content: '课';
+                            position: absolute;
+                            bottom: 5px;
+                            right: 2px;
+                            font-size: 10px;
+                            color: #fff;
+                            line-height: 10px;
+                        }
+                    }
+                }
+                &.border-radius {
+                    border-radius: 50%!important;
+                }
+                &.selected {
+                    &-start {
+                        border-bottom: none;
+                        border-top-left-radius: 12%;
+                        border-bottom-left-radius:12%;
+                        i:after {
+                            content: '开始';
+                        }
+                    }
+                    &-end {
+                        border-bottom: none;
+                        border-top-right-radius: 12%;
+                        border-bottom-right-radius:12%;
+                        i:after {
+                            content: '结束';
+                        }
+                    }
+                    &-start.selected-end {
+                        i:after {
+                            content: '选中';
+                        }
+                    }
+                    &-start,
+                    &-end {
+                        // border-top: 01px solid @color;
+                        // border-bottom: 01px solid @color;
+                        height: 50px!important;
+                        line-height: 50px!important;
+                        color: #fff;
+                        background: @color;
+                        i:after {
+                            position: absolute;
+                            top: 10px;
+                            left: 0;
+                            font-size: 12px;
+                            font-style: normal;
+                            text-align: center;
+                            width: 100%;
+                        }
+
+                    }
+                    &-start.is-holiday ,&-end.is-holiday{
+                        .holiday{
+                            &:before{
+                              border-bottom-color: #fff;
+                            }
+                            &:after{
+                              color: #fa967f;
+                            }
+                        }
+                    }
+
+                    &-line {
+                        background-color: fade(lighten(@color, 10%),30%);
+                        color: #333;
+                        // border-top: 1px solid @color;#e0f4f2;
+                        height: 50px!important;
+                        line-height: 50px!important;
+                        // border-bottom: 01px solid @color;
+                        &:after {
+                            .one-px-line;
+                        }
+                        &:before {
+                            .one-px-line-top;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.vue-component-calendar-content-enter-active,
+.vue-component-calendar-content-leave-active {
+    -webkit-transition: all ease-in-out 0.3s;
+    transition: all ease-in-out 0.3s;
+}
+.vue-component-calendar-content-enter,
+.vue-component-calendar-content-leave-active {
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+}
+.expand-enter,
+.expand-leave {
+    opacity: 0;
+    -webkit-transform: scale(1.1);
+   transform: scale(1.1);
+}

@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+import {request as ajax} from '@/utils/ksutils/common/request.js'
 
  export function parseTime(time, cFormat) {
    if (arguments.length === 0) {
@@ -265,3 +266,17 @@
    }
    return targetObj
  }
+
+// add
+export function request(options){
+  const PASSWORD_CLIENT_ID = 'cms_password';
+  const PASSWORD_CLIENT_SECRET = '123456';
+  var Authorization = 'Basic ' + window.btoa(PASSWORD_CLIENT_ID + ':' + PASSWORD_CLIENT_SECRET)
+  var headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    Authorization
+  }
+  options.headers = headers;
+  return ajax(options)
+}
