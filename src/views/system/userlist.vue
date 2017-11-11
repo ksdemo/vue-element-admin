@@ -109,14 +109,6 @@
     
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="50px" style='width: 600px; margin-left:50px;'>
-        <!--
-        <el-form-item label="类型">
-          <el-select class="filter-item" v-model="temp.type" placeholder="请选择">
-            <el-option v-for="item in  roleTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        -->
 
         <el-form-item label="帐号" class="ks-dialog-input">
           <el-input v-model="temp.title"></el-input>
@@ -246,7 +238,6 @@ export default {
       showRealnameAuth: true,
       showCarAuth: true,
       tableKey: 0,
-
       adminPassword: ''
     }
   },

@@ -7,24 +7,43 @@
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="帐号" @blur="getClientInfo" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <icon-svg icon-class="password" />
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" :type="pwdType"  v-model="loginForm.password" autoComplete="on"
           placeholder="密码" />
         <span class='show-pwd' @click='showPwd'><icon-svg icon-class="eye" /></span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      <el-form-item prop="vcode" v-if="loginType === 0">
+        <span class="svg-container">
+          <icon-svg icon-class="table" />
+        </span>
+        <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="on"
+          placeholder="验证码" />
+          <span class='show-vcode' @click='getVcodeImg'><img src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png" alt=""></span>
+      </el-form-item>
 
+      <el-form-item prop="vcode" v-if="loginType === 1">
+        <span class="svg-container">
+          <icon-svg icon-class="table" />
+        </span>
+        <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="on"
+          placeholder="验证码" />
+          <span class='show-pcode' @click='getPhoneCode'><el-button >发送验证码</el-button></span>
+      </el-form-item>
+
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      <!--
       <div class='tips'>账号:admin 密码随便填</div>
       <div class='tips'>账号:editor  密码随便填</div>
 
       <el-button class='thirdparty-button' type="primary" @click='showDialog=true'>打开第三方登录</el-button>
+      -->
     </el-form>
 
     <el-dialog title="第三方验证" :visible.sync="showDialog">
@@ -58,18 +77,33 @@ export default {
         callback()
       }
     }
+    const validateVcode = (rule, value, callback) => {
+      if (value.length < 4) {
+        callback(new Error('清输入验证码'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: 'admin',
-        password: '1111111'
+        password: '1111111',
+        vcode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        vcode: [{ required: true, trigger: 'blur', validator: validateVcode }]
       },
       pwdType: 'password',
       loading: false,
-      showDialog: false
+      showDialog: false,
+      vcodeImg: ''
+    }
+  },
+  computed:{
+    loginType(){
+      return this.$store.state.user.loginType
     }
   },
   methods: {
@@ -79,6 +113,32 @@ export default {
       } else {
         this.pwdType = 'password'
       }
+    },
+    async getClientInfo(){
+      let username = this.loginForm.username
+      if (isvalidUsername(username)){
+        try {
+          await this.$store.dispatch('getClientToken')
+          let loginType = await this.$store.dispatch('checkLoginType', username)
+          if(loginType === 0){
+            this.getVcodeImg();
+          }
+        } catch(e) {
+          console.log(e)
+        }
+      }
+    },
+    getVcodeImg(){
+      this.$store.dispatch('getImgCode')
+      .then(res=>{
+        console.log(res)
+      })
+      .catch(e =>{
+        console.log(e)
+      })
+    },
+    getPhoneCode(){
+
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -191,6 +251,26 @@ export default {
       color: #454545;
     }
     .show-pwd {
+      position: absolute;
+      right: 10px;
+      top: 7px;
+      font-size: 16px;
+      color: $dark_gray;
+      cursor: pointer;
+    }
+    .show-vcode{
+      position: absolute;
+      right: 10px;
+      top: 13px;
+      font-size: 16px;
+      color: $dark_gray;
+      cursor: pointer;
+      img {
+        width: 115px;
+        height: 24px;
+      }
+    }
+    .show-pcode{
       position: absolute;
       right: 10px;
       top: 7px;

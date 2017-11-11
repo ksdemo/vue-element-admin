@@ -1,52 +1,74 @@
 import fetch from '@/utils/fetch'
-import {request} from '@/utils/index.js'
+import {request, randomString} from '@/utils/add.js'
+import { getToken } from '@/utils/auth'
+
 /**
  * 客户端模式获取accessToken
-
-export function getClientToken: function () {
-  var deferred = $q.defer();
-  var method = "auth/oauth/token";
-  var params = {grant_type: 'client_credentials'};
-  var postCfg = {
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic ' + CLIENT_AUTH
-      },
-      transformRequest: function (params) {
-          return $.param(params);
-      }
-  };
-  $http.post(REQUEST_URL + method, params, postCfg).then(function (res) {
-      if (res.data.access_token) {
-          util.setDataToLocalStorage(ACCESS_TOKEN, res.data.access_token, 1);
-      }
-      deferred.resolve(res.data);
-  }).catch(function (res) {
-      deferred.reject(res.data);
-  });
-  return deferred.promise;
-}
  */
+export function getClientToken() {
+  const url = "/cms/oauth/token";
+  const PASSWORD_CLIENT_ID = 'cms_client';
+  const PASSWORD_CLIENT_SECRET = '123456';
+  var Authorization = 'Basic ' + window.btoa(PASSWORD_CLIENT_ID + ':' + PASSWORD_CLIENT_SECRET)
+  var data = {grant_type: 'client_credentials'};
+  var headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    Authorization
+  }
+  return request({
+    url,
+    type: 'post',
+    data,
+    headers
+  })
+}
+
 /**
  * 密码模式获取accessToken
  */
-
-
-function loginByUsername1(username, password) {
+export function getPasswordToken(username, password) {
+  var Authorization = 'Basic ' + getToken()
+  var headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    Authorization
+  }
   var data = {
     grant_type: 'password',
-    username: 'oauth2:user:102:1',
-    password: 'e10adc3949ba59abbe56e057f20f883e'
+    username: 'admin',
+    password: 'd525e685b8f0c89e5d981a6b86feb6d4'
   };
 
   return request({
     url: "/cms/oauth/token",
     type: 'post',
-    data
+    data,
+    headers
   })
 }
 
-function loginByUsername2(username, password) {
+export function checkLoginType(username){
+  return request({
+    url: "/cms/sysLogin/checkLoginType",
+    type: 'get',
+    data: {
+      username
+    }
+  })
+}
+
+export function getImgCode(){
+  return request({
+    url: "/cms/sysLogin/getImgCode",
+    type: 'get',
+    data: {
+      imgKey: randomString()
+    }
+  })
+}
+
+export function loginByUsername (username, password) {
   const data = {
     username,
     password
@@ -57,9 +79,6 @@ function loginByUsername2(username, password) {
     data
   })
 }
-
-let loginByUsername = loginByUsername1
-export {loginByUsername}
 
 export function logout() {
   return fetch({
