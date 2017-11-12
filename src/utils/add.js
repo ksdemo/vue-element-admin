@@ -1,6 +1,6 @@
 import { Message } from 'element-ui'
 // add
-import {request as ajax} from '@/utils/ksutils/common/request.js'
+import {ajax, request as ajax2} from '@/utils/ksutils/common/request.js'
 import { getToken } from '@/utils/auth'
 
 export function request(options){
@@ -17,7 +17,7 @@ export function request(options){
     options.headers = headers;
   }
   return new Promise((resolve, reject)=>{
-    ajax(options)
+    ajax2(options)
       .then(res =>{
         if(res.code === 0 || 1){
           resolve(res)
@@ -43,9 +43,62 @@ export function request(options){
   })
 }
 
+export function requestImg(options){
+  return new Promise((resolve, reject)=>{
+    const BASE_API = process.env.BASE_API
+    var url = BASE_API + options.url;
+    url = joinUrl(url, options.data);
+    resolve(url)
+    /*
+    var Authorization = 'Bearer ' + getToken();
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open("get", url, true);
+    xhr.responseType = "arraybuffer";
+    xhr.timeout = 5000;
+    for (var name in headers) {
+      if (typeof headers[name] !== 'undefined' && headers.hasOwnProperty(name)) {
+        xhr.setRequestHeader(name, headers[name])
+      }
+    }
+    xhr.onload = function(res) {
+      if (this.status == 200) {
+          console.log(res)
+          var data = this.response
+          console.log(data)
+          var blob = new Blob([data], {
+              type: 'image/jpeg'
+          })
+          console.log(blob)
+          var read = new FileReader() // 新建一个读取文件对象
+          read.readAsDataURL(blob) // 读取文件
+          read.onload = function() { // 读取成功后回调
+            read.onload = null
+            var imgCode = window.URL.createObjectURL(blob);
+            console.log(imgCode)
+            console.log(read.result)
+            resolve(imgCode)
+          }
+
+      }else{
+        reject('获取验证图片失败')
+      }
+    }
+    xhr.ontimeout = function() {
+      xhr.onload = null
+      reject('获取验证图片超时')
+    }
+    xhr.send();
+    /**/
+  })
+}
+
 // 随机字符串
 export function randomString(len) {
-    var len = len || 61;
+    len = len || 6;
     var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
     var maxPos = $chars.length;
     var ranstr = '';
@@ -53,4 +106,23 @@ export function randomString(len) {
         ranstr += $chars.charAt(Math.floor(Math.random() * maxPos));
     }
     return ranstr;
+}
+
+function joinUrlParam(data) {
+  var str = '';
+  if (data.constructor === Object) {
+    for (var key in data) {
+      var value = data[key];
+      if (data.hasOwnProperty(key) && typeof value !== 'undefined') {
+        typeof value === 'object' && (value = JSON.stringify(value))
+        str += '&' + key + '=' + encodeURIComponent(value)
+      }
+    }
+  }
+  str = str.replace(/^\s+|^\&+|\s+$|\&+$/g, '')
+  return str
+}
+function joinUrl(url, data) {
+  url += /\?/.test(url) ? '&' : '?';
+  return url + joinUrlParam(data)
 }

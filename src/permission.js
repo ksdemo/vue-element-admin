@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
   if (getToken()) { // 判断是否有token
     if (to.path === '/login') {
       // next({ path: '/' })
-      removeToken()
+      removeToken();next({ ...to });
       NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息

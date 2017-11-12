@@ -7,34 +7,26 @@
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="帐号" @blur="getClientInfo" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="off" placeholder="帐号" @blur="getClientInfo" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <icon-svg icon-class="password" />
         </span>
-        <el-input name="password" :type="pwdType"  v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" :type="pwdType"  v-model="loginForm.password" autoComplete="off"
           placeholder="密码" />
         <span class='show-pwd' @click='showPwd'><icon-svg icon-class="eye" /></span>
       </el-form-item>
 
-      <el-form-item prop="vcode" v-if="loginType === 0">
+      <el-form-item prop="vcode">
         <span class="svg-container">
           <icon-svg icon-class="table" />
         </span>
-        <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="on"
+        <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="off"
           placeholder="验证码" />
-          <span class='show-vcode' @click='getVcodeImg'><img src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png" alt=""></span>
-      </el-form-item>
-
-      <el-form-item prop="vcode" v-if="loginType === 1">
-        <span class="svg-container">
-          <icon-svg icon-class="table" />
-        </span>
-        <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="on"
-          placeholder="验证码" />
-          <span class='show-pcode' @click='getPhoneCode'><el-button >发送验证码</el-button></span>
+          <span class='show-vcode' @click='getVcodeImg'  v-if="loginType === 0"><img :src="imgVcode" alt="点击刷新验证码"></span>
+          <span class='show-pcode' @click='getPhoneCode'  v-if="loginType === 1"><el-button >发送验证码</el-button></span>
       </el-form-item>
 
       <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
@@ -98,12 +90,15 @@ export default {
       pwdType: 'password',
       loading: false,
       showDialog: false,
-      vcodeImg: ''
+      imgVcode: ''
     }
   },
   computed:{
     loginType(){
       return this.$store.state.user.loginType
+    },
+    imgCode(){
+      return this.$store.state.user.imgCode
     }
   },
   methods: {
@@ -121,21 +116,16 @@ export default {
           await this.$store.dispatch('getClientToken')
           let loginType = await this.$store.dispatch('checkLoginType', username)
           if(loginType === 0){
-            this.getVcodeImg();
+            await this.getVcodeImg();
           }
         } catch(e) {
           console.log(e)
         }
       }
     },
-    getVcodeImg(){
-      this.$store.dispatch('getImgCode')
-      .then(res=>{
-        console.log(res)
-      })
-      .catch(e =>{
-        console.log(e)
-      })
+    async getVcodeImg(){
+      let imgCode = await this.$store.dispatch('getImgCode')
+      this.imgVcode = imgCode
     },
     getPhoneCode(){
 

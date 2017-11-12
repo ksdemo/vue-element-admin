@@ -45,6 +45,9 @@ const user = {
     },
     SET_LOGINTYPE: (state, loginType) => {
       state.loginType = loginType
+    },
+    SET_IMGCODE: (state, imgCode) => {
+      state.imgCode = imgCode
     }
   },
 
@@ -75,11 +78,12 @@ const user = {
         })
       })
     },
-    // 获取验证码
+    // 获取验证码图片
     getImgCode({commit},param) {
       return new Promise((resolve, reject) => {
         getImgCode(param)
         .then(response => {
+          commit('SET_IMGCODE', response)
           resolve(response)
         }).catch(error => {
           reject(error)

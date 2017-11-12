@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import {request, randomString} from '@/utils/add.js'
+import {request, randomString, requestImg} from '@/utils/add.js'
 import { getToken } from '@/utils/auth'
 
 /**
@@ -59,11 +59,12 @@ export function checkLoginType(username){
 }
 
 export function getImgCode(){
-  return request({
+  return requestImg({
     url: "/cms/sysLogin/getImgCode",
     type: 'get',
     data: {
-      imgKey: randomString()
+      imgKey:  +new Date() + '_' + randomString(),
+      access_token : getToken()
     }
   })
 }

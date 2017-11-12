@@ -60,7 +60,9 @@ export function ajax(option, callback) {
     //function; return:  xhr.status
     'error': '',
     //function; return:  [success: string | json ] | [error: undefined]
-    'complete': ''
+    'complete': '',
+    // 返回数据类型, 空字符串 (默认), "arraybuffer", "blob", "document", 和 "text"
+    'responseType': ''
   }
   option = extend(true, {}, defaults, option)
   var xhr = XMLHttpRequest ? new XMLHttpRequest() : XDomainRequest ? new XDomainRequest() : new ActiveXObject('Microsoft.XMLHttp') // XDomainRequest IE8+优先使用
@@ -79,6 +81,7 @@ export function ajax(option, callback) {
   xhr.open(type, url, option.async)
   xhr.timeout = option.timeout // 设置超时
   xhr.withCredentials = option.withCredentials
+  xhr.responseType = option.responseType 
   if (type === 'POST') {
     data = joinUrlParam(data)
       // POST 需设请求头
@@ -95,7 +98,7 @@ export function ajax(option, callback) {
     callback && callback(null, xhr)
     xhr.onreadystatechange = null
   }
-  console.log(data)
+
   xhr.onreadystatechange = function() {
       var res
       if (xhr.readyState == 4) {
@@ -114,6 +117,9 @@ export function ajax(option, callback) {
                 } else {
                   throw new Error('AJAX_CONNCTION_ERROR_XML')
                 }
+                break;
+              case 'image':
+                res = res;
                 break;
             }
             success && success(res, xhr);
@@ -167,7 +173,8 @@ export async function request({
   data = {}, 
   dataType = 'json', 
   type = 'GET', 
-  method = 'fetch', 
+  method = 'fetch',
+  responseType = '',
   headers = {
     'Accept': 'application/json, text/plain, */*',// 'application/json',
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'//'application/json'
@@ -185,6 +192,7 @@ export async function request({
       method: type,
       headers,
       mode: "cors",
+      responseType,
       cache: "force-cache"
     }
 
@@ -195,9 +203,13 @@ export async function request({
     }
 
     try {
-      const response = await fetch(url, requestConfig);
-      const responseJson = await response.json();
-      return responseJson
+      let response = await fetch(url, requestConfig);
+      if(dataType == 'json'){
+        response = await response.json();
+      }else {
+        response = response.body
+      }
+      return response
     } catch (e) {
       throw new Error(e)
     }
