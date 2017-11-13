@@ -19,7 +19,7 @@ export function request(options){
   return new Promise((resolve, reject)=>{
     ajax2(options)
       .then(res =>{
-        if(res.code === 0 || 1){
+        if(res.code == 0 ){
           resolve(res)
         }else{
           Message({

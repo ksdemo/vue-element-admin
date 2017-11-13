@@ -62,11 +62,50 @@ export const asyncRouterMap = [
     name: '系统管理',
     icon: 'example',
     children: [
+      {
+        path: '/system/rights',
+        component: _import('example/table/index'),
+        redirect: '/system/rights/userlist',
+        name: '权限管理',
+        icon: 'people',
+        children: [
+          { path: '/system/rights/userlist', component: _import('system/userlist'), name: '用户管理' },
+          { path: '/system/rights/rolelist', component: _import('example/table/table'), name: '角色管理' },
+          { path: '/system/rights/deptlist', component: _import('example/table/table'), name: '部门管理' }
+        ]
+      },
+      {
+        path: '/system/configs',
+        component: _import('example/table/index'),
+        redirect: 'noredirect',
+        name: '配置管理',
+        icon: 'people',
+        children: [
+          { path: '/system/configs/platform', 
+            component: _import('example/table/index'), 
+            name: '平台管理',
+            children: [
+              { path: '/system/configs/platform/platform_list', component: _import('system/userlist'), name: '平台列表' },
+              { path: '/system/configs/platform/platform_list', component: _import('example/table/table'), name: '授权帐号' },
+              { path: '/system/configs/platform/platform_list', component: _import('example/table/table'), name: '授权接口' }
+            ]
+          },
+        ]
+      }
+    ]
+  },
+/*  {
+    path: '/system2',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '系统管理',
+    icon: 'example',
+    children: [
       { path: 'userlist', component: _import('system/userlist'), name: '用户管理' },
       { path: 'rolelist', component: _import('example/table/table'), name: '角色管理' },
       { path: 'deptlist', component: _import('example/table/table'), name: '部门管理' }
     ]
-  },
+  },*/
   {
     path: '/permission',
     component: Layout,

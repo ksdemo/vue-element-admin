@@ -1,15 +1,16 @@
 import fetch from '@/utils/fetch'
 import {request, randomString, requestImg} from '@/utils/add.js'
 import { getToken } from '@/utils/auth'
+import md5 from 'js-md5';
 
 /**
  * 客户端模式获取accessToken
  */
 export function getClientToken() {
   const url = "/cms/oauth/token";
-  const PASSWORD_CLIENT_ID = 'cms_client';
-  const PASSWORD_CLIENT_SECRET = '123456';
-  var Authorization = 'Basic ' + window.btoa(PASSWORD_CLIENT_ID + ':' + PASSWORD_CLIENT_SECRET)
+  const CLIENT_ID = 'cms_client';
+  const CLIENT_SECRET = '123456';
+  var Authorization = 'Basic ' + window.btoa(CLIENT_ID + ':' + CLIENT_SECRET)
   var data = {grant_type: 'client_credentials'};
   var headers = {
     'Accept': 'application/json, text/plain, */*',
@@ -24,22 +25,25 @@ export function getClientToken() {
   })
 }
 
-/**
+/*
  * 密码模式获取accessToken
  */
-export function getPasswordToken(username, password) {
-  var Authorization = 'Basic ' + getToken()
+export function getPasswordToken(userInfo) {
+  const PASSWORD_ID = 'cms_password'
+  const PASSWORD_SECRET = '123456'
+  var Authorization = 'Basic ' + window.btoa(PASSWORD_ID + ':' + PASSWORD_SECRET)
   var headers = {
     'Accept': 'application/json, text/plain, */*',
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     Authorization
   }
+  let password = md5(userInfo.password);
   var data = {
     grant_type: 'password',
-    username: 'admin',
-    password: 'd525e685b8f0c89e5d981a6b86feb6d4'
+    username: userInfo.username,// : 'admin',
+    password,//: 'd525e685b8f0c89e5d981a6b86feb6d4'
   };
-
+  console.log(userInfo);
   return request({
     url: "/cms/oauth/token",
     type: 'post',
@@ -64,6 +68,17 @@ export function getImgCode(){
     type: 'get',
     data: {
       imgKey:  +new Date() + '_' + randomString(),
+      access_token : getToken()
+    }
+  })
+}
+
+export function getPhoneCode(username){
+  return request({
+    url: "/cms/sysLogin/getSmsCode",
+    type: 'get',
+    data: {
+      username:  username,
       access_token : getToken()
     }
   })

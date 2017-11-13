@@ -2,6 +2,8 @@ import Cookies from 'js-cookie'
 
 const TokenKey = 'Admin-Token'
 
+const ClientTokenKey = 'Client-Token'
+
 const RefreshTokenKey = 'Refresh-Token'
 
 export function setToken(token) {
@@ -14,6 +16,18 @@ export function getToken() {
 
 export function removeToken() {
   return Cookies.remove(TokenKey)
+}
+
+export function setClientToken(token) {
+  return Cookies.set(ClientTokenKey, token)
+}
+
+export function getClientToken() {
+  return Cookies.get(ClientTokenKey)
+}
+
+export function removeClientToken() {
+  return Cookies.remove(ClientTokenKey)
 }
 
 export function setRefreshToken(token) {

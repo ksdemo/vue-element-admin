@@ -3,8 +3,7 @@
  */
 
 export function isvalidUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  return /^(1\d{10}|\w{4,11})$/.test(str)
 }
 
 /* 合法uri*/

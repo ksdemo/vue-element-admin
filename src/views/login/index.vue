@@ -70,16 +70,17 @@ export default {
       }
     }
     const validateVcode = (rule, value, callback) => {
-      if (value.length < 4) {
-        callback(new Error('清输入验证码'))
-      } else {
-        callback()
-      }
+      callback()
+      // if (value.length < 4) {
+      //   callback(new Error('清输入验证码'))
+      // } else {
+      //   callback()
+      // }
     }
     return {
       loginForm: {
         username: 'admin',
-        password: '1111111',
+        password: '123456',
         vcode: ''
       },
       loginRules: {
@@ -128,16 +129,21 @@ export default {
       this.imgVcode = imgCode
     },
     getPhoneCode(){
-
+      let username = this.loginForm.username
+      if (/^1\d{10}$/.test(username)){
+        this.$store.dispatch('getPhoneCode',username)
+      }
+      
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+          // this.$store.dispatch('getPasswordToken', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: '/' })
-                // this.showDialog = true
+            // this.showDialog = true
           }).catch(() => {
             this.loading = false
           })

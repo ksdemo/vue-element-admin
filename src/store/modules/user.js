@@ -1,4 +1,4 @@
-import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,checkLoginType, getImgCode} from '@/api/login'
+import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,checkLoginType, getImgCode, getPhoneCode} from '@/api/login'
 import { getToken, setToken, setRefreshToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -90,11 +90,22 @@ const user = {
         })
       })
     },
+    // 获取手机验证码
+    getPhoneCode({commit},param) {
+      return new Promise((resolve, reject) => {
+        getPhoneCode(param)
+        .then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 获取密码token
     getPasswordToken({commit}, userInfo) {
-      const username = userInfo.username.trim()
+      userInfo.username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
+        getPasswordToken(userInfo).then(response => {
           const data = response.data || response
           let token = data.token || data.access_token;
           let refreshtoken = data.token || data.refresh_token;
