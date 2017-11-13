@@ -36,7 +36,10 @@ export function validateRequired(str) {
 }
 
 export function validatePassword(str) {
-  str = str+'' || ''
+  if(!str){
+    return false
+  }
+  str = str + ''
   str = trim(str)
   return str.length >= 6
 }

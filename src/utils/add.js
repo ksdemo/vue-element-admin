@@ -1,7 +1,10 @@
 import { Message } from 'element-ui'
 // add
 import {ajax, request as ajax2} from '@/utils/ksutils/common/request.js'
+import {compareObj} from '@/utils/ksutils/common/common.js'
 import { getToken } from '@/utils/auth'
+
+export {compareObj}
 
 export function request(options){
   const BASE_API = process.env.BASE_API

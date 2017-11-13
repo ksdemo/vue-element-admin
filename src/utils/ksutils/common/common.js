@@ -100,7 +100,38 @@ export function inObj(param, obj) {
   }
   return false
 }
-
+// 获取对象属性长度
+export function getLength(obj){
+  var count = 0
+  for(var key in obj){
+    if(obj.hasOwnProperty(key) && obj[key] !== undefined){
+      count++
+    }
+  }
+  return count
+}
+// 比较两对象的值
+export function compareObj(objA, objB){
+  if(objA == null && objB == null){
+    return true
+  }else if(typeof objA !== 'object' || typeof objB !== 'object'){
+    return objA == objB
+  }else {
+    var flag = true
+    if(getLength(objA) != getLength(objB)){
+      return false
+    }
+    for(var key in objA){
+      if(objA.hasOwnProperty(key) && objA[key] !== undefined){
+        flag = compareObj(objA[key], objB[key])
+        if(!flag){
+          return false;
+        }
+      }
+    }
+    return flag
+  }
+}
 
 // 扩展 克隆 摘取自jquery
 export function extend() {

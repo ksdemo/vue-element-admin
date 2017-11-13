@@ -109,7 +109,7 @@
     </el-form>
 
     <!-- 创建/编辑平台状态-->
-    <el-form class="small-space" :model="temp" :rules="modifyStatusPlatformRules"  ref="modifyStatusPlatform" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
+    <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
       <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
           <h3 color="red">温馨提示: 请慎重操作平台</h3>
           <el-form-item label="状态" class="ks-dialog-input" prop='status'>
@@ -133,10 +133,12 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { fetchPlatformList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import { parseTime } from '@/utils'
 import { validateRequired, validatePassword } from '@/utils/validate'
+import { compareObj } from '@/utils/add.js'
 
 const statusTypeOptions = [
   {'key': 'normal','display_name':'正常'},
@@ -197,6 +199,7 @@ export default {
         cname: undefined,
         sort: '+id'
       },
+      oldTemp: '',
       temp: {
         id: undefined,
         cname: '',
@@ -225,9 +228,6 @@ export default {
         cname: [{ required: true, trigger: 'blur', validator: validateCname }],
         name: [{ required: true, trigger: 'blur', validator: validateName }],
         pid: [{ required: true, trigger: 'blur', validator: validatePid }],
-        adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
-      },
-      modifyStatusPlatformRules:{
         adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
       }
     }
@@ -281,10 +281,13 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
+      this.oldTemp = Object.assign({}, row)
       this.temp = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      this.temp.adminPassword = ''
+      this.$nextTick(()=>{
+        this.temp.adminPassword = ''
+      })
     },
     create() {
       this.$refs.createPlatform.validate(valid => {
@@ -294,6 +297,7 @@ export default {
             cname: this.temp.cname,
             name: this.temp.name,
             pid: this.temp.pid,
+            description: this.oldTemp.description,
             adminPassword: this.temp.adminPassword
           })
           this.cancel();
@@ -323,8 +327,22 @@ export default {
           var updateForm = Object.assign({},{
             cname: this.temp.cname,
             name: this.temp.name,
+            description: this.temp.description,
             adminPassword: this.temp.adminPassword
           })
+          var oldForm = Object.assign({},{
+            cname: this.oldTemp.cname,
+            name: this.oldTemp.name,
+            description: this.oldTemp.description,
+            adminPassword: this.temp.adminPassword
+          })
+
+          if(compareObj(oldForm,updateForm)){
+            this.cancel();
+            this.listLoading = false
+            console.log('更新数据无变化!!')
+            return;
+          }
           this.cancel();
           updatePlatform(updateForm).then(() => {
             this.$notify({
@@ -364,6 +382,7 @@ export default {
     },
     handleModifyStatus(row){
       this.resetTemp()
+      this.oldTemp = Object.assign({}, row)
       this.temp = Object.assign({}, row)
       this.dialogModifyStatusVisible = true
     },
@@ -372,32 +391,40 @@ export default {
       this.dialogModifyStatusVisible = false;
     },
     updateModifyStatus(){
-      this.$refs.modifyStatusPlatform.validate(valid => {
-        if (valid) {
-          this.listLoading = true
-          var updateForm = Object.assign({},{
-            status: this.temp.status,
-            adminPassword: this.temp.adminPassword
-          })
+      if(validatePassword(this.temp.adminPassword)){
+        this.listLoading = true
+        var updateForm = Object.assign({},{
+          status: this.temp.status,
+          adminPassword: this.temp.adminPassword
+        })
+        if(compareObj(this.oldTemp.status, this.temp.status)){
           this.cancelModifyStatus();
-          modifyStatusPlatform(updateForm).then(() => {
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-            this.listLoading = false
-            this.getList()
-          }).catch(() => {
-            this.listLoading = false
-            this.getList()
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          this.listLoading = false
+          console.log('更新状态无变化!!')
+          return;
         }
-      })
+        this.cancelModifyStatus();
+        modifyStatusPlatform(updateForm).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '更新成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.listLoading = false
+          this.getList()
+        }).catch(() => {
+          this.listLoading = false
+          this.getList()
+        })
+      } else {
+        Message({
+          message: '请输入管理员密码',
+          type: 'error',
+          duration: 2 * 1000
+        })
+        return false
+      }
     }
   }
 }
