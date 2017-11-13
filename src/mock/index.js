@@ -2,6 +2,8 @@ import Mock from 'mockjs'
 import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
+// 平台
+import platformAPI from './platform'
 
 Mock.setup({
   timeout: '350-600'
@@ -19,5 +21,10 @@ Mock.mock(/\/article\/pv/, 'get', articleAPI.getPv)
 
 // 搜索相关
 Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
+
+//系统管理
+
+//平台管理
+Mock.mock(/\/system\/configs\/platform\/platform_list/, 'get', platformAPI.getList)
 
 export default Mock

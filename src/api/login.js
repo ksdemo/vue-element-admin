@@ -29,6 +29,7 @@ export function getClientToken() {
  * 密码模式获取accessToken
  */
 export function getPasswordToken(userInfo) {
+  const url = "/cms/oauth/token";
   const PASSWORD_ID = 'cms_password'
   const PASSWORD_SECRET = '123456'
   var Authorization = 'Basic ' + window.btoa(PASSWORD_ID + ':' + PASSWORD_SECRET)
@@ -41,11 +42,11 @@ export function getPasswordToken(userInfo) {
   var data = {
     grant_type: 'password',
     username: userInfo.username,// : 'admin',
-    password,//: 'd525e685b8f0c89e5d981a6b86feb6d4'
+    password//: 'd525e685b8f0c89e5d981a6b86feb6d4'
   };
   console.log(userInfo);
   return request({
-    url: "/cms/oauth/token",
+    url,
     type: 'post',
     data,
     headers

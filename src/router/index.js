@@ -69,7 +69,7 @@ export const asyncRouterMap = [
         name: '权限管理',
         icon: 'people',
         children: [
-          { path: 'userlist', component: _import('system/userlist'), name: '用户管理' },
+          { path: 'userlist', component: _import('system/rights/userlist'), name: '用户管理' },
           { path: 'rolelist', component: _import('example/table/table'), name: '角色管理' },
           { path: 'deptlist', component: _import('example/table/table'), name: '部门管理' }
         ]
@@ -86,7 +86,7 @@ export const asyncRouterMap = [
             redirect: 'noredirect',
             name: '平台管理',
             children: [
-              { path: 'platform_list', component: _import('system/userlist'), name: '平台列表' },
+              { path: 'platform_list', component: _import('system/configs/platform/platform_list'), name: '平台列表' },
               { path: 'account_list', component: _import('example/table/table'), name: '授权帐号' },
               { path: 'api_list', component: _import('example/table/table'), name: '授权接口' }
             ]

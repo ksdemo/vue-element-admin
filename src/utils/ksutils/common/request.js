@@ -40,7 +40,7 @@ export function ajax(option, callback) {
     //'get' | 'post'
     'type': 'GET',
     'async': true,
-    'timeout': 30000,
+    'timeout': 10000,
     //string
     'url': '',
     //json
@@ -64,7 +64,7 @@ export function ajax(option, callback) {
     // 返回数据类型, 空字符串 (默认), "arraybuffer", "blob", "document", 和 "text"
     'responseType': ''
   }
-  option = extend(true, {}, defaults, option)
+  option = extend({}, defaults, option)
   var xhr = XMLHttpRequest ? new XMLHttpRequest() : XDomainRequest ? new XDomainRequest() : new ActiveXObject('Microsoft.XMLHttp') // XDomainRequest IE8+优先使用
   var type = option.type.toUpperCase(),
     url = option.url,

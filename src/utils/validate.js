@@ -30,3 +30,17 @@ export function validatAlphabets(str) {
   return reg.test(str)
 }
 
+export function validateRequired(str) {
+  const reg = /\S+/
+  return reg.test(str)
+}
+
+export function validatePassword(str) {
+  str = str || ''
+  str = trim(str)
+  return str.length > 6
+}
+
+function trim(str) {
+  return str.replace(/(^\s*)|(\s*$)/g, '')
+}

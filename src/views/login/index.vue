@@ -130,7 +130,7 @@ export default {
     },
     getPhoneCode(){
       let username = this.loginForm.username
-      if (/^1\d{10}$/.test(username)){
+      if (isvalidUsername(username)){
         this.$store.dispatch('getPhoneCode',username)
       }
       
