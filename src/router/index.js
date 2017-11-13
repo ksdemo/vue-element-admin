@@ -45,16 +45,16 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  {
-    path: '/customer',
-    component: Layout,
-    redirect: 'noredirect',
-    name: '客户管理',
-    icon: 'example',
-    children: [
-      { path: 'list', component: _import('customer/list'), name: '客户列表', meta: { role: ['admin'] }}
-    ]
-  },
+  // {
+  //   path: '/customer',
+  //   component: Layout,
+  //   redirect: 'noredirect',
+  //   name: '客户管理',
+  //   icon: 'example',
+  //   children: [
+  //     { path: 'list', component: _import('customer/list'), name: '客户列表', meta: { role: ['admin'] }}
+  //   ]
+  // },
   {
     path: '/system',
     component: Layout,
@@ -69,9 +69,9 @@ export const asyncRouterMap = [
         name: '权限管理',
         icon: 'people',
         children: [
-          { path: '/system/rights/userlist', component: _import('system/userlist'), name: '用户管理' },
-          { path: '/system/rights/rolelist', component: _import('example/table/table'), name: '角色管理' },
-          { path: '/system/rights/deptlist', component: _import('example/table/table'), name: '部门管理' }
+          { path: 'userlist', component: _import('system/userlist'), name: '用户管理' },
+          { path: 'rolelist', component: _import('example/table/table'), name: '角色管理' },
+          { path: 'deptlist', component: _import('example/table/table'), name: '部门管理' }
         ]
       },
       {
@@ -83,11 +83,12 @@ export const asyncRouterMap = [
         children: [
           { path: '/system/configs/platform', 
             component: _import('example/table/index'), 
+            redirect: 'noredirect',
             name: '平台管理',
             children: [
-              { path: '/system/configs/platform/platform_list', component: _import('system/userlist'), name: '平台列表' },
-              { path: '/system/configs/platform/platform_list', component: _import('example/table/table'), name: '授权帐号' },
-              { path: '/system/configs/platform/platform_list', component: _import('example/table/table'), name: '授权接口' }
+              { path: 'platform_list', component: _import('system/userlist'), name: '平台列表' },
+              { path: 'account_list', component: _import('example/table/table'), name: '授权帐号' },
+              { path: 'api_list', component: _import('example/table/table'), name: '授权接口' }
             ]
           },
         ]
