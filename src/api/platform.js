@@ -10,7 +10,31 @@ export function fetchList(query) {
   })
 }
 */
-export function fetchList(query) {
+export function fetchPlatformList(query) {
+  return fetch({
+    url: '/system/configs/platform/platform_list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function createPlatform(query) {
+  return fetch({
+    url: '/system/configs/platform/platform_list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function updatePlatform(query) {
+  return fetch({
+    url: '/system/configs/platform/platform_list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function modifyStatusPlatform(query) {
   return fetch({
     url: '/system/configs/platform/platform_list',
     method: 'get',

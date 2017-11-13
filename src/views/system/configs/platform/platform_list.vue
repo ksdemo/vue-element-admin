@@ -11,7 +11,6 @@
 
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
-      <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
 
     </div>
 
@@ -77,65 +76,64 @@
 
     <!-- 创建/编辑平台信息-->
     <el-form class="small-space" :inline="true" :model="temp"  :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel"  >
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel"  >
 
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='cname'>
+            <el-input v-model="temp.cname"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='pid'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.pid" ></el-input>
+            <el-input v-else v-model="temp.pid" readonly :disabled="true"></el-input>
+          </el-form-item>
 
-        <el-form-item label="平台名称" class="ks-dialog-input" prop='cname'>
-          <el-input v-model="temp.cname"></el-input>
-        </el-form-item>
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='name'>
+            <el-input v-model="temp.name"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+
+          <div slot="footer" class="dialog-footer">
+            <el-form-item prop='adminPassword'>
+              <el-input style="width: 200px;"  placeholder="管理员密码" type="password" v-model="temp.adminPassword">
+              </el-input>
+            </el-form-item>
+            <el-button @click="cancel">取 消</el-button>
+            <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
+            <el-button v-else type="primary" @click="update">确 定</el-button>
+          </div>
         
-        <el-form-item label="平台号" class="ks-dialog-input" prop='pid'>
-          <el-input v-if="dialogStatus=='create'" v-model="temp.pid" ></el-input>
-          <el-input v-else v-model="temp.pid" readonly :disabled="true"></el-input>
-        </el-form-item>
+      </el-dialog>
+    </el-form>
 
-        <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='name'>
-          <el-input v-model="temp.name"></el-input>
-        </el-form-item>
-
-        <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
-          <el-input v-model="temp.description" style="width: 501px"></el-input>
-        </el-form-item>
-      
-      
+    <!-- 创建/编辑平台状态-->
+    <el-form class="small-space" :model="temp" :rules="modifyStatusPlatformRules"  ref="modifyStatusPlatform" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
+      <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+          <h3 color="red">温馨提示: 请慎重操作平台</h3>
+          <el-form-item label="状态" class="ks-dialog-input" prop='status'>
+            <el-select class="filter-item" v-model="temp.status" placeholder="请选择" style="width: 179px">
+              <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
+              </el-option>
+            </el-select>
+          </el-form-item> 
         <div slot="footer" class="dialog-footer">
-          <el-form-item prop='adminPassword'>
-            <el-input style="width: 200px;"  placeholder="管理员密码" type="password" v-model="adminPassword">
+          <el-form-item prop='adminPassword' style="display: inline-block">
+            <el-input style="width: 200px;"  placeholder="管理员密码" type="password" v-model="temp.adminPassword">
             </el-input>
           </el-form-item>
-          <el-button @click="cancel">取 消</el-button>
-          <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-          <el-button v-else type="primary" @click="update">确 定</el-button>
+          <el-button @click="cancelModifyStatus">取 消</el-button>
+          <el-button @click="updateModifyStatus">确 定</el-button>
         </div>
-      
-    </el-dialog>
+      </el-dialog>
     </el-form>
-    <!-- 创建/编辑平台状态-->
-    <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
-        <h3 color="red">温馨提示: 请慎重操作平台</h3>
-        <el-form-item label="状态" class="ks-dialog-input">
-          <el-select class="filter-item" v-model="temp.status" placeholder="请选择" style="width: 179px">
-            <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item> 
-        
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-input style="width: 200px;"  placeholder="管理员密码" type="password" v-model="adminPassword">
-        </el-input>
-        <el-button @click="cancelModifyStatus">取 消</el-button>
-        <el-button @click="updateModifyStatus">确 定</el-button>
-      </div>
-    </el-dialog>
 
   </div>
 </template>
 
 <script>
-// import { fetchList, fetchPv } from '@/api/article'
-import { fetchList, fetchDetail } from '@/api/platform.js'
+import { fetchPlatformList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import { parseTime } from '@/utils'
 import { validateRequired, validatePassword } from '@/utils/validate'
@@ -151,7 +149,6 @@ const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
 }, {})
 
 function adapt(data){
-  console.log(data)
   return data;
 }
 
@@ -208,7 +205,8 @@ export default {
         description: '',
         creat_time: 0,
         update_time: 0,
-        status: 'normal'
+        status: 'normal',
+        adminPassword: ''
       },
       statusTypeOptions,
       sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
@@ -223,11 +221,13 @@ export default {
       showRealnameAuth: true,
       showCarAuth: true,
       tableKey: 0,
-      adminPassword: '',
       createPlatformRules:{
         cname: [{ required: true, trigger: 'blur', validator: validateCname }],
         name: [{ required: true, trigger: 'blur', validator: validateName }],
         pid: [{ required: true, trigger: 'blur', validator: validatePid }],
+        adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
+      },
+      modifyStatusPlatformRules:{
         adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
       }
     }
@@ -246,7 +246,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchPlatformList(this.listQuery).then(response => {
         this.list = adapt(response.data.items)
         this.total = response.data.total
         this.listLoading = false
@@ -277,11 +277,14 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
+      this.temp.adminPassword = ''
     },
     handleUpdate(row) {
+      this.resetTemp()
       this.temp = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
+      this.temp.adminPassword = ''
     },
     create() {
       this.$refs.createPlatform.validate(valid => {
@@ -291,11 +294,10 @@ export default {
             cname: this.temp.cname,
             name: this.temp.name,
             pid: this.temp.pid,
-            adminPassword: this.adminPassword
+            adminPassword: this.temp.adminPassword
           })
           this.cancel();
-          this.$store.dispatch('LoginByUsername', createForm).then(() => {
-            this.cancel()
+          createPlatform(createForm).then(() => {
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -303,8 +305,10 @@ export default {
               duration: 2000
             })
             this.listLoading = false
+            this.getList()
           }).catch(() => {
             this.listLoading = false
+            this.getList()
           })
         } else {
           console.log('error submit!!')
@@ -313,26 +317,37 @@ export default {
       })
     },
     update() {
-      this.temp.timestamp = +this.temp.timestamp
-      for (const v of this.list) {
-        if (v.id === this.temp.id) {
-          const index = this.list.indexOf(v)
-          this.list.splice(index, 1, this.temp)
-          break
+      this.$refs.createPlatform.validate(valid => {
+        if (valid) {
+          this.listLoading = true
+          var updateForm = Object.assign({},{
+            cname: this.temp.cname,
+            name: this.temp.name,
+            adminPassword: this.temp.adminPassword
+          })
+          this.cancel();
+          updatePlatform(updateForm).then(() => {
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.listLoading = false
+            this.getList()
+          }).catch(() => {
+            this.listLoading = false
+            this.getList()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
         }
-      }
-      this.dialogFormVisible = false
-      this.$notify({
-        title: '成功',
-        message: '更新成功',
-        type: 'success',
-        duration: 2000
       })
     },
     cancel(){
       this.resetTemp()
       this.dialogFormVisible = false
-      this.clearAdminPass()
     },
     resetTemp() {
       this.temp = {
@@ -347,38 +362,42 @@ export default {
         adminPassword: ''
       }
     },
-    handleDownload() {
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('vendor/Export2Excel')
-        const tHeader = ['时间', '地区', '类型', '标题', '重要性']
-        const filterVal = ['timestamp', 'province', 'type', 'title', 'importance']
-        const data = this.formatJson(filterVal, this.list)
-        export_json_to_excel(tHeader, data, 'table数据')
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
-    },
-    clearAdminPass(){
-      this.adminPassword = '';
-    },
     handleModifyStatus(row){
+      this.resetTemp()
       this.temp = Object.assign({}, row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus(){
+      this.resetTemp();
       this.dialogModifyStatusVisible = false;
-      this.clearAdminPass();
     },
     updateModifyStatus(){
-      this.dialogModifyStatusVisible = false;
-      this.clearAdminPass();
+      this.$refs.modifyStatusPlatform.validate(valid => {
+        if (valid) {
+          this.listLoading = true
+          var updateForm = Object.assign({},{
+            status: this.temp.status,
+            adminPassword: this.temp.adminPassword
+          })
+          this.cancelModifyStatus();
+          modifyStatusPlatform(updateForm).then(() => {
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.listLoading = false
+            this.getList()
+          }).catch(() => {
+            this.listLoading = false
+            this.getList()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
