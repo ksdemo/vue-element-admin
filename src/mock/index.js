@@ -27,5 +27,7 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 //平台管理
 Mock.mock(/\/system\/configs\/platform\/platformList/, 'get', platformAPI.getPlatformList)
 Mock.mock(/\/system\/configs\/platform\/authAccountList/, 'get', platformAPI.getAuthAccountList)
+Mock.mock(/\/system\/configs\/platform\/authAccountInfo/, 'get', platformAPI.getAuthAccountInfo)
+Mock.mock(/\/system\/configs\/platform\/platformAll/, 'get', platformAPI.getPlatformAll)
 
 export default Mock

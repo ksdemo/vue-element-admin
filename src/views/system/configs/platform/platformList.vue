@@ -24,7 +24,7 @@
 
       <el-table-column align="center" label="平台号" width="100">
         <template scope="scope">
-          <span>{{scope.row.cmsClientId}}</span>
+          <span>{{scope.row.clientCode}}</span>
         </template>
       </el-table-column>
 
@@ -81,9 +81,9 @@
             <el-input v-model="temp.clientName"></el-input>
           </el-form-item>
           
-          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
-            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
-            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          <el-form-item label="平台号" class="ks-dialog-input" prop='clientCode'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.clientCode" ></el-input>
+            <el-input v-else v-model="temp.clientCode" readonly :disabled="true"></el-input>
           </el-form-item>
 
           <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
@@ -133,7 +133,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { fetchPlatformList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
+import { getPlatformList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import { parseTime } from '@/utils'
 import { validateRequired, validatePassword } from '@/utils/validate'
@@ -202,7 +202,7 @@ export default {
       temp: {
         id: undefined,
         clientName: '',
-        cmsClientId: undefined,
+        clientCode: undefined,
         clientTag: '',
         description: '',
         createTime: 0,
@@ -226,7 +226,7 @@ export default {
       createPlatformRules:{
         clientName: [{ required: true, trigger: 'blur', validator: validateCname }],
         clientTag: [{ required: true, trigger: 'blur', validator: validateName }],
-        cmsClientId: [{ required: true, trigger: 'blur', validator: validatePid }],
+        clientCode: [{ required: true, trigger: 'blur', validator: validatePid }],
         adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
       }
     }
@@ -250,7 +250,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchPlatformList(this.listQuery).then(response => {
+      getPlatformList(this.listQuery).then(response => {
         let data = adapt(response.data)
         this.list = data.data
         this.totalCount = data.totalCount
@@ -301,7 +301,7 @@ export default {
           var createForm = Object.assign({},{
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
-            cmsClientId: this.temp.cmsClientId,
+            clientCode: this.temp.clientCode,
             description: this.oldTemp.description,
             adminPassword: this.temp.adminPassword
           })
@@ -376,7 +376,7 @@ export default {
       this.temp = {
         id: undefined,
         clientName: '',
-        cmsClientId: undefined,
+        clientCode: undefined,
         clientTag: '',
         description: '',
         createTime: 0,

@@ -11,7 +11,7 @@ export function fetchList(query) {
 }
 */
 // 获取平台列表
-export function fetchPlatformList(query) {
+export function getPlatformList(query) {
   return fetch({
     url: '/system/configs/platform/platformList',
     method: 'get',
@@ -44,7 +44,7 @@ export function modifyStatusPlatform(query) {
     params: query
   })
 }
-
+/* 授权账号列表 相关 S */
 // 获取授权账号列表
 export function getAuthAccountList(query) {
   return fetch({
@@ -53,3 +53,47 @@ export function getAuthAccountList(query) {
     params: query
   })
 }
+// 获取授权账号信息
+export function getAuthAccountInfo(query) {
+  return fetch({
+    url: '/system/configs/platform/getAuthAccountInfo',
+    method: 'get',
+    params: query
+  })
+}
+  // 所有平台信息,用于授权账户选择平台
+export function  getPlatformAll(parentId) {
+    return fetch({
+      url: '/system/configs/platform/platformAll',
+      method: 'get',
+      params: {
+        parentId
+      }
+    })
+  }
+// 创建授权账号
+export function createAuthAccount(query) {
+  return fetch({
+    url: '/system/configs/platform/authAccountList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 修改平台信息
+export function updateAuthAccount(query) {
+  return fetch({
+    url: '/system/configs/platform/platformList',
+    method: 'get',
+    params: query
+  })
+}
+// 修改平台状态
+export function modifyStatusAuthAccount(query) {
+  return fetch({
+    url: '/system/configs/platform/platformList',
+    method: 'get',
+    params: query
+  })
+}
+/* 授权账号列表 相关 E */
