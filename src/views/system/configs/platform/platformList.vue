@@ -141,7 +141,7 @@ import { compareObj } from '@/utils/add.js'
 
 const statusTypeOptions = [
   {'key': 1,'display_name':'正常', 'tag' : 'success'},
-  {'key': 0,'display_name':'冻结', 'tag' : 'danger'}
+  {'key': 0,'display_name':'已禁用', 'tag' : 'danger'}
 ]
 // arr to obj
 const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {

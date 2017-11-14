@@ -16,37 +16,31 @@
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
 
-      <el-table-column align="center" min-width="100px" label="平台名称">
-        <template scope="scope">
-          <span>{{scope.row.clientName}}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="平台号" width="100">
         <template scope="scope">
           <span>{{scope.row.cmsClientId}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="平台标签" width="100">
+      <el-table-column align="center" label="授权账号代码" width="150">
         <template scope="scope">
           <span>{{scope.row.clientTag}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" min-width="100px" label="描述">
+      <el-table-column align="center" min-width="150" label="授权账号名称">
         <template scope="scope">
           <span >{{scope.row.description}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="180px" label="创建时间">
+      <el-table-column align="center" width="150" label="令牌失效时间(秒)">
         <template scope="scope">
           <span>{{scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="180px" label="更新时间">
+      <el-table-column align="center" width="150" label=" 令牌刷新时间(秒)">
         <template scope="scope">
           <span>{{scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
@@ -58,8 +52,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="180">
+      <el-table-column align="center" label="操作" width="240">
         <template scope="scope">
+          <el-button size="small" type="danger" @click="handleUpdate(scope.row)">关联接口</el-button>
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
         </template>
@@ -77,6 +72,198 @@
     <el-form class="small-space" :inline="true" :model="temp"  :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel"  >
 
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
+          </el-form-item>
+
+          <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
+            <el-input v-model="temp.description" style="width: 501px"></el-input>
+          </el-form-item>
           <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
             <el-input v-model="temp.clientName"></el-input>
           </el-form-item>
@@ -133,7 +320,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { fetchPlatformList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
+import { getAuthAccountList, createPlatform, updatePlatform, modifyStatusPlatform } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import { parseTime } from '@/utils'
 import { validateRequired, validatePassword } from '@/utils/validate'
@@ -141,7 +328,7 @@ import { compareObj } from '@/utils/add.js'
 
 const statusTypeOptions = [
   {'key': 1,'display_name':'正常', 'tag' : 'success'},
-  {'key': 0,'display_name':'冻结', 'tag' : 'danger'}
+  {'key': 0,'display_name':'已禁用', 'tag' : 'danger'}
 ]
 // arr to obj
 const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
@@ -250,7 +437,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchPlatformList(this.listQuery).then(response => {
+      getAuthAccountList(this.listQuery).then(response => {
         let data = adapt(response.data)
         this.list = data.data
         this.totalCount = data.totalCount

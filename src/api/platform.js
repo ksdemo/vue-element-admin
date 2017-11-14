@@ -45,17 +45,11 @@ export function modifyStatusPlatform(query) {
   })
 }
 
-export function fetchArticle() {
+// 获取授权账号列表
+export function getAuthAccountList(query) {
   return fetch({
-    url: '/article/detail',
-    method: 'get'
-  })
-}
-
-export function fetchPv(pv) {
-  return fetch({
-    url: '/article/pv',
+    url: '/system/configs/platform/authAccountList',
     method: 'get',
-    params: { pv }
+    params: query
   })
 }
