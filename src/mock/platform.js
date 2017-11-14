@@ -17,7 +17,7 @@ for (let i = 0; i < count; i++) {
 }
 
 export default {
-  getList: config => {
+  getPlatformList: config => {
     const { clientName, pageNo = 1, pageSize = 20, sort } = param2Obj(config.url)
 
     let mockList = List.filter(item => {

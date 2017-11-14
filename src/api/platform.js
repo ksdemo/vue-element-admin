@@ -13,7 +13,7 @@ export function fetchList(query) {
 // 获取平台列表
 export function fetchPlatformList(query) {
   return fetch({
-    url: '/system/configs/platform/platform_list',
+    url: '/system/configs/platform/platformList',
     method: 'get',
     params: query
   })
@@ -22,7 +22,7 @@ export function fetchPlatformList(query) {
 // 创建平台
 export function createPlatform(query) {
   return fetch({
-    url: '/system/configs/platform/platform_list',
+    url: '/system/configs/platform/platformList',
     method: 'get',
     params: query
   })
@@ -31,7 +31,7 @@ export function createPlatform(query) {
 // 修改平台信息
 export function updatePlatform(query) {
   return fetch({
-    url: '/system/configs/platform/platform_list',
+    url: '/system/configs/platform/platformList',
     method: 'get',
     params: query
   })
@@ -39,7 +39,7 @@ export function updatePlatform(query) {
 // 修改平台状态
 export function modifyStatusPlatform(query) {
   return fetch({
-    url: '/system/configs/platform/platform_list',
+    url: '/system/configs/platform/platformList',
     method: 'get',
     params: query
   })
