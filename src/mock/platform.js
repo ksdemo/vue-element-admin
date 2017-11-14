@@ -6,23 +6,22 @@ const count = 100
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    id: '@increment',
-    cname: '@cname',
-    pid: Mock.Random.natural( 100, 10000 ),
-    name: '@word',
+    clientName: '@cname',
+    cmsClientId: Mock.Random.natural( 100, 10000 ),
+    clientTag: '@word',
     description: '@csentence',
-    creat_time: +Mock.Random.date('T'),
-    update_time: +Mock.Random.date('T'),
-    'status|1': ['normal', 'freeze']
+    createTime: +Mock.Random.date('T'),
+    updateTime: +Mock.Random.date('T'),
+    'clientState|1': [0, 1] // 0冻结, 1正常
   }))
 }
 
 export default {
   getList: config => {
-    const { cname, page = 1, limit = 20, sort } = param2Obj(config.url)
+    const { clientName, pageNo = 1, pageSize = 20, sort } = param2Obj(config.url)
 
     let mockList = List.filter(item => {
-      if (cname && item.cname.indexOf(cname) < 0) return false
+      if (clientName && item.clientName.indexOf(clientName) < 0) return false
       return true
     })
 
@@ -30,21 +29,25 @@ export default {
       mockList = mockList.reverse()
     }
 
-    const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+    const pageList = mockList.filter((item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
 
     return {
-      total: mockList.length,
-      items: pageList
+      code: 0,
+      msg: '',
+      totalPages: Math.ceil(mockList.length/pageSize),
+      totalCount: mockList.length,
+      pageSize: pageSize,
+      pageNo: pageNo,
+      data: pageList
     }
   },
   getDetail: () => ({
-    id: '@increment',
-    cname: '@cname',
-    pid: Mock.Random.natural( 100, 10000 ),
-    name: '@word',
-    description: '@csentenc',
-    creat_time: +Mock.Random.date('T'),
-    update_time: +Mock.Random.date('T'),
-    'status': 'normal'
+    clientName: '@cname',
+    cmsClientId: Mock.Random.natural( 100, 10000 ),
+    clientTag: '@word',
+    description: '@csentence',
+    createTime: +Mock.Random.date('T'),
+    updateTime: +Mock.Random.date('T'),
+    'clientState|1': [0, 1] // 0冻结, 1正常
   })
 }

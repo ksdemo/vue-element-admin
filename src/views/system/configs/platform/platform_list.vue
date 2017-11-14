@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="平台名称" v-model="listQuery.cname">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="平台名称" v-model="listQuery.clientName">
       </el-input>
 
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
@@ -18,19 +18,19 @@
 
       <el-table-column align="center" min-width="100px" label="平台名称">
         <template scope="scope">
-          <span>{{scope.row.cname}}</span>
+          <span>{{scope.row.clientName}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="平台号" width="100">
         <template scope="scope">
-          <span>{{scope.row.pid}}</span>
+          <span>{{scope.row.cmsClientId}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="平台标签" width="100">
         <template scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span>{{scope.row.clientTag}}</span>
         </template>
       </el-table-column>
 
@@ -42,25 +42,24 @@
 
       <el-table-column align="center" width="180px" label="创建时间">
         <template scope="scope">
-          <span>{{scope.row.creat_time | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" width="180px" label="更新时间">
         <template scope="scope">
-          <span>{{scope.row.update_time | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100" align="center" label="状态">
         <template scope="scope">
-          <span>{{scope.row.status | statusFilter(scope.row.status)}}</span>
+          <span>{{scope.row.clientState | statusFilter(scope.row.clientState)}}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="180">
         <template scope="scope">
-          <!--v-if="scope.row.status !=='deleted'" -->
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
         </template>
@@ -69,8 +68,8 @@
     </el-table>
 
     <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.pageNo"
+        :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
 
@@ -78,17 +77,17 @@
     <el-form class="small-space" :inline="true" :model="temp"  :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel"  >
 
-          <el-form-item label="平台名称" class="ks-dialog-input" prop='cname'>
-            <el-input v-model="temp.cname"></el-input>
+          <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
+            <el-input v-model="temp.clientName"></el-input>
           </el-form-item>
           
-          <el-form-item label="平台号" class="ks-dialog-input" prop='pid'>
-            <el-input v-if="dialogStatus=='create'" v-model="temp.pid" ></el-input>
-            <el-input v-else v-model="temp.pid" readonly :disabled="true"></el-input>
+          <el-form-item label="平台号" class="ks-dialog-input" prop='cmsClientId'>
+            <el-input v-if="dialogStatus=='create'" v-model="temp.cmsClientId" ></el-input>
+            <el-input v-else v-model="temp.cmsClientId" readonly :disabled="true"></el-input>
           </el-form-item>
 
-          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='name'>
-            <el-input v-model="temp.name"></el-input>
+          <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
+            <el-input v-model="temp.clientTag"></el-input>
           </el-form-item>
 
           <el-form-item label="平台描述" class="ks-dialog-input"  prop='description'>
@@ -112,8 +111,8 @@
     <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
       <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
           <h3 color="red">温馨提示: 请慎重操作平台</h3>
-          <el-form-item label="状态" class="ks-dialog-input" prop='status'>
-            <el-select class="filter-item" v-model="temp.status" placeholder="请选择" style="width: 179px">
+          <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
+            <el-select class="filter-item" v-model="temp.clientState" placeholder="请选择" style="width: 179px">
               <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
               </el-option>
             </el-select>
@@ -141,8 +140,8 @@ import { validateRequired, validatePassword } from '@/utils/validate'
 import { compareObj } from '@/utils/add.js'
 
 const statusTypeOptions = [
-  {'key': 'normal','display_name':'正常'},
-  {'key': 'freeze','display_name':'冻结'}
+  {'key': 1,'display_name':'正常'},
+  {'key': 0,'display_name':'冻结'}
 ]
 // arr to obj
 const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
@@ -191,24 +190,24 @@ export default {
 
     return {
       list: null,
-      total: null,
+      totalCount: null,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
-        cname: undefined,
+        pageNo: 1,
+        pageSize: 20,
+        clientName: undefined,
         sort: '+id'
       },
       oldTemp: '',
       temp: {
         id: undefined,
-        cname: '',
-        pid: undefined,
-        name: '',
+        clientName: '',
+        cmsClientId: undefined,
+        clientTag: '',
         description: '',
-        creat_time: 0,
-        update_time: 0,
-        status: 'normal',
+        createTime: 0,
+        updateTime: 0,
+        clientState: 1,
         adminPassword: ''
       },
       statusTypeOptions,
@@ -225,16 +224,16 @@ export default {
       showCarAuth: true,
       tableKey: 0,
       createPlatformRules:{
-        cname: [{ required: true, trigger: 'blur', validator: validateCname }],
-        name: [{ required: true, trigger: 'blur', validator: validateName }],
-        pid: [{ required: true, trigger: 'blur', validator: validatePid }],
+        clientName: [{ required: true, trigger: 'blur', validator: validateCname }],
+        clientTag: [{ required: true, trigger: 'blur', validator: validateName }],
+        cmsClientId: [{ required: true, trigger: 'blur', validator: validatePid }],
         adminPassword: [{ required: true, trigger: 'blur', validator: validateAdminPassword }]
       }
     }
   },
   filters: {
-    statusFilter(status) {
-      return statusTypeKeyValue[status]
+    statusFilter(clientState) {
+      return statusTypeKeyValue[clientState]
     },
     typeFilter(type) {
       return roleTypeKeyValue[type]
@@ -247,21 +246,22 @@ export default {
     getList() {
       this.listLoading = true
       fetchPlatformList(this.listQuery).then(response => {
-        this.list = adapt(response.data.items)
-        this.total = response.data.total
+        let data = adapt(response.data)
+        this.list = data.data
+        this.totalCount = data.totalCount
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.pageNo = 1
       this.getList()
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
+      this.listQuery.pageSize = val
       this.getList()
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
+      this.listQuery.pageNo = val
       this.getList()
     },
     timeFilter(time) {
@@ -294,9 +294,9 @@ export default {
         if (valid) {
           this.listLoading = true
           var createForm = Object.assign({},{
-            cname: this.temp.cname,
-            name: this.temp.name,
-            pid: this.temp.pid,
+            clientName: this.temp.clientName,
+            clientTag: this.temp.clientTag,
+            cmsClientId: this.temp.cmsClientId,
             description: this.oldTemp.description,
             adminPassword: this.temp.adminPassword
           })
@@ -325,14 +325,14 @@ export default {
         if (valid) {
           this.listLoading = true
           var updateForm = Object.assign({},{
-            cname: this.temp.cname,
-            name: this.temp.name,
+            clientName: this.temp.clientName,
+            clientTag: this.temp.clientTag,
             description: this.temp.description,
             adminPassword: this.temp.adminPassword
           })
           var oldForm = Object.assign({},{
-            cname: this.oldTemp.cname,
-            name: this.oldTemp.name,
+            clientName: this.oldTemp.clientName,
+            clientTag: this.oldTemp.clientTag,
             description: this.oldTemp.description,
             adminPassword: this.temp.adminPassword
           })
@@ -370,13 +370,13 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        cname: '',
-        pid: undefined,
-        name: '',
+        clientName: '',
+        cmsClientId: undefined,
+        clientTag: '',
         description: '',
-        creat_time: 0,
-        update_time: 0,
-        status: 'normal',
+        createTime: 0,
+        updateTime: 0,
+        clientState: 1,
         adminPassword: ''
       }
     },
@@ -394,10 +394,10 @@ export default {
       if(validatePassword(this.temp.adminPassword)){
         this.listLoading = true
         var updateForm = Object.assign({},{
-          status: this.temp.status,
+          clientState: this.temp.clientState,
           adminPassword: this.temp.adminPassword
         })
-        if(compareObj(this.oldTemp.status, this.temp.status)){
+        if(compareObj(this.oldTemp.clientState, this.temp.clientState)){
           this.cancelModifyStatus();
           this.listLoading = false
           console.log('更新状态无变化!!')
