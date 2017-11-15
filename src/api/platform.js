@@ -114,7 +114,7 @@ export function getResource(clientCode) {
 export function updateResource(data) {
   return fetch({
     url: '/system/configs/platform/platformList',
-    method: 'post',
+    method: 'get',
     params: {
       clientCode: data.clientCode,
       adminPassword: data.adminPassword,
