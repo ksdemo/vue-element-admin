@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="240">
         <template scope="scope">
-          <el-button size="small" type="danger" @click="handleUpdate(scope.row)">关联接口</el-button>
+          <el-button size="small" type="danger" @click="handleUpdateResource(scope.row)">关联接口</el-button>
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
         </template>
@@ -103,7 +103,7 @@
             <span class='show-pwd' @click='showSmsPasswordType'><icon-svg icon-class="eye" /></icon-svg></span>
         </el-form-item>
         <el-form-item label="短信发送地址" class="ks-dialog-input" prop='smsUrl'>
-          <el-input v-model="temp.smsUrl"></el-input>
+          <el-input v-model="temp.smsUrl" style="width: 501px"></el-input>
         </el-form-item>
         <el-form-item label="帐号描述" class="ks-dialog-input" prop='description'>
           <el-input v-model="temp.description" style="width: 501px"></el-input>
@@ -123,7 +123,7 @@
         </div>
       </el-dialog>
     </el-form>
-    <!-- 创建/编辑平台状态-->
+    <!-- 创建/编辑帐号状态-->
     <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
       <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
         <h3 color="red">温馨提示: 请慎重操作平台</h3>
@@ -143,6 +143,21 @@
         </div>
       </el-dialog>
     </el-form>
+
+    <!-- 编辑关联接口-->
+    <el-dialog title="修改关联接口" custom-class="ks-big_dialog" :visible.sync="dialogResourceVisible" @close="cancelResource">
+      <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="80px" style='width: 850px; margin-left:50px;'>
+        
+        <div slot="footer" class="dialog-footer">
+          <el-form-item prop='adminPassword' style="display: inline-block">
+            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
+            </el-input>
+          </el-form-item>
+          <el-button @click="cancelResource">取 消</el-button>
+          <el-button @click="updateResource">确 定</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
 
   </div>
 </template>
@@ -211,7 +226,11 @@ const defaultTemp = {
       "updateTime": "",
       "adminPassword": ''
     }
-
+const defaultResourceTemp = {
+  "adminPassword": '',
+  "clientCode": '',
+  "list": []
+}
 export default {
   name: 'table_demo',
   directives: {
@@ -350,10 +369,9 @@ export default {
       smsPasswordType: 'password',
       // 关联接口相关
       resourceClientCode: '',
-      oldResourceTemp: [],
-      resourceTemp: [],
-      dialogResourceVisible: false,
-      adminPassword: ''
+      oldResourceTemp:'',
+      resourceTemp: Object.assign({},defaultResourceTemp),
+      dialogResourceVisible: false
     }
   },
   filters: {
@@ -576,8 +594,7 @@ export default {
 
     // 关联接口相关
     resetResourceTemp() {
-      this.resourceTemp = []
-      this.resourceClientCode = ''
+      this.resourceTemp = Object.assign({},defaultResourceTemp)
     },
     cancelResource() {
       this.resetResourceTemp()
@@ -589,25 +606,30 @@ export default {
       this.getResource(row)
       .then(data=>{
         console.log(data)
-        this.oldResourceTemp = Object.assign({}, data)
-        this.resourceTemp = Object.assign({}, data)
+        let resourceForm= {
+          "adminPassword": '',
+          "clientCode": row.clientCode,
+          "list": data
+        }
+        this.oldResourceTemp = Object.assign({}, resourceForm)
+        this.resourceTemp = Object.assign({}, resourceForm)
         this.dialogResourceVisible = true
       })
     },
-    transformResourceForm(list){
-      let data = list;
-      console.log(data)
+    transformResourceForm(resourceTemp){
+      let list = resourceTemp.list;
+      console.log(list)
       var updateForm = {
-        data: data,
-        adminPassword: this.adminPassword,
-        clientCode: this.resourceClientCode
+        data: list,
+        adminPassword: this.resourceTemp.adminPassword,
+        clientCode: this.resourceTemp.resourceClientCode
       }
       return updateForm
     },
     updateResource() {
-      if (validatePassword(this.adminPassword)) {
+      if (validatePassword(this.resourceTemp.adminPassword)) {
         this.listLoading = true
-        if (compareObj(this.oldResourceTemp, this.resourceTemp)) {
+        if (compareObj(this.oldResourceTemp.list, this.resourceTemp.list)) {
           this.cancelResource();
           this.listLoading = false
           console.log('更新状态无变化!!')
