@@ -98,12 +98,12 @@
       </el-dialog>
     </el-form>
 
-    <!-- 编辑关联接口-->
-    <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="80px" style='width: 850px; margin-left:50px;'>
-      <el-dialog title="修改关联接口" :visible.sync="dialogResourceVisible" @close="cancelResource">
-          <el-form-item v-for="item in resourceTemp.list" :key="item.service" :label="item.serviceName" >
-            <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.path" >
-              <el-checkbox :label="checkItem.path+'('+checkItem.name+')'" :name="checkItem.service" value="true" :checked="checkItem.checkbox"></el-checkbox>
+    <!-- 编辑关联帐号-->
+    <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="200px" style='width: 850px; margin-left:50px;'>
+      <el-dialog title="修改关联帐号" :visible.sync="dialogResourceVisible" @close="cancelResource">
+          <el-form-item v-for="item in resourceTemp.list" :key="item.platfromName" :label="item.platfromName+':'" >
+            <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.clientName" >
+              <el-checkbox :label="checkItem.clientName" :name="checkItem.clientName" value="true" :checked="checkItem.checkbox"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <div slot="footer" class="dialog-footer">

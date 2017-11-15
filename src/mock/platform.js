@@ -558,7 +558,7 @@ export default {
       }]
     }
   },
-  // 授权接口的关联帐号
+  // 授权接口的所有关联帐号
   getResourceAccount() {
     return {
       "code": 1,
@@ -570,7 +570,7 @@ export default {
           "lotusClientId": 801,
           "clientCode": 801,
           "clientName": "泰友公众号客户端",
-          "checkbox": false
+          "checkbox": true
         }, {
           "lotusClientId": 802,
           "clientCode": 802,
@@ -580,7 +580,7 @@ export default {
           "lotusClientId": 803,
           "clientCode": 803,
           "clientName": "泰友小程序密码授权帐号",
-          "checkbox": false
+          "checkbox": true
         }]
       }, {
         "clientCode": 100,
