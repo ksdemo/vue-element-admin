@@ -16,7 +16,7 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="授权账号代码" width="150">
+      <el-table-column align="center" label="帐号标签" width="100">
         <template scope="scope">
           <span>{{scope.row.clientTag}}</span>
         </template>
@@ -143,6 +143,7 @@
         </div>
       </el-dialog>
     </el-form>
+
   </div>
 </template>
 <script>
@@ -155,7 +156,9 @@ import {
   getPlatformAll,
   createAuthAccount,
   updateAuthAccount,
-  modifyStatusAuthAccount
+  modifyStatusAuthAccount,
+  getResource,
+  updateResource
 } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
@@ -266,6 +269,8 @@ export default {
     }
 
     return {
+      statusTypeOptions,
+      clientTypeOptions,
       list: null,
       totalCount: null,
       listLoading: true,
@@ -275,9 +280,8 @@ export default {
         clientName: '',
         sort: '+id'
       },
-      oldTemp: '',
       temp: Object.assign({},defaultTemp),
-      statusTypeOptions,
+      oldTemp: '',
       sortOptions: [{
         label: '按ID升序列',
         key: '+id'
@@ -342,9 +346,14 @@ export default {
           validator: validateAdminPassword
         }]
       },
-      clientTypeOptions,
       clientPasswordType: 'password',
-      smsPasswordType: 'password'
+      smsPasswordType: 'password',
+      // 关联接口相关
+      resourceClientCode: '',
+      oldResourceTemp: [],
+      resourceTemp: [],
+      dialogResourceVisible: false,
+      adminPassword: ''
     }
   },
   filters: {
@@ -394,7 +403,20 @@ export default {
         getAuthAccountInfo(clientCode)
           .then(response => {
             let data = Object.assign({}, response.data.data)
-            this.temp = Object.assign({}, data)
+            resolve(data);
+          })
+          .catch(e => {
+            reject(e)
+          })
+      })
+    },
+    getResource(row) {
+      return new Promise((resolve, reject) => {
+        let clientCode = row.clientCode
+        getResource(clientCode)
+          .then(response => {
+            let data = Object.assign({}, response.data.data)
+            this.resourcTemp = Object.assign({}, data)
             resolve(data);
           })
           .catch(e => {
@@ -414,6 +436,7 @@ export default {
       this.listQuery.pageNo = val
       this.getList()
     },
+    // 创建/更新帐号
     handleCreate() {
       this.resetTemp()
       this.dialogStatus = 'create'
@@ -424,7 +447,6 @@ export default {
       this.resetTemp()
       this.getAuthAccountInfo(row)
       .then(data=>{
-        console.log(data.clientType, data.clientState)
         this.oldTemp = Object.assign({}, data)
         this.temp = Object.assign({}, data)
         this.dialogStatus = 'update'
@@ -498,6 +520,7 @@ export default {
     resetTemp() {
       this.temp = Object.assign({},defaultTemp)
     },
+    // 更改状态
     handleModifyStatus(row) {
       this.resetTemp()
       this.oldTemp = Object.assign({}, row)
@@ -522,7 +545,7 @@ export default {
           return;
         }
         this.cancelModifyStatus();
-        modifyStatusPlatform(updateForm).then(() => {
+        modifyStatusAuthAccount(updateForm).then(() => {
           this.$notify({
             title: '成功',
             message: '更新成功',
@@ -549,7 +572,71 @@ export default {
     },
     showSmsPasswordType(){
       this.smsPasswordType = this.smsPasswordType === 'password' ? 'text' : 'password'
-    }
+    },
+
+    // 关联接口相关
+    resetResourceTemp() {
+      this.resourceTemp = []
+      this.resourceClientCode = ''
+    },
+    cancelResource() {
+      this.resetResourceTemp()
+      this.dialogResourceVisible = false;
+    },
+    handleUpdateResource(row) {
+      this.resetResourceTemp()
+      this.resourceClientCode = row.clientCode
+      this.getResource(row)
+      .then(data=>{
+        console.log(data)
+        this.oldResourceTemp = Object.assign({}, data)
+        this.resourceTemp = Object.assign({}, data)
+        this.dialogResourceVisible = true
+      })
+    },
+    transformResourceForm(list){
+      let data = list;
+      console.log(data)
+      var updateForm = {
+        data: data,
+        adminPassword: this.adminPassword,
+        clientCode: this.resourceClientCode
+      }
+      return updateForm
+    },
+    updateResource() {
+      if (validatePassword(this.adminPassword)) {
+        this.listLoading = true
+        if (compareObj(this.oldResourceTemp, this.resourceTemp)) {
+          this.cancelResource();
+          this.listLoading = false
+          console.log('更新状态无变化!!')
+          return;
+        }
+        var updateForm = transformResourceForm(this.resourceTemp)
+        this.cancelResource();
+        updateResource(updateForm).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '更新成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.listLoading = false
+          this.getList()
+        }).catch(() => {
+          this.listLoading = false
+          this.getList()
+        })
+      } else {
+        Message({
+          message: '请输入管理员密码',
+          type: 'error',
+          duration: 2 * 1000
+        })
+        return false
+      }
+    },
   }
 }
 </script>

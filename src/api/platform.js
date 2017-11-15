@@ -101,4 +101,25 @@ export function modifyStatusAuthAccount(query) {
     params: query
   })
 }
+// 获取授权帐号关联接口
+export function getResource(clientCode) {
+  return fetch({
+    url: '/system/configs/platform/getResource',
+    method: 'get',
+    params: {clientCode}
+  })
+}
+
+// 更新授权帐号关联接口
+export function updateResource(data) {
+  return fetch({
+    url: '/system/configs/platform/platformList',
+    method: 'post',
+    params: {
+      clientCode: data.clientCode,
+      adminPassword: data.adminPassword,
+      data: data.data
+    }
+  })
+}
 /* 授权账号列表 相关 E */
