@@ -13,32 +13,27 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="给我一点时间" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="100">
         <template scope="scope">
-          <span>{{scope.row.id}}</span>
+          <span>{{scope.row.resId}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帐号标签" width="100">
+      <el-table-column align="center" label="服务名称" width="100">
         <template scope="scope">
-          <span>{{scope.row.clientTag}}</span>
+          <span>{{scope.row.serviceName}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" min-width="150" label="授权账号名称">
+      <el-table-column align="center" label="接口名称" min-width="150">
         <template scope="scope">
-          <span>{{scope.row.description}}</span>
+          <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="150" label="令牌失效时间(秒)">
+      <el-table-column align="center" label="URL"  min-width="150">
         <template scope="scope">
-          <span>{{scope.row.accessTokenExpires}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="150" label=" 令牌刷新时间(秒)">
-        <template scope="scope">
-          <span>{{scope.row.refreshTokenExpires}}</span>
+          <span>{{scope.row.path}}</span>
         </template>
       </el-table-column>
       <el-table-column width="100" align="center" label="状态">
         <template scope="scope">
-          <el-tag :type="scope.row.clientState | statusTagFilter">{{scope.row.clientState | statusFilter }}</el-tag>
+          <el-tag :type="scope.row.resState | statusTagFilter">{{scope.row.resState | statusFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="240">
@@ -53,64 +48,23 @@
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.pageNo" :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
-    <!-- 创建/编辑授权帐号信息   -->
-    <el-form class="small-space" :inline="true" :model="temp" :rules="createAuthAccountRules" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createAuthAccount">
+    <!-- 创建/编辑授权接口信息   -->
+    <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createResource"  :rules="createResourceRules">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
-        <el-form-item label="平台号" class="ks-dialog-input" prop='parentId'>
-          <el-select class="filter-item" v-model="temp.parentId" placeholder="请选择" style="width: 179px">
-            <el-option v-if="platformAll" v-for="platform in platformAll" :key="platform.clientName" :label="platform.clientName" :value="platform.clientCode">
+        <el-form-item label="服务名称" class="ks-dialog-input" prop='service'>
+          <el-select class="filter-item" v-model="temp.service" placeholder="请选择" style="width: 179px">
+            <el-option v-if="serviceList" v-for="item in serviceList" :key="item.serviceCode" :label="item.serviceName" :value="item.serviceCode">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="授权类型" class="ks-dialog-input" prop='clientType'>
-          <el-select class="filter-item" v-model="temp.clientType" placeholder="请选择" style="width: 179px">
-            <el-option v-for="item in clientTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
+        <el-form-item label="接口名称" class="ks-dialog-input" prop='name'>
+          <el-input v-model="temp.name"></el-input>
         </el-form-item>
-        <el-form-item label="账号名称" class="ks-dialog-input" prop='clientName'>
-          <el-input v-model="temp.clientName"></el-input>
-        </el-form-item>
-        <el-form-item label="账号标签" class="ks-dialog-input" prop='clientTag'>
-          <el-input v-model="temp.clientTag"></el-input>
-        </el-form-item>
-        <el-form-item label="授权账号" class="ks-dialog-input" prop='clientId'>
-          <el-input v-model="temp.clientId"></el-input>
-        </el-form-item>
-        <el-form-item label="授权密码" class="ks-dialog-input" prop='clientPassword'>
-            <el-input :type="clientPasswordType"  v-model="temp.clientPassword" autoComplete="off"
-            placeholder="密码" />
-            <span class='show-pwd' @click='showClientPassword'><icon-svg icon-class="eye" /></icon-svg></span>
-        </el-form-item>
-        <el-form-item label="令牌失效时间(秒)" class="ks-dialog-input" prop='accessTokenExpires'>
-          <el-input v-model="temp.accessTokenExpires"></el-input>
-        </el-form-item>
-        <el-form-item label="令牌刷新时间(秒)" class="ks-dialog-input" prop='refreshTokenExpires'>
-          <el-input v-model="temp.refreshTokenExpires"></el-input>
-        </el-form-item>
-        <el-form-item label="微信APPID" class="ks-dialog-input" prop='wxAppId'>
-          <el-input v-model="temp.wxAppId"></el-input>
-        </el-form-item>
-        <el-form-item label="微信APPSECURT" class="ks-dialog-input" prop='wxAppSecurt'>
-          <el-input v-model="temp.wxAppSecurt"></el-input>
-        </el-form-item>
-        <el-form-item label="短信用户名" class="ks-dialog-input" prop='smsUsername'>
-          <el-input v-model="temp.smsUsername"></el-input>
-        </el-form-item>
-        <el-form-item label="短信用户密码" class="ks-dialog-input" prop='smsPassword'>
-            <el-input :type="smsPasswordType"  v-model="temp.smsPassword" autoComplete="off"
-            placeholder="密码" />
-            <span class='show-pwd' @click='showSmsPasswordType'><icon-svg icon-class="eye" /></icon-svg></span>
-        </el-form-item>
-        <el-form-item label="短信发送地址" class="ks-dialog-input" prop='smsUrl'>
-          <el-input v-model="temp.smsUrl" style="width: 501px"></el-input>
+        <el-form-item label="URL" class="ks-dialog-input" prop='path'>
+          <el-input v-model="temp.path" style="width: 501px"></el-input>
         </el-form-item>
         <el-form-item label="帐号描述" class="ks-dialog-input" prop='description'>
           <el-input v-model="temp.description" style="width: 501px"></el-input>
-        </el-form-item>
-        <el-form-item label="IP白名单" prop='clientIps'>
-          <el-input style="width: 501px;display:block" type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="请输入内容" v-model="temp.clientIps">
-          </el-input>
         </el-form-item>
         <div slot="footer" class="dialog-footer">
           <el-form-item prop='adminPassword'>
@@ -170,19 +124,16 @@ import {
   Message
 } from 'element-ui'
 import {
-  getAuthAccountList,
-  getAuthAccountInfo,
-  getAuthAccountResource,
-  getPlatformAll,
-  createAuthAccount,
+  getResourceList,
+  getResourceInfo,
+  getResourceAccount,
+  getServiceList,
+  createResource,
   updateResource,
-  updateAuthAccountResource,
-  modifyStatusAuthAccount
+  updateResourceAccount,
+  modifyStatusResource
 } from '@/api/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
-import {
-  parseTime
-} from '@/utils'
 import {
   validateRequired,
   validatePassword
@@ -206,26 +157,17 @@ function adapt(data) {
 }
 
 const defaultTemp = {
-      "id": '',
-      "parentId": '',
-      "clientType": '',
-      "clientCode": '',
-      "clientParentCode": '',
-      "clientState": '',
-      "clientTag": "",
-      "clientName": "",
+      "resId": '',
+      "service": "",
+      "serviceName": "",
+      "pathPrefix": "",
+      "resState": '',
+      "path": "",
+      "name": "",
       "description": "",
-      "clientId": "",
-      "clientPassword": "",
-      "accessTokenExpires": 7200,//7200
-      "refreshTokenExpires": 2592000,//2592000
-      "clientIps": null,
-      "wxAppId": null,
-      "wxAppSecurt": null,
-      "smsUsername": "",
-      "smsPassword": "",
-      "smsUrl": "",
-      "outletType": null,
+      "clientIds": null,
+      "createUser": 1,
+      "updateUser": 1,
       "createTime": "",
       "updateTime": "",
       "adminPassword": ''
@@ -241,44 +183,23 @@ export default {
     waves
   },
   data() {
-    const validateParentId = (rule, value, callback) => {
+    const validateService = (rule, value, callback) => {
       if (!validateRequired(value)) {
-        callback(new Error('请选择所属平台'))
+        callback(new Error('请选择所属服务'))
       } else {
         callback()
       }
     }
-    const validateClientType = (rule, value, callback) => {
+    const validateName = (rule, value, callback) => {
       if (!validateRequired(value)) {
-        callback(new Error('请选择授权类型'))
+        callback(new Error('请输入正确的接口名称'))
       } else {
         callback()
       }
     }
-    const validateClientName = (rule, value, callback) => {
+    const validatePath = (rule, value, callback) => {
       if (!validateRequired(value)) {
-        callback(new Error('请输入正确的帐号名称'))
-      } else {
-        callback()
-      }
-    }
-    const validateClientTag = (rule, value, callback) => {
-      if (!validateRequired(value)) {
-        callback(new Error('请输入正确的帐号标签'))
-      } else {
-        callback()
-      }
-    }
-    const validateClientId = (rule, value, callback) => {
-      if (!validateRequired(value)) {
-        callback(new Error('请输入正确的授权帐号'))
-      } else {
-        callback()
-      }
-    }
-    const validateClientPassword = (rule, value, callback) => {
-      if (!validateRequired(value)) {
-        callback(new Error('请输入正确的授权密码'))
+        callback(new Error('请输入正确的接口URL'))
       } else {
         callback()
       }
@@ -293,7 +214,6 @@ export default {
 
     return {
       statusTypeOptions,
-      clientTypeOptions,
       list: null,
       totalCount: null,
       listLoading: true,
@@ -319,49 +239,33 @@ export default {
         update: '编辑',
         create: '创建'
       },
-      platformAll: [{
-        "parentId": 0,
-        "clientType": 0,
-        "clientCode": 0,
-        "clientParentCode": 0,
-        "clientState": 1,
-        "clientTag": "test",
-        "clientName": "测试平台",
-        "description": "主要用于后台管理系统"
+      serviceList: [{
+        "serviceId": "",
+        "serviceCode": "",
+        "serviceName": "",
+        "pathPrefix": "",
+        "serviceDesc": "",
+        "createTime": "",
+        "updateTime": ""
       }],
       showRealnameAuth: true,
       showCarAuth: true,
       tableKey: 0,
-      createAuthAccountRules: {
-        parentId: [{
+      createResourceRules: {
+        service: [{
           required: true,
           trigger: 'change',
-          validator: validateParentId
+          validator: validateService
         }],
-        clientType: [{
-          required: true,
-          trigger: 'change',
-          validator: validateClientType
-        }],
-        clientName: [{
+        name: [{
           required: true,
           trigger: 'blur',
-          validator: validateClientName
+          validator: validateName
         }],
-        clientTag: [{
+        path: [{
           required: true,
           trigger: 'blur',
-          validator: validateClientTag
-        }],
-        clientId: [{
-          required: true,
-          trigger: 'blur',
-          validator: validateClientId
-        }],
-        clientPassword: [{
-          required: true,
-          trigger: 'blur',
-          validator: validateClientPassword
+          validator: validatePath
         }],
         adminPassword: [{
           required: true,
@@ -369,8 +273,7 @@ export default {
           validator: validateAdminPassword
         }]
       },
-      clientPasswordType: 'password',
-      smsPasswordType: 'password',
+
       // 关联接口相关
       resourceClientCode: '',
       oldResourceTemp:'',
@@ -393,37 +296,38 @@ export default {
   },
   created() {
     this.getList()
-    this.getPlatformAll()
+    this.getServiceList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      getAuthAccountList(this.listQuery).then(response => {
+      getResourceList(this.listQuery).then(response => {
         let data = adapt(response.data)
         this.list = data.data
         this.totalCount = data.totalCount
         this.listLoading = false
       })
     },
-    getPlatformAll() {
+    getServiceList() {
       let parentId = 0;
-      getPlatformAll(parentId)
+      getServiceList(parentId)
         .then(response => {
-          this.platformAll = response.data.data
+          this.serviceList = response.data.data
         })
         .catch(e => {
           Message({
-            message: '获取平台信息总数失败',
+            message: '获取服务信息列表失败',
             type: 'error',
             duration: 2 * 1000
           })
         })
     },
-    getAuthAccountInfo(row) {
+    getResourceInfo(row) {
       return new Promise((resolve, reject) => {
-        let clientCode = row.clientCode
-        getAuthAccountInfo(clientCode)
+        let resId = row.resId
+        getResourceInfo(resId)
           .then(response => {
+            console.log(response)
             let data = Object.assign({}, response.data.data)
             resolve(data);
           })
@@ -432,10 +336,10 @@ export default {
           })
       })
     },
-    getAuthAccountResource(row) {
+    getResourceAccount(row) {
       return new Promise((resolve, reject) => {
         let clientCode = row.clientCode
-        getAuthAccountResource(clientCode)
+        getResourceAccount(clientCode)
           .then(response => {
             let data = Object.assign({}, response.data.data)
             this.resourcTemp = Object.assign({}, data)
@@ -467,7 +371,7 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
-      this.getAuthAccountInfo(row)
+      this.getResourceInfo(row)
       .then(data=>{
         this.oldTemp = Object.assign({}, data)
         this.temp = Object.assign({}, data)
@@ -476,13 +380,13 @@ export default {
       })
     },
     create() {
-      this.$refs.createAuthAccount.validate(valid => {
+      this.$refs.createResource.validate(valid => {
         if (valid) {
           this.listLoading = true
           var createForm = Object.assign({}, this.temp)
           console.log(createForm)
           this.cancel();
-          createAuthAccount(createForm).then(() => {
+          createResource(createForm).then(() => {
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -502,7 +406,7 @@ export default {
       })
     },
     update() {
-      this.$refs.createAuthAccount.validate(valid => {
+      this.$refs.createResource.validate(valid => {
         if (valid) {
           this.listLoading = true
           var updateForm = Object.assign({}, this.temp)
@@ -516,7 +420,7 @@ export default {
             return;
           }
           this.cancel();
-          updateAuthAccountResource(updateForm).then(() => {
+          updateResourceAccount(updateForm).then(() => {
             this.$notify({
               title: '成功',
               message: '更新成功',
@@ -567,7 +471,7 @@ export default {
           return;
         }
         this.cancelModifyStatus();
-        modifyStatusAuthAccount(updateForm).then(() => {
+        modifyStatusResource(updateForm).then(() => {
           this.$notify({
             title: '成功',
             message: '更新成功',
@@ -589,12 +493,6 @@ export default {
         return false
       }
     },
-    showClientPassword(){
-      this.clientPasswordType = this.clientPasswordType === 'password' ? 'text' : 'password'
-    },
-    showSmsPasswordType(){
-      this.smsPasswordType = this.smsPasswordType === 'password' ? 'text' : 'password'
-    },
 
     // 关联接口相关
     resetResourceTemp() {
@@ -607,7 +505,7 @@ export default {
     handleUpdateResource(row) {
       this.resetResourceTemp()
       this.resourceClientCode = row.clientCode
-      this.getAuthAccountResource(row)
+      this.getResourceAccount(row)
       .then(data=>{
         console.log(data)
         let resourceForm= {

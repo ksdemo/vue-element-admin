@@ -32,8 +32,9 @@ Mock.mock(/\/system\/configs\/platform\/authAccountInfo/, 'get', platformAPI.get
 Mock.mock(/\/system\/configs\/platform\/platformAll/, 'get', platformAPI.getPlatformAll)
 Mock.mock(/\/system\/configs\/platform\/getAuthAccountResource/, 'get', platformAPI.getAuthAccountResource)
 // 授权接口
-Mock.mock(/\/system\/configs\/platform\/resourcesList/, 'get', platformAPI.resourceList)
-Mock.mock(/\/system\/configs\/platform\/resourcesInfo/, 'get', platformAPI.resourceInfo)
+Mock.mock(/\/system\/configs\/platform\/resourceList/, 'get', platformAPI.resourceList)
+Mock.mock(/\/system\/configs\/platform\/resourceInfo/, 'get', platformAPI.resourceInfo)
+Mock.mock(/\/system\/configs\/platform\/resourceServiceList/, 'get', platformAPI.resourceServiceList)
 Mock.mock(/\/system\/configs\/platform\/getResourceAccount/, 'get', platformAPI.getResourceAccount)
 
 export default Mock

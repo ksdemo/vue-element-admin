@@ -369,7 +369,7 @@ export default {
       "pageNo": 1,
       "totalPages": 15,
       "totalCount": 149,
-      "content": [{
+      "data": [{
         "resId": 106,
         "service": "lotusgo-service-auth",
         "serviceName": "授权服务",
@@ -383,7 +383,7 @@ export default {
         "resId": 109,
         "service": "lotusgo-service-auth",
         "serviceName": "授权服务",
-        "resState": 1,
+        "resState": 0,
         "path": "/outlet/getToken",
         "name": "测试接口",
         "description": "测试接口",
@@ -393,7 +393,7 @@ export default {
         "resId": 200,
         "service": "lotusgo-service-auth",
         "serviceName": "授权服务",
-        "resState": 1,
+        "resState": 0,
         "path": "/lotusClient/platformAdd",
         "name": "后台-新增平台",
         "description": "后台-授权管理-新增平台",
@@ -492,6 +492,70 @@ export default {
         "createTime": "2017-06-29 11:42:47",
         "updateTime": "2017-08-08 11:58:43"
       }
+    }
+  },
+  // 授权接口信息
+  resourceServiceList() {
+    return {
+      "code": 1,
+      "msg": null,
+      "data": [{
+        "serviceId": 1,
+        "serviceCode": "lotusgo-service-users",
+        "serviceName": "用户服务",
+        "pathPrefix": "users",
+        "serviceDesc": "用户相关的服务体",
+        "createTime": "2017-07-03 18:16:32",
+        "updateTime": "2017-08-08 17:24:38"
+      }, {
+        "serviceId": 2,
+        "serviceCode": "lotusgo-service-order",
+        "serviceName": "订单服务",
+        "pathPrefix": "order",
+        "serviceDesc": "订单相关服务",
+        "createTime": "2017-07-03 18:17:12",
+        "updateTime": "2017-08-08 17:24:40"
+      }, {
+        "serviceId": 3,
+        "serviceCode": "lotusgo-service-pay",
+        "serviceName": "支付服务",
+        "pathPrefix": "pay",
+        "serviceDesc": "支付相关服务",
+        "createTime": "2017-07-03 18:17:12",
+        "updateTime": "2017-08-08 17:24:42"
+      }, {
+        "serviceId": 4,
+        "serviceCode": "lotusgo-service-goods",
+        "serviceName": "商品服务",
+        "pathPrefix": "goods",
+        "serviceDesc": "商品相关服务",
+        "createTime": "2017-07-03 18:17:12",
+        "updateTime": "2017-08-08 17:24:43"
+      }, {
+        "serviceId": 5,
+        "serviceCode": "lotusgo-service-third",
+        "serviceName": "第三方服务",
+        "pathPrefix": "third",
+        "serviceDesc": "第三方相关接入服务",
+        "createTime": "2017-07-03 18:17:38",
+        "updateTime": "2017-08-08 17:24:46"
+      }, {
+        "serviceId": 6,
+        "serviceCode": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "pathPrefix": "auth",
+        "serviceDesc": "授权服务",
+        "createTime": "2017-08-08 14:17:36",
+        "updateTime": "2017-08-08 17:24:48"
+      }, {
+        "serviceId": 7,
+        "serviceCode": "lotusgo-service-invoice",
+        "serviceName": "发票服务",
+        "pathPrefix": "invoice",
+        "serviceDesc": "发票服务",
+        "createTime": "2017-09-08 15:36:40",
+        "updateTime": "2017-09-08 15:36:40"
+      }]
     }
   },
   // 授权接口的关联帐号

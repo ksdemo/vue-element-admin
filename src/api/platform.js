@@ -128,14 +128,21 @@ export function updateAuthAccountResource(data) {
 /* 授权接口 相关 S */
 export function getResourceList(query) {
   return fetch({
-    url: '/system/configs/platform/resourcesList',
+    url: '/system/configs/platform/resourceList',
     method: 'get',
     params: query
   })
 }
-export function getResourceInfo(query) {
+export function getResourceInfo(resId) {
   return fetch({
-    url: '/system/configs/platform/resourcesInfo',
+    url: '/system/configs/platform/resourceInfo',
+    method: 'get',
+    params: {resId}
+  })
+}
+export function getServiceList(query) {
+  return fetch({
+    url: '/system/configs/platform/resourceServiceList',
     method: 'get',
     params: query
   })
@@ -147,36 +154,36 @@ export function getResourceAccount(query) {
     params: query
   })
 }
-// 创建授权账号
+// 创建接口账号
 export function createResource(query) {
   return fetch({
-    url: '/system/configs/platform/resourcesList',
+    url: '/system/configs/platform/resourceList',
     method: 'get',
     params: query
   })
 }
 
-// 修改平台信息
+// 修改接口信息
 export function updateResource(query) {
   return fetch({
-    url: '/system/configs/platform/resourcesList',
+    url: '/system/configs/platform/resourceList',
     method: 'get',
     params: query
   })
 }
-// 修改平台状态
+// 修改接口状态
 export function modifyStatusResource(query) {
   return fetch({
-    url: '/system/configs/platform/resourcesList',
+    url: '/system/configs/platform/resourceList',
     method: 'get',
     params: query
   })
 }
 
-// 更新授权帐号关联接口
+// 更新授权接口关联接口
 export function updateResourceAccount(data) {
   return fetch({
-    url: '/system/configs/platform/resourcesList',
+    url: '/system/configs/platform/resourceList',
     method: 'get',
     params: data
   })
