@@ -8,13 +8,14 @@
 import { mapGetters } from 'vuex'
 import adminDashboard from './admin/index'
 import editorDashboard from './editor/index'
+import welcomeDashboard from './welcome/index'
 
 export default {
   name: 'dashboard',
-  components: { adminDashboard, editorDashboard },
+  components: { adminDashboard, editorDashboard, welcomeDashboard },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      currentRole: 'welcomeDashboard'
     }
   },
   computed: {
@@ -23,6 +24,7 @@ export default {
     ])
   },
   created() {
+    return
     if (this.roles.indexOf('admin') >= 0) {
       return
     }

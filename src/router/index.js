@@ -20,14 +20,14 @@ export const constantRouterMap = [
     { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
     { path: '/404', component: _import('errorPage/404'), hidden: true },
     { path: '/401', component: _import('errorPage/401'), hidden: true },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    name: '首页',
-    hidden: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
-  }
+    {
+      path: '/',
+      component: Layout,
+      redirect: '/dashboard',
+      name: '首页',
+      hidden: true,
+      children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    }
 /*  ,{
     path: '/introduction',
     component: Layout,
@@ -45,16 +45,6 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/customer',
-  //   component: Layout,
-  //   redirect: 'noredirect',
-  //   name: '客户管理',
-  //   icon: 'example',
-  //   children: [
-  //     { path: 'list', component: _import('customer/list'), name: '客户列表', meta: { role: ['admin'] }}
-  //   ]
-  // },
   {
     path: '/system',
     component: Layout,
