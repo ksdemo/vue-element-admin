@@ -105,7 +105,7 @@ export default {
       "msg": null,
       "data": {
         "parentId": 100,
-        "clientType": 2,
+        "clientType": 0,
         "clientCode": 101,
         "clientParentCode": 100,
         "clientState": 1,

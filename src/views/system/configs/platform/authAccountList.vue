@@ -53,8 +53,8 @@
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.pageNo" :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
-    <!-- 创建/编辑授权帐号信息  :rules="createAuthAccountRules"  -->
-    <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createAuthAccount">
+    <!-- 创建/编辑授权帐号信息   -->
+    <el-form class="small-space" :inline="true" :model="temp" :rules="createAuthAccountRules" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createAuthAccount">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
         <el-form-item label="平台号" class="ks-dialog-input" prop='parentId'>
           <el-select class="filter-item" v-model="temp.parentId" placeholder="请选择" style="width: 179px">
@@ -64,7 +64,7 @@
         </el-form-item>
         <el-form-item label="授权类型" class="ks-dialog-input" prop='clientType'>
           <el-select class="filter-item" v-model="temp.clientType" placeholder="请选择" style="width: 179px">
-            <el-option v-if="clientTypeOptions" v-for="item in clientTypeOptions" :key="item.key" :value="item.display_name" :label="item.display_name">
+            <el-option v-for="item in clientTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
@@ -78,7 +78,9 @@
           <el-input v-model="temp.clientId"></el-input>
         </el-form-item>
         <el-form-item label="授权密码" class="ks-dialog-input" prop='clientPassword'>
-          <el-input v-model="temp.clientPassword"></el-input>
+            <el-input :type="clientPasswordType"  v-model="temp.clientPassword" autoComplete="off"
+            placeholder="密码" />
+            <span class='show-pwd' @click='showClientPassword'><icon-svg icon-class="eye" /></icon-svg></span>
         </el-form-item>
         <el-form-item label="令牌失效时间(秒)" class="ks-dialog-input" prop='accessTokenExpires'>
           <el-input v-model="temp.accessTokenExpires"></el-input>
@@ -96,7 +98,9 @@
           <el-input v-model="temp.smsUsername"></el-input>
         </el-form-item>
         <el-form-item label="短信用户密码" class="ks-dialog-input" prop='smsPassword'>
-          <el-input v-model="temp.smsPassword"></el-input>
+            <el-input :type="smsPasswordType"  v-model="temp.smsPassword" autoComplete="off"
+            placeholder="密码" />
+            <span class='show-pwd' @click='showSmsPasswordType'><icon-svg icon-class="eye" /></icon-svg></span>
         </el-form-item>
         <el-form-item label="短信发送地址" class="ks-dialog-input" prop='smsUrl'>
           <el-input v-model="temp.smsUrl"></el-input>
@@ -179,29 +183,76 @@ function adapt(data) {
   return data;
 }
 
+const defaultTemp = {
+      "id": '',
+      "parentId": '',
+      "clientType": '',
+      "clientCode": '',
+      "clientParentCode": '',
+      "clientState": '',
+      "clientTag": "",
+      "clientName": "",
+      "description": "",
+      "clientId": "",
+      "clientPassword": "",
+      "accessTokenExpires": 7200,//7200
+      "refreshTokenExpires": 2592000,//2592000
+      "clientIps": null,
+      "wxAppId": null,
+      "wxAppSecurt": null,
+      "smsUsername": "",
+      "smsPassword": "",
+      "smsUrl": "",
+      "outletType": null,
+      "createTime": "",
+      "updateTime": "",
+      "adminPassword": ''
+    }
+
 export default {
   name: 'table_demo',
   directives: {
     waves
   },
   data() {
-    const validateCname = (rule, value, callback) => {
+    const validateParentId = (rule, value, callback) => {
       if (!validateRequired(value)) {
-        callback(new Error('请输入正确的平台名称'))
+        callback(new Error('请选择所属平台'))
       } else {
         callback()
       }
     }
-    const validateName = (rule, value, callback) => {
-      if (!/^\w+$/.test(value)) {
-        callback(new Error('请输入正确的平台标签(英文或数字)'))
+    const validateClientType = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请选择授权类型'))
       } else {
         callback()
       }
     }
-    const validatePid = (rule, value, callback) => {
-      if (!/^\d+$/.test(value)) {
-        callback(new Error('请输入正确的平台号码(纯数字)'))
+    const validateClientName = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请输入正确的帐号名称'))
+      } else {
+        callback()
+      }
+    }
+    const validateClientTag = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请输入正确的帐号标签'))
+      } else {
+        callback()
+      }
+    }
+    const validateClientId = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请输入正确的授权帐号'))
+      } else {
+        callback()
+      }
+    }
+    const validateClientPassword = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请输入正确的授权密码'))
       } else {
         callback()
       }
@@ -221,34 +272,11 @@ export default {
       listQuery: {
         pageNo: 1,
         pageSize: 20,
-        clientName: undefined,
+        clientName: '',
         sort: '+id'
       },
       oldTemp: '',
-      temp: {
-        "parentId": '',
-        "clientType": '',
-        "clientCode": '',
-        "clientParentCode": '',
-        "clientState": '',
-        "clientTag": "",
-        "clientName": "",
-        "description": "",
-        "clientId": "",
-        "clientPassword": "",
-        "accessTokenExpires": '',
-        "refreshTokenExpires": '',
-        "clientIps": null,
-        "wxAppId": null,
-        "wxAppSecurt": null,
-        "smsUsername": "",
-        "smsPassword": "",
-        "smsUrl": "",
-        "outletType": null,
-        "createTime": "",
-        "updateTime": "",
-        "adminPassword": ''
-      },
+      temp: Object.assign({},defaultTemp),
       statusTypeOptions,
       sortOptions: [{
         label: '按ID升序列',
@@ -265,7 +293,6 @@ export default {
         create: '创建'
       },
       platformAll: [{
-        "clientCode": 0,
         "parentId": 0,
         "clientType": 0,
         "clientCode": 0,
@@ -279,20 +306,35 @@ export default {
       showCarAuth: true,
       tableKey: 0,
       createAuthAccountRules: {
+        parentId: [{
+          required: true,
+          trigger: 'change',
+          validator: validateParentId
+        }],
+        clientType: [{
+          required: true,
+          trigger: 'change',
+          validator: validateClientType
+        }],
         clientName: [{
           required: true,
           trigger: 'blur',
-          validator: validateCname
+          validator: validateClientName
         }],
         clientTag: [{
           required: true,
           trigger: 'blur',
-          validator: validateName
+          validator: validateClientTag
         }],
-        clientCode: [{
+        clientId: [{
           required: true,
           trigger: 'blur',
-          validator: validatePid
+          validator: validateClientId
+        }],
+        clientPassword: [{
+          required: true,
+          trigger: 'blur',
+          validator: validateClientPassword
         }],
         adminPassword: [{
           required: true,
@@ -300,7 +342,9 @@ export default {
           validator: validateAdminPassword
         }]
       },
-      clientTypeOptions
+      clientTypeOptions,
+      clientPasswordType: 'password',
+      smsPasswordType: 'password'
     }
   },
   filters: {
@@ -349,7 +393,7 @@ export default {
         let clientCode = row.clientCode
         getAuthAccountInfo(clientCode)
           .then(response => {
-            let data = Object.assign({}, response.data)
+            let data = Object.assign({}, response.data.data)
             this.temp = Object.assign({}, data)
             resolve(data);
           })
@@ -370,15 +414,6 @@ export default {
       this.listQuery.pageNo = val
       this.getList()
     },
-    timeFilter(time) {
-      if (!time[0]) {
-        this.listQuery.start = undefined
-        this.listQuery.end = undefined
-        return
-      }
-      this.listQuery.start = parseInt(+time[0] / 1000)
-      this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
-    },
     handleCreate() {
       this.resetTemp()
       this.dialogStatus = 'create'
@@ -387,25 +422,21 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
-      this.oldTemp = Object.assign({}, row)
-      this.temp = Object.assign({}, row)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.temp.adminPassword = ''
+      this.getAuthAccountInfo(row)
+      .then(data=>{
+        console.log(data.clientType, data.clientState)
+        this.oldTemp = Object.assign({}, data)
+        this.temp = Object.assign({}, data)
+        this.dialogStatus = 'update'
+        this.dialogFormVisible = true
       })
     },
     create() {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = Object.assign({}, {
-            clientName: this.temp.clientName,
-            clientTag: this.temp.clientTag,
-            clientCode: this.temp.clientCode,
-            description: this.oldTemp.description,
-            adminPassword: this.temp.adminPassword
-          })
+          var createForm = Object.assign({}, this.temp)
+          console.log(createForm)
           this.cancel();
           createAuthAccount(createForm).then(() => {
             this.$notify({
@@ -421,7 +452,7 @@ export default {
             this.getList()
           })
         } else {
-          console.log('error submit!!')
+          console.error('error submit!!')
           return false
         }
       })
@@ -430,19 +461,10 @@ export default {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = Object.assign({}, {
-            clientName: this.temp.clientName,
-            clientTag: this.temp.clientTag,
-            description: this.temp.description,
-            adminPassword: this.temp.adminPassword
-          })
-          var oldForm = Object.assign({}, {
-            clientName: this.oldTemp.clientName,
-            clientTag: this.oldTemp.clientTag,
-            description: this.oldTemp.description,
-            adminPassword: this.temp.adminPassword
-          })
-
+          var updateForm = Object.assign({}, this.temp)
+          var oldForm = Object.assign({}, this.oldTemp)
+          oldForm.adminPassword = this.temp.adminPassword
+          console.log(updateForm)
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
@@ -450,7 +472,7 @@ export default {
             return;
           }
           this.cancel();
-          updatePlatform(updateForm).then(() => {
+          updateAuthAccount(updateForm).then(() => {
             this.$notify({
               title: '成功',
               message: '更新成功',
@@ -464,7 +486,7 @@ export default {
             this.getList()
           })
         } else {
-          console.log('error submit!!')
+          console.error('error submit!!')
           return false
         }
       })
@@ -474,30 +496,7 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = {
-        "parentId": '',
-        "clientType": '',
-        "clientCode": '',
-        "clientParentCode": '',
-        "clientState": '',
-        "clientTag": "",
-        "clientName": "",
-        "description": "",
-        "clientId": "",
-        "clientPassword": "",
-        "accessTokenExpires": '',
-        "refreshTokenExpires": '',
-        "clientIps": null,
-        "wxAppId": null,
-        "wxAppSecurt": null,
-        "smsUsername": "",
-        "smsPassword": "",
-        "smsUrl": "",
-        "outletType": null,
-        "createTime": "",
-        "updateTime": "",
-        "adminPassword": ''
-      }
+      this.temp = Object.assign({},defaultTemp)
     },
     handleModifyStatus(row) {
       this.resetTemp()
@@ -544,15 +543,33 @@ export default {
         })
         return false
       }
+    },
+    showClientPassword(){
+      this.clientPasswordType = this.clientPasswordType === 'password' ? 'text' : 'password'
+    },
+    showSmsPasswordType(){
+      this.smsPasswordType = this.smsPasswordType === 'password' ? 'text' : 'password'
     }
   }
 }
 </script>
-<style>
-div.ks-dialog-input:nth-child(2n+1) {
-  margin-right: 60px !important;
-}
-.ks-big_dialog{
-  width: 850px !important;
-}
+<style rel="stylesheet/scss" lang="scss">
+  @import "src/styles/mixin.scss";
+  $bg:#2d3a4b;
+  $dark_gray:#889aa4;
+  $light_gray:#eee;
+  div.ks-dialog-input:nth-child(2n+1) {
+    margin-right: 60px !important;
+  }
+  .ks-big_dialog{
+    width: 850px !important;
+  }
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: $dark_gray;
+    cursor: pointer;
+  }
 </style>

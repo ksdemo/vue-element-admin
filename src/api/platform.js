@@ -50,15 +50,20 @@ export function getAuthAccountList(query) {
   return fetch({
     url: '/system/configs/platform/authAccountList',
     method: 'get',
-    params: query
+    params:  {
+      pageNo: query.pageNo,
+      pageSize: query.pageSize,
+      clientName: query.clientName,
+      sort: query.sort
+    }
   })
 }
 // 获取授权账号信息
-export function getAuthAccountInfo(query) {
+export function getAuthAccountInfo(clientCode) {
   return fetch({
-    url: '/system/configs/platform/getAuthAccountInfo',
+    url: '/system/configs/platform/authAccountInfo',
     method: 'get',
-    params: query
+    params: {clientCode}
   })
 }
   // 所有平台信息,用于授权账户选择平台
