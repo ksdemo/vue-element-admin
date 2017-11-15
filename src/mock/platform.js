@@ -74,6 +74,7 @@ export default {
     }
   },
 
+  /* */
   getAuthAccountList: config => {
     const {clientName, pageNo = 1, pageSize = 20, sort} = param2Obj(config.url)
 
@@ -168,7 +169,7 @@ export default {
     }
   },
   // 授权账户获取关联接口
-  getResource() {
+  getAuthAccountResource() {
     return {
       "code": 1,
       "msg": null,
@@ -353,6 +354,191 @@ export default {
           "path": "/scanGoods/getHierar",
           "service": "lotusgo-service-goods",
           "serviceName": "商品服务",
+          "checkbox": false
+        }]
+      }]
+    }
+  },
+
+  // 授权接口列表
+  resourceList() {
+    return {
+      "code": 1,
+      "msg": null,
+      "pageSize": 10,
+      "pageNo": 1,
+      "totalPages": 15,
+      "totalCount": 149,
+      "content": [{
+        "resId": 106,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/platformList",
+        "name": "平台列表接口",
+        "description": "查询所有的平台列表",
+        "createTime": "2017-06-29 11:42:47",
+        "updateTime": "2017-08-08 11:58:43"
+      }, {
+        "resId": 109,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/outlet/getToken",
+        "name": "测试接口",
+        "description": "测试接口",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-08 11:58:44"
+      }, {
+        "resId": 200,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/platformAdd",
+        "name": "后台-新增平台",
+        "description": "后台-授权管理-新增平台",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:41:45"
+      }, {
+        "resId": 201,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/platformUpdate",
+        "name": "后台-修改平台",
+        "description": "后台-授权管理-修改平台",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:41:47"
+      }, {
+        "resId": 202,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/platformChangeState",
+        "name": "后台-变更平台状态",
+        "description": "后台-授权管理-变更平台状态",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:00"
+      }, {
+        "resId": 203,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/authAccountList",
+        "name": "后台-授权帐号列表",
+        "description": "后台-授权管理-授权帐号列表",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:03"
+      }, {
+        "resId": 204,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/authAccountAdd",
+        "name": "后台-新增授权帐号",
+        "description": "后台-授权管理-新增授权帐号",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:07"
+      }, {
+        "resId": 205,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/authAccountUpdate",
+        "name": "后台-修改授权帐号",
+        "description": "后台-授权管理-修改授权帐号",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:10"
+      }, {
+        "resId": 206,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/authAccountChangeState",
+        "name": "后台-变更帐号状态",
+        "description": "后台-授权管理-变更帐号状态",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:29"
+      }, {
+        "resId": 207,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "resState": 1,
+        "path": "/lotusClient/getResource",
+        "name": "后台-帐号接口列表",
+        "description": "后台-授权管理-帐号接口列表",
+        "createTime": "2017-08-04 15:38:41",
+        "updateTime": "2017-08-10 15:42:36"
+      }]
+    }
+  },
+  // 授权接口信息
+  resourceInfo() {
+    return {
+      "code": 1,
+      "msg": null,
+      "data": {
+        "resId": 106,
+        "service": "lotusgo-service-auth",
+        "serviceName": "授权服务",
+        "pathPrefix": "auth",
+        "resState": 1,
+        "path": "/lotusClient/platformList",
+        "name": "平台列表接口",
+        "description": "查询所有的平台列表",
+        "clientIds": null,
+        "createUser": 1,
+        "updateUser": 1,
+        "createTime": "2017-06-29 11:42:47",
+        "updateTime": "2017-08-08 11:58:43"
+      }
+    }
+  },
+  // 授权接口的关联帐号
+  getResourceAccount() {
+    return {
+      "code": 1,
+      "msg": null,
+      "data": [{
+        "clientCode": 800,
+        "platfromName": "泰友平台",
+        "list": [{
+          "lotusClientId": 801,
+          "clientCode": 801,
+          "clientName": "泰友公众号客户端",
+          "checkbox": false
+        }, {
+          "lotusClientId": 802,
+          "clientCode": 802,
+          "clientName": "泰友小程序客户端授权帐号",
+          "checkbox": false
+        }, {
+          "lotusClientId": 803,
+          "clientCode": 803,
+          "clientName": "泰友小程序密码授权帐号",
+          "checkbox": false
+        }]
+      }, {
+        "clientCode": 100,
+        "platfromName": "综合后台管理系统平台",
+        "list": [{
+          "lotusClientId": 101,
+          "clientCode": 101,
+          "clientName": "综合后台管理系统平台客户端授权",
+          "checkbox": false
+        }, {
+          "lotusClientId": 102,
+          "clientCode": 102,
+          "clientName": "综合后台管理系统密码授权",
+          "checkbox": true
+        }]
+      }, {
+        "clientCode": 900,
+        "platfromName": "银商咨询接入",
+        "list": [{
+          "lotusClientId": 901,
+          "clientCode": 901,
+          "clientName": "银商咨询客户端接入",
           "checkbox": false
         }]
       }]

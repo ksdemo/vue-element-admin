@@ -88,7 +88,7 @@ export const asyncRouterMap = [
             children: [
               { path: 'platformList', component: _import('system/configs/platform/platformList'), name: '平台列表' },
               { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: '授权帐号' },
-              { path: 'api_list', component: _import('example/table/table'), name: '授权接口' }
+              { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: '授权接口' }
             ]
           },
         ]

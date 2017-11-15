@@ -44,7 +44,7 @@ export function modifyStatusPlatform(query) {
     params: query
   })
 }
-/* 授权账号列表 相关 S */
+/* 授权账号 相关 S */
 // 获取授权账号列表
 export function getAuthAccountList(query) {
   return fetch({
@@ -66,6 +66,16 @@ export function getAuthAccountInfo(clientCode) {
     params: {clientCode}
   })
 }
+
+// 获取授权帐号关联接口
+export function getAuthAccountResource(clientCode) {
+  return fetch({
+    url: '/system/configs/platform/getAuthAccountResource',
+    method: 'get',
+    params: {clientCode}
+  })
+}
+
   // 所有平台信息,用于授权账户选择平台
 export function  getPlatformAll(parentId) {
     return fetch({
@@ -101,17 +111,9 @@ export function modifyStatusAuthAccount(query) {
     params: query
   })
 }
-// 获取授权帐号关联接口
-export function getResource(clientCode) {
-  return fetch({
-    url: '/system/configs/platform/getResource',
-    method: 'get',
-    params: {clientCode}
-  })
-}
 
 // 更新授权帐号关联接口
-export function updateResource(data) {
+export function updateAuthAccountResource(data) {
   return fetch({
     url: '/system/configs/platform/platformList',
     method: 'get',
@@ -122,4 +124,61 @@ export function updateResource(data) {
     }
   })
 }
-/* 授权账号列表 相关 E */
+/* 授权账号 相关 E */
+/* 授权接口 相关 S */
+export function getResourceList(query) {
+  return fetch({
+    url: '/system/configs/platform/resourcesList',
+    method: 'get',
+    params: query
+  })
+}
+export function getResourceInfo(query) {
+  return fetch({
+    url: '/system/configs/platform/resourcesInfo',
+    method: 'get',
+    params: query
+  })
+}
+export function getResourceAccount(query) {
+  return fetch({
+    url: '/system/configs/platform/getResourceAccount',
+    method: 'get',
+    params: query
+  })
+}
+// 创建授权账号
+export function createResource(query) {
+  return fetch({
+    url: '/system/configs/platform/resourcesList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 修改平台信息
+export function updateResource(query) {
+  return fetch({
+    url: '/system/configs/platform/resourcesList',
+    method: 'get',
+    params: query
+  })
+}
+// 修改平台状态
+export function modifyStatusResource(query) {
+  return fetch({
+    url: '/system/configs/platform/resourcesList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 更新授权帐号关联接口
+export function updateResourceAccount(data) {
+  return fetch({
+    url: '/system/configs/platform/resourcesList',
+    method: 'get',
+    params: data
+  })
+}
+/* 授权接口 相关 E */

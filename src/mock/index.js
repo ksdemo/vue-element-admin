@@ -26,9 +26,14 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 
 //平台管理
 Mock.mock(/\/system\/configs\/platform\/platformList/, 'get', platformAPI.getPlatformList)
+// 授权帐号
 Mock.mock(/\/system\/configs\/platform\/authAccountList/, 'get', platformAPI.getAuthAccountList)
 Mock.mock(/\/system\/configs\/platform\/authAccountInfo/, 'get', platformAPI.getAuthAccountInfo)
 Mock.mock(/\/system\/configs\/platform\/platformAll/, 'get', platformAPI.getPlatformAll)
-Mock.mock(/\/system\/configs\/platform\/getResource/, 'get', platformAPI.getResource)
+Mock.mock(/\/system\/configs\/platform\/getAuthAccountResource/, 'get', platformAPI.getAuthAccountResource)
+// 授权接口
+Mock.mock(/\/system\/configs\/platform\/resourcesList/, 'get', platformAPI.resourceList)
+Mock.mock(/\/system\/configs\/platform\/resourcesInfo/, 'get', platformAPI.resourceInfo)
+Mock.mock(/\/system\/configs\/platform\/getResourceAccount/, 'get', platformAPI.getResourceAccount)
 
 export default Mock
