@@ -145,19 +145,23 @@
     </el-form>
 
     <!-- 编辑关联接口-->
-    <el-dialog title="修改关联接口" custom-class="ks-big_dialog" :visible.sync="dialogResourceVisible" @close="cancelResource">
-      <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="80px" style='width: 850px; margin-left:50px;'>
-        
-        <div slot="footer" class="dialog-footer">
-          <el-form-item prop='adminPassword' style="display: inline-block">
-            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
-            </el-input>
+    <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="80px" style='width: 850px; margin-left:50px;'>
+      <el-dialog title="修改关联接口" custom-class="ks-lg_dialog" :visible.sync="dialogResourceVisible" @close="cancelResource">
+          <el-form-item v-for="item in resourceTemp.list" :key="item.service" :label="item.serviceName" >
+            <el-checkbox-group >
+              <el-checkbox v-for="checkItem in item.list" :label="checkItem.path+'('+checkItem.name+')'" :name="checkItem.service" :value="checkItem.resId" :checked="checkItem.checkbox"></el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
-          <el-button @click="cancelResource">取 消</el-button>
-          <el-button @click="updateResource">确 定</el-button>
-        </div>
-      </el-form>
-    </el-dialog>
+          <div slot="footer" class="dialog-footer">
+            <el-form-item prop='adminPassword' style="display: inline-block">
+              <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
+              </el-input>
+            </el-form-item>
+            <el-button @click="cancelResource">取 消</el-button>
+            <el-button @click="updateResource">确 定</el-button>
+          </div>
+      </el-dialog>
+    </el-form>
 
   </div>
 </template>
@@ -672,6 +676,9 @@ export default {
   }
   .ks-big_dialog{
     width: 850px !important;
+  }
+  .ks-lg_dialog{
+    width: 1000px !important;
   }
   .show-pwd {
     position: absolute;
