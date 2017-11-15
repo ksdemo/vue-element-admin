@@ -1,19 +1,5 @@
-[![vue](https://img.shields.io/badge/vue-2.4.2-brightgreen.svg)](https://github.com/vuejs/vue)
-[![element-ui](https://img.shields.io/badge/element--ui-1.4.2-brightgreen.svg)](https://github.com/ElemeFE/element)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/PanJiaChen/vue-element-admin/blob/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/PanJiaChen/vue-element-admin.svg)]()
-
 ## Intro
 
-> In the past half year, I have been building a backend for management dashboard using Vue. Though the backend has contained greater than 70 pages and over 10 permissions, it still takes insignificant effort to maintain the project. So I decide to make it open source so as to share my development experience and progress on backend. The tech stack is mainly [Vue.js](https://github.com/vuejs/vue)+[Element](https://github.com/ElemeFE/element)+[axios](https://github.com/mzabriskie/axios). Since it's a personal project, all data requests are simulated with [Mock.js](https://github.com/nuysoft/Mock). **Note:** if anyone wants to modify or develop based on this project, please remove the mock files.
-
-**Live demo:** http://panjiachen.github.io/vue-element-admin
-
-**Note: element-ui@1.4.2 is used in the project, so vue 2.3.0+ is required.**
-
- - vueAdmin-template: [vueAdmin-template](https://github.com/PanJiaChen/vueAdmin-template)  
- - electron-vue-admin: [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
- - Donate:[donate](https://github.com/PanJiaChen/vue-element-admin/blob/master/README-en.md#donate)
 
 ## Features
 
