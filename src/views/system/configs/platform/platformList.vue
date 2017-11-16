@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column width="100" align="center" label="状态">
         <template scope="scope">
-          <el-tag :type="scope.row.clientState | statusTagFilter">{{scope.row.clientState | statusFilter }}</el-tag>
+          <el-tag :type="scope.row.clientState | statusTagFilter">{{scope.row.clientState | statusNameFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="180">
@@ -133,11 +133,6 @@ import {
   statusTypeOptions
 } from '@/config'
 
-  // arr to obj
-const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 function adapt(data) {
   return data;
@@ -241,19 +236,6 @@ export default {
           validator: validateAdminPassword
         }]
       }
-    }
-  },
-  filters: {
-    statusFilter(clientState) {
-      return statusTypeKeyValue[clientState]
-    },
-    statusTagFilter(status) {
-      for (var i = 0; i < statusTypeOptions.length; i++) {
-        if (statusTypeOptions[i].key == status) {
-          return statusTypeOptions[i].tag
-        }
-      }
-      return ''
     }
   },
   created() {

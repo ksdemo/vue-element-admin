@@ -1,3 +1,25 @@
+import {
+  statusTypeOptions
+} from '@/config'
+
+// arr to obj
+const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
+
+export function statusNameFilter(clientState) {
+  return statusTypeKeyValue[clientState]
+}
+export function statusTagFilter(status) {
+  for (var i = 0; i < statusTypeOptions.length; i++) {
+    if (statusTypeOptions[i].key == status) {
+      return statusTypeOptions[i].tag
+    }
+  }
+  return ''
+}
+
 function pluralize(time, label) {
   if (time === 1) {
     return time + label
