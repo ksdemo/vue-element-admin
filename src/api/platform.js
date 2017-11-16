@@ -126,6 +126,7 @@ export function updateAuthAccountResource(data) {
 }
 /* 授权账号 相关 E */
 /* 授权接口 相关 S */
+// 获取接口列表
 export function getResourceList(query) {
   return fetch({
     url: '/system/configs/platform/resourceList',
@@ -133,6 +134,7 @@ export function getResourceList(query) {
     params: query
   })
 }
+// 获取接口信息
 export function getResourceInfo(resId) {
   return fetch({
     url: '/system/configs/platform/resourceInfo',
@@ -140,6 +142,7 @@ export function getResourceInfo(resId) {
     params: {resId}
   })
 }
+// 获取接口的所有服务列表
 export function getServiceList(query) {
   return fetch({
     url: '/system/configs/platform/resourceServiceList',
@@ -147,6 +150,7 @@ export function getServiceList(query) {
     params: query
   })
 }
+// 获取接口关联帐号列表
 export function getResourceAccount(query) {
   return fetch({
     url: '/system/configs/platform/getResourceAccount',
@@ -154,7 +158,7 @@ export function getResourceAccount(query) {
     params: query
   })
 }
-// 创建接口账号
+// 创建接口
 export function createResource(query) {
   return fetch({
     url: '/system/configs/platform/resourceList',
@@ -180,7 +184,7 @@ export function modifyStatusResource(query) {
   })
 }
 
-// 更新授权接口关联接口
+// 更新接口关联的帐号
 export function updateResourceAccount(data) {
   return fetch({
     url: '/system/configs/platform/resourceList',
