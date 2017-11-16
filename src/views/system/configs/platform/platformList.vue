@@ -86,8 +86,8 @@
     </el-form>
     <!-- 创建/编辑平台状态-->
     <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
-      <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
-        <h3 color="red">温馨提示: 请慎重操作平台</h3>
+      <el-dialog title="修改平台启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+        <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
           <el-select class="filter-item" v-model="temp.clientState" placeholder="请选择" style="width: 179px">
             <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">

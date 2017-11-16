@@ -56,7 +56,7 @@
     <!-- 创建/编辑授权帐号信息   -->
     <el-form class="small-space" :inline="true" :model="temp" :rules="createAuthAccountRules" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createAuthAccount">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
-        <el-form-item label="平台号" class="ks-dialog-input" prop='parentId'>
+        <el-form-item label="所属平台号" class="ks-dialog-input" prop='parentId'>
           <el-select class="filter-item" v-model="temp.parentId" placeholder="请选择" style="width: 179px">
             <el-option v-if="platformAll" v-for="platform in platformAll" :key="platform.clientName" :label="platform.clientName" :value="platform.clientCode">
             </el-option>
@@ -123,8 +123,8 @@
     </el-form>
     <!-- 创建/编辑帐号状态-->
     <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
-      <el-dialog title="修改平台状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
-        <h3 color="red">温馨提示: 请慎重操作平台</h3>
+      <el-dialog title="修改帐号启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+        <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
           <el-select class="filter-item" v-model="temp.clientState" placeholder="请选择" style="width: 179px">
             <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
