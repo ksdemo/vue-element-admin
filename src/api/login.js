@@ -1,3 +1,4 @@
+import {AUTH_CLIENT_ID, AUTH_CLIENT_SECRET, AUTH_PASSWORD_ID, AUTH_PASSWORD_SECRET} from '@/config'
 import fetch from '@/utils/fetch'
 import {request, randomString, requestImg} from '@/utils/add.js'
 import { getToken } from '@/utils/auth'
@@ -8,9 +9,7 @@ import md5 from 'js-md5';
  */
 export function getClientToken() {
   const url = "/cms/oauth/token";
-  const CLIENT_ID = 'cms_client';
-  const CLIENT_SECRET = '123456';
-  var Authorization = 'Basic ' + window.btoa(CLIENT_ID + ':' + CLIENT_SECRET)
+  var Authorization = 'Basic ' + window.btoa(AUTH_CLIENT_ID + ':' + AUTH_CLIENT_SECRET)
   var data = {grant_type: 'client_credentials'};
   var headers = {
     'Accept': 'application/json, text/plain, */*',
@@ -30,9 +29,7 @@ export function getClientToken() {
  */
 export function getPasswordToken(userInfo) {
   const url = "/cms/oauth/token";
-  const PASSWORD_ID = 'cms_password'
-  const PASSWORD_SECRET = '123456'
-  var Authorization = 'Basic ' + window.btoa(PASSWORD_ID + ':' + PASSWORD_SECRET)
+  var Authorization = 'Basic ' + window.btoa(AUTH_PASSWORD_ID + ':' + AUTH_PASSWORD_SECRET)
   var headers = {
     'Accept': 'application/json, text/plain, */*',
     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
@@ -42,9 +39,11 @@ export function getPasswordToken(userInfo) {
   var data = {
     grant_type: 'password',
     username: userInfo.username,// : 'admin',
-    password//: 'd525e685b8f0c89e5d981a6b86feb6d4'
+    password,
+    vcode: userInfo.vcode
+    //: 'd525e685b8f0c89e5d981a6b86feb6d4'
   };
-  console.log(userInfo);
+  console.log(data);
   return request({
     url,
     type: 'post',

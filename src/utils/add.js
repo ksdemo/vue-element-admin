@@ -129,3 +129,7 @@ function joinUrl(url, data) {
   url += /\?/.test(url) ? '&' : '?';
   return url + joinUrlParam(data)
 }
+
+export function deepCloneJSON(obj){
+  return JSON.parse(JSON.stringify(obj))
+}

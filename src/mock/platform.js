@@ -308,7 +308,7 @@ export default {
           "checkbox": true
         }, {
           "resId": 86,
-          "name": "获取",
+          "name": "获取商品服务列表",
           "path": "/scanGoods/getHierarList",
           "service": "lotusgo-service-goods",
           "serviceName": "商品服务",

@@ -78,9 +78,8 @@
           <el-input v-model="temp.clientId"></el-input>
         </el-form-item>
         <el-form-item label="授权密码" class="ks-dialog-input" prop='clientPassword'>
-            <el-input :type="clientPasswordType"  v-model="temp.clientPassword" autoComplete="off"
-            placeholder="密码" />
-            <span class='show-pwd' @click='showClientPassword'><icon-svg icon-class="eye" /></icon-svg></span>
+          <el-input :type="clientPasswordType" v-model="temp.clientPassword" autoComplete="off" placeholder="密码" />
+          <span class='show-pwd' @click='showClientPassword'><icon-svg icon-class="eye" /></icon-svg></span>
         </el-form-item>
         <el-form-item label="令牌失效时间(秒)" class="ks-dialog-input" prop='accessTokenExpires'>
           <el-input v-model="temp.accessTokenExpires"></el-input>
@@ -98,9 +97,8 @@
           <el-input v-model="temp.smsUsername"></el-input>
         </el-form-item>
         <el-form-item label="短信用户密码" class="ks-dialog-input" prop='smsPassword'>
-            <el-input :type="smsPasswordType"  v-model="temp.smsPassword" autoComplete="off"
-            placeholder="密码" />
-            <span class='show-pwd' @click='showSmsPasswordType'><icon-svg icon-class="eye" /></icon-svg></span>
+          <el-input :type="smsPasswordType" v-model="temp.smsPassword" autoComplete="off" placeholder="密码" />
+          <span class='show-pwd' @click='showSmsPasswordType'><icon-svg icon-class="eye" /></icon-svg></span>
         </el-form-item>
         <el-form-item label="短信发送地址" class="ks-dialog-input" prop='smsUrl'>
           <el-input v-model="temp.smsUrl" style="width: 501px"></el-input>
@@ -143,26 +141,24 @@
         </div>
       </el-dialog>
     </el-form>
-
     <!-- 编辑关联接口-->
     <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="120px" style='width: 850px; margin-left:50px;'>
       <el-dialog title="修改关联接口" :visible.sync="dialogResourceVisible" @close="cancelResource">
-          <el-form-item v-for="item in resourceTemp.list" :key="item.service" :label="item.serviceName + ':'" >
-            <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.path" >
-              <el-checkbox :label="checkItem.path+'('+checkItem.name+')'" :name="checkItem.service" value="true" :checked="checkItem.checkbox"></el-checkbox>
-            </el-checkbox-group>
+        <el-form-item v-for="item in resourceTemp.list" :key="item.service" :label="item.serviceName + ':'">
+          <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.path">
+            <el-checkbox :label="checkItem.path+' ('+checkItem.name+')'" :name="checkItem.service" value="true" :checked="checkItem.checkbox"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <div slot="footer" class="dialog-footer">
+          <el-form-item prop='adminPassword' style="display: inline-block">
+            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
+            </el-input>
           </el-form-item>
-          <div slot="footer" class="dialog-footer">
-            <el-form-item prop='adminPassword' style="display: inline-block">
-              <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
-              </el-input>
-            </el-form-item>
-            <el-button @click="cancelResource">取 消</el-button>
-            <el-button @click="updateResource">确 定</el-button>
-          </div>
+          <el-button @click="cancelResource">取 消</el-button>
+          <el-button @click="updateResource">确 定</el-button>
+        </div>
       </el-dialog>
     </el-form>
-
   </div>
 </template>
 <script>
@@ -188,7 +184,8 @@ import {
   validatePassword
 } from '@/utils/validate'
 import {
-  compareObj
+  compareObj,
+  deepCloneJSON
 } from '@/utils/add.js'
 import {
   clientTypeOptions,
@@ -206,30 +203,30 @@ function adapt(data) {
 }
 
 const defaultTemp = {
-      "id": '',
-      "parentId": '',
-      "clientType": '',
-      "clientCode": '',
-      "clientParentCode": '',
-      "clientState": '',
-      "clientTag": "",
-      "clientName": "",
-      "description": "",
-      "clientId": "",
-      "clientPassword": "",
-      "accessTokenExpires": 7200,//7200
-      "refreshTokenExpires": 2592000,//2592000
-      "clientIps": null,
-      "wxAppId": null,
-      "wxAppSecurt": null,
-      "smsUsername": "",
-      "smsPassword": "",
-      "smsUrl": "",
-      "outletType": null,
-      "createTime": "",
-      "updateTime": "",
-      "adminPassword": ''
-    }
+  "id": '',
+  "parentId": '',
+  "clientType": '',
+  "clientCode": '',
+  "clientParentCode": '',
+  "clientState": '',
+  "clientTag": "",
+  "clientName": "",
+  "description": "",
+  "clientId": "",
+  "clientPassword": "",
+  "accessTokenExpires": 7200, //7200
+  "refreshTokenExpires": 2592000, //2592000
+  "clientIps": null,
+  "wxAppId": null,
+  "wxAppSecurt": null,
+  "smsUsername": "",
+  "smsPassword": "",
+  "smsUrl": "",
+  "outletType": null,
+  "createTime": "",
+  "updateTime": "",
+  "adminPassword": ''
+}
 const defaultResourceTemp = {
   "adminPassword": '',
   "clientCode": '',
@@ -303,7 +300,7 @@ export default {
         clientName: '',
         sort: '+id'
       },
-      temp: Object.assign({},defaultTemp),
+      temp: deepCloneJSON(defaultTemp),
       oldTemp: '',
       sortOptions: [{
         label: '按ID升序列',
@@ -373,8 +370,8 @@ export default {
       smsPasswordType: 'password',
       // 关联接口相关
       resourceClientCode: '',
-      oldResourceTemp:'',
-      resourceTemp: Object.assign({},defaultResourceTemp),
+      oldResourceTemp: '',
+      resourceTemp: deepCloneJSON(defaultResourceTemp),
       dialogResourceVisible: false
     }
   },
@@ -424,7 +421,7 @@ export default {
         let clientCode = row.clientCode
         getAuthAccountInfo(clientCode)
           .then(response => {
-            let data = Object.assign({}, response.data.data)
+            let data = response.data.data
             resolve(data);
           })
           .catch(e => {
@@ -437,8 +434,7 @@ export default {
         let clientCode = row.clientCode
         getAuthAccountResource(clientCode)
           .then(response => {
-            let data = Object.assign({}, response.data.data)
-            this.resourcTemp = Object.assign({}, data)
+            let data = response.data.data
             resolve(data);
           })
           .catch(e => {
@@ -468,18 +464,18 @@ export default {
     handleUpdate(row) {
       this.resetTemp()
       this.getAuthAccountInfo(row)
-      .then(data=>{
-        this.oldTemp = Object.assign({}, data)
-        this.temp = Object.assign({}, data)
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-      })
+        .then(data => {
+          this.oldTemp = deepCloneJSON(data)
+          this.temp = deepCloneJSON(data)
+          this.dialogStatus = 'update'
+          this.dialogFormVisible = true
+        })
     },
     create() {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = Object.assign({}, this.temp)
+          var createForm = deepCloneJSON(this.temp)
           console.log(createForm)
           this.cancel();
           createAuthAccount(createForm).then(() => {
@@ -505,8 +501,8 @@ export default {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = Object.assign({}, this.temp)
-          var oldForm = Object.assign({}, this.oldTemp)
+          var updateForm = deepCloneJSON(this.temp)
+          var oldForm = deepCloneJSON(this.oldTemp)
           oldForm.adminPassword = this.temp.adminPassword
           console.log(updateForm)
           if (compareObj(oldForm, updateForm)) {
@@ -540,13 +536,13 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = Object.assign({},defaultTemp)
+      this.temp = deepCloneJSON(defaultTemp)
     },
     // 更改状态
     handleModifyStatus(row) {
       this.resetTemp()
-      this.oldTemp = Object.assign({}, row)
-      this.temp = Object.assign({}, row)
+      this.oldTemp = deepCloneJSON(row)
+      this.temp = deepCloneJSON(row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus() {
@@ -556,7 +552,7 @@ export default {
     updateModifyStatus() {
       if (validatePassword(this.temp.adminPassword)) {
         this.listLoading = true
-        var updateForm = Object.assign({}, {
+        var updateForm = deepCloneJSON({
           clientState: this.temp.clientState,
           adminPassword: this.temp.adminPassword
         })
@@ -589,16 +585,16 @@ export default {
         return false
       }
     },
-    showClientPassword(){
+    showClientPassword() {
       this.clientPasswordType = this.clientPasswordType === 'password' ? 'text' : 'password'
     },
-    showSmsPasswordType(){
+    showSmsPasswordType() {
       this.smsPasswordType = this.smsPasswordType === 'password' ? 'text' : 'password'
     },
 
     // 关联接口相关
     resetResourceTemp() {
-      this.resourceTemp = Object.assign({},defaultResourceTemp)
+      this.resourceTemp = deepCloneJSON(defaultResourceTemp)
     },
     cancelResource() {
       this.resetResourceTemp()
@@ -608,20 +604,20 @@ export default {
       this.resetResourceTemp()
       this.resourceClientCode = row.clientCode
       this.getAuthAccountResource(row)
-      .then(data=>{
-        console.log(data)
-        let resourceForm= {
-          "adminPassword": '',
-          "clientCode": row.clientCode,
-          "list": data
-        }
-        this.oldResourceTemp = Object.assign({}, JSON.parse(JSON.stringify(resourceForm)))
-        this.resourceTemp = Object.assign({}, JSON.parse(JSON.stringify(resourceForm)))
-        this.dialogResourceVisible = true
-      })
+        .then(data => {
+          console.log(data)
+          let resourceForm = {
+            "adminPassword": '',
+            "clientCode": row.clientCode,
+            "list": data
+          }
+          this.oldResourceTemp = deepCloneJSON(resourceForm)
+          this.resourceTemp = deepCloneJSON(resourceForm)
+          this.dialogResourceVisible = true
+        })
     },
     updateResource() {
-      function transformResourceForm(resourceTemp){
+      function transformResourceForm(resourceTemp) {
         let list = JSON.stringify(resourceTemp.list)
         console.log(list)
         var updateForm = {
@@ -668,25 +664,28 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-  @import "src/styles/mixin.scss";
-  $bg:#2d3a4b;
-  $dark_gray:#889aa4;
-  $light_gray:#eee;
-  div.ks-dialog-input:nth-child(2n+1) {
-    margin-right: 60px !important;
-  }
-  .ks-big_dialog{
-    width: 850px !important;
-  }
-  .ks-lg_dialog{
-    width: 1000px !important;
-  }
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-  }
+@import "src/styles/mixin.scss";
+$bg:#2d3a4b;
+$dark_gray:#889aa4;
+$light_gray:#eee;
+div.ks-dialog-input:nth-child(2n+1) {
+  margin-right: 60px !important;
+}
+
+.ks-big_dialog {
+  width: 850px !important;
+}
+
+.ks-lg_dialog {
+  width: 1000px !important;
+}
+
+.show-pwd {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  font-size: 16px;
+  color: $dark_gray;
+  cursor: pointer;
+}
 </style>

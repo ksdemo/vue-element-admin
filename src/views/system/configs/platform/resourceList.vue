@@ -26,7 +26,7 @@
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="URL"  min-width="150">
+      <el-table-column align="center" label="URL" min-width="150">
         <template scope="scope">
           <span>{{scope.row.path}}</span>
         </template>
@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="240">
         <template scope="scope">
-          <el-button size="small" type="danger" @click="handleUpdateResource(scope.row)">关联接口</el-button>
+          <el-button size="small" type="danger" @click="handleUpdateResourceAccount(scope.row)">关联帐号</el-button>
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
         </template>
@@ -49,7 +49,7 @@
       </el-pagination>
     </div>
     <!-- 创建/编辑授权接口信息   -->
-    <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createResource"  :rules="createResourceRules">
+    <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createResource" :rules="createResourceRules">
       <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
         <el-form-item label="服务名称" class="ks-dialog-input" prop='service'>
           <el-select class="filter-item" v-model="temp.service" placeholder="请选择" style="width: 179px">
@@ -97,26 +97,24 @@
         </div>
       </el-dialog>
     </el-form>
-
     <!-- 编辑关联帐号-->
     <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="200px" style='width: 850px; margin-left:50px;'>
       <el-dialog title="修改关联帐号" :visible.sync="dialogResourceVisible" @close="cancelResource">
-          <el-form-item v-for="item in resourceTemp.list" :key="item.platfromName" :label="item.platfromName+':'" >
-            <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.clientName" >
-              <el-checkbox :label="checkItem.clientName" :name="checkItem.clientName" value="true" :checked="checkItem.checkbox"></el-checkbox>
-            </el-checkbox-group>
+        <el-form-item v-for="item in resourceTemp.list" :key="item.platfromName" :label="item.platfromName+':'">
+          <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.clientName">
+            <el-checkbox :label="checkItem.clientName" :name="checkItem.clientName" value="true" :checked="checkItem.checkbox"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <div slot="footer" class="dialog-footer">
+          <el-form-item prop='adminPassword' style="display: inline-block">
+            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
+            </el-input>
           </el-form-item>
-          <div slot="footer" class="dialog-footer">
-            <el-form-item prop='adminPassword' style="display: inline-block">
-              <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="resourceTemp.adminPassword">
-              </el-input>
-            </el-form-item>
-            <el-button @click="cancelResource">取 消</el-button>
-            <el-button @click="updateResource">确 定</el-button>
-          </div>
+          <el-button @click="cancelResource">取 消</el-button>
+          <el-button @click="updateResource">确 定</el-button>
+        </div>
       </el-dialog>
     </el-form>
-
   </div>
 </template>
 <script>
@@ -139,7 +137,8 @@ import {
   validatePassword
 } from '@/utils/validate'
 import {
-  compareObj
+  compareObj,
+  deepCloneJSON
 } from '@/utils/add.js'
 import {
   clientTypeOptions,
@@ -157,21 +156,21 @@ function adapt(data) {
 }
 
 const defaultTemp = {
-      "resId": '',
-      "service": "",
-      "serviceName": "",
-      "pathPrefix": "",
-      "resState": '',
-      "path": "",
-      "name": "",
-      "description": "",
-      "clientIds": null,
-      "createUser": 1,
-      "updateUser": 1,
-      "createTime": "",
-      "updateTime": "",
-      "adminPassword": ''
-    }
+  "resId": '',
+  "service": "",
+  "serviceName": "",
+  "pathPrefix": "",
+  "resState": '',
+  "path": "",
+  "name": "",
+  "description": "",
+  "clientIds": null,
+  "createUser": 1,
+  "updateUser": 1,
+  "createTime": "",
+  "updateTime": "",
+  "adminPassword": ''
+}
 const defaultResourceTemp = {
   "adminPassword": '',
   "clientCode": '',
@@ -223,7 +222,7 @@ export default {
         clientName: '',
         sort: '+id'
       },
-      temp: Object.assign({},defaultTemp),
+      temp: deepCloneJSON(defaultTemp),
       oldTemp: '',
       sortOptions: [{
         label: '按ID升序列',
@@ -276,8 +275,8 @@ export default {
 
       // 关联接口相关
       resourceClientCode: '',
-      oldResourceTemp:'',
-      resourceTemp: Object.assign({},defaultResourceTemp),
+      oldResourceTemp: '',
+      resourceTemp: deepCloneJSON(defaultResourceTemp),
       dialogResourceVisible: false
     }
   },
@@ -328,7 +327,7 @@ export default {
         getResourceInfo(resId)
           .then(response => {
             console.log(response)
-            let data = Object.assign({}, response.data.data)
+            let data = response.data.data
             resolve(data);
           })
           .catch(e => {
@@ -341,8 +340,7 @@ export default {
         let clientCode = row.clientCode
         getResourceAccount(clientCode)
           .then(response => {
-            let data = Object.assign({}, response.data.data)
-            this.resourcTemp = Object.assign({}, data)
+            let data = response.data.data
             resolve(data);
           })
           .catch(e => {
@@ -372,18 +370,18 @@ export default {
     handleUpdate(row) {
       this.resetTemp()
       this.getResourceInfo(row)
-      .then(data=>{
-        this.oldTemp = Object.assign({}, data)
-        this.temp = Object.assign({}, data)
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-      })
+        .then(data => {
+          this.oldTemp = deepCloneJSON(data)
+          this.temp = deepCloneJSON(data)
+          this.dialogStatus = 'update'
+          this.dialogFormVisible = true
+        })
     },
     create() {
       this.$refs.createResource.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = Object.assign({}, this.temp)
+          var createForm = deepCloneJSON(this.temp)
           console.log(createForm)
           this.cancel();
           createResource(createForm).then(() => {
@@ -409,8 +407,8 @@ export default {
       this.$refs.createResource.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = Object.assign({}, this.temp)
-          var oldForm = Object.assign({}, this.oldTemp)
+          var updateForm = deepCloneJSON(this.temp)
+          var oldForm = deepCloneJSON(this.oldTemp)
           oldForm.adminPassword = this.temp.adminPassword
           console.log(updateForm)
           if (compareObj(oldForm, updateForm)) {
@@ -444,13 +442,13 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = Object.assign({},defaultTemp)
+      this.temp = deepCloneJSON(defaultTemp)
     },
     // 更改状态
     handleModifyStatus(row) {
       this.resetTemp()
-      this.oldTemp = Object.assign({}, row)
-      this.temp = Object.assign({}, row)
+      this.oldTemp = deepCloneJSON(row)
+      this.temp = deepCloneJSON(row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus() {
@@ -460,7 +458,7 @@ export default {
     updateModifyStatus() {
       if (validatePassword(this.temp.adminPassword)) {
         this.listLoading = true
-        var updateForm = Object.assign({}, {
+        var updateForm = deepCloneJSON({
           clientState: this.temp.clientState,
           adminPassword: this.temp.adminPassword
         })
@@ -496,30 +494,30 @@ export default {
 
     // 关联接口相关
     resetResourceTemp() {
-      this.resourceTemp = Object.assign({},defaultResourceTemp)
+      this.resourceTemp = deepCloneJSON(defaultResourceTemp)
     },
     cancelResource() {
       this.resetResourceTemp()
       this.dialogResourceVisible = false;
     },
-    handleUpdateResource(row) {
+    handleUpdateResourceAccount(row) {
       this.resetResourceTemp()
       this.resourceClientCode = row.clientCode
       this.getResourceAccount(row)
-      .then(data=>{
-        console.log(data)
-        let resourceForm= {
-          "adminPassword": '',
-          "clientCode": row.clientCode,
-          "list": data
-        }
-        this.oldResourceTemp = Object.assign({}, JSON.parse(JSON.stringify(resourceForm)))
-        this.resourceTemp = Object.assign({}, JSON.parse(JSON.stringify(resourceForm)))
-        this.dialogResourceVisible = true
-      })
+        .then(data => {
+          console.log(data)
+          let resourceForm = {
+            "adminPassword": '',
+            "clientCode": row.clientCode,
+            "list": data
+          }
+          this.oldResourceTemp = deepCloneJSON(resourceForm)
+          this.resourceTemp = deepCloneJSON(resourceForm)
+          this.dialogResourceVisible = true
+        })
     },
     updateResource() {
-      function transformResourceForm(resourceTemp){
+      function transformResourceForm(resourceTemp) {
         let list = JSON.stringify(resourceTemp.list)
         console.log(list)
         var updateForm = {
@@ -566,25 +564,28 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss">
-  @import "src/styles/mixin.scss";
-  $bg:#2d3a4b;
-  $dark_gray:#889aa4;
-  $light_gray:#eee;
-  div.ks-dialog-input:nth-child(2n+1) {
-    margin-right: 60px !important;
-  }
-  .ks-big_dialog{
-    width: 850px !important;
-  }
-  .ks-lg_dialog{
-    width: 1000px !important;
-  }
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-  }
+@import "src/styles/mixin.scss";
+$bg:#2d3a4b;
+$dark_gray:#889aa4;
+$light_gray:#eee;
+div.ks-dialog-input:nth-child(2n+1) {
+  margin-right: 60px !important;
+}
+
+.ks-big_dialog {
+  width: 850px !important;
+}
+
+.ks-lg_dialog {
+  width: 1000px !important;
+}
+
+.show-pwd {
+  position: absolute;
+  right: 10px;
+  top: 7px;
+  font-size: 16px;
+  color: $dark_gray;
+  cursor: pointer;
+}
 </style>
