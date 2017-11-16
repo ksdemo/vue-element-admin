@@ -133,7 +133,16 @@ import {
   statusTypeOptions
 } from '@/config'
 
-
+const defaultTemp = {
+  clientName: '',
+  clientCode: undefined,
+  clientTag: '',
+  description: '',
+  createTime: 0,
+  updateTime: 0,
+  clientState: 1,
+  adminPassword: ''
+}
 function adapt(data) {
   return data;
 }
@@ -184,17 +193,7 @@ export default {
         sort: '+id'
       },
       oldTemp: '',
-      temp: {
-        id: undefined,
-        clientName: '',
-        clientCode: undefined,
-        clientTag: '',
-        description: '',
-        createTime: 0,
-        updateTime: 0,
-        clientState: 1,
-        adminPassword: ''
-      },
+      temp: deepCloneJSON(defaultTemp),
       statusTypeOptions,
       sortOptions: [{
         label: '按ID升序列',
@@ -367,17 +366,7 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = {
-        id: undefined,
-        clientName: '',
-        clientCode: undefined,
-        clientTag: '',
-        description: '',
-        createTime: 0,
-        updateTime: 0,
-        clientState: 1,
-        adminPassword: ''
-      }
+      this.temp = deepCloneJSON(defaultTemp)
     },
     handleModifyStatus(row) {
       this.resetTemp()
