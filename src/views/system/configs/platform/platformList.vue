@@ -58,8 +58,8 @@
       </el-pagination>
     </div>
     <!-- 创建/编辑平台信息-->
-    <el-form class="small-space" :inline="true" :model="temp" :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
-      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
+      <el-form class="small-space" :inline="true" :model="temp" :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
         <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
           <el-input v-model="temp.clientName"></el-input>
         </el-form-item>
@@ -73,20 +73,16 @@
         <el-form-item label="平台描述" class="ks-dialog-input" prop='description'>
           <el-input v-model="temp.description" style="width: 501px"></el-input>
         </el-form-item>
-        <div slot="footer" class="dialog-footer">
-          <el-form-item prop='adminPassword'>
-            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="temp.adminPassword">
-            </el-input>
-          </el-form-item>
-          <el-button @click="cancel">取 消</el-button>
-          <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-          <el-button v-else type="primary" @click="update">确 定</el-button>
-        </div>
-      </el-dialog>
-    </el-form>
+     </el-form>
+      <dialog-footer-admin slot="footer"
+        @onenter = 'enterDialog'
+        @oncancel= 'cancel'
+      >
+      </dialog-footer-admin>
+    </el-dialog>
     <!-- 创建/编辑平台状态-->
-    <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
-      <el-dialog title="修改平台启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+    <el-dialog title="修改平台启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+      <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
           <el-select class="filter-item" v-model="temp.clientState" placeholder="请选择" style="width: 179px">
@@ -94,16 +90,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <div slot="footer" class="dialog-footer">
-          <el-form-item prop='adminPassword' style="display: inline-block">
-            <el-input style="width: 200px;" placeholder="管理员密码" type="password" v-model="temp.adminPassword">
-            </el-input>
-          </el-form-item>
-          <el-button @click="cancelModifyStatus">取 消</el-button>
-          <el-button @click="updateModifyStatus">确 定</el-button>
-        </div>
-      </el-dialog>
-    </el-form>
+      </el-form>
+      <dialog-footer-admin slot="footer"
+        @onenter = 'updateModifyStatus'
+        @oncancel= 'cancelModifyStatus'
+      >
+      </dialog-footer-admin>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -140,8 +133,7 @@ const defaultTemp = {
   description: '',
   createTime: 0,
   updateTime: 0,
-  clientState: 1,
-  adminPassword: ''
+  clientState: 1
 }
 function adapt(data) {
   return data;
@@ -170,13 +162,6 @@ export default {
     const validatePid = (rule, value, callback) => {
       if (!/^\d+$/.test(value)) {
         callback(new Error('请输入正确的平台号码(纯数字)'))
-      } else {
-        callback()
-      }
-    }
-    const validateAdminPassword = (rule, value, callback) => {
-      if (!validatePassword(value)) {
-        callback(new Error('请输入正确的管理员密码'))
       } else {
         callback()
       }
@@ -228,13 +213,13 @@ export default {
           required: true,
           trigger: 'blur',
           validator: validatePid
-        }],
-        adminPassword: [{
-          required: true,
-          trigger: 'blur',
-          validator: validateAdminPassword
         }]
       }
+    }
+  },
+  computed:{
+    adminPassword(){
+      return this.$store.state.user.adminPassword
     }
   },
   created() {
@@ -275,7 +260,6 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.temp.adminPassword = ''
     },
     handleUpdate(row) {
       this.resetTemp()
@@ -283,9 +267,13 @@ export default {
       this.temp = deepCloneJSON(row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.temp.adminPassword = ''
-      })
+    },
+    enterDialog(){
+      if (this.dialogStatus == 'create') {
+        this.create()
+      }else{ 
+        this.update()
+      }
     },
     create() {
       this.$refs.createPlatform.validate(valid => {
@@ -296,7 +284,7 @@ export default {
             clientTag: this.temp.clientTag,
             clientCode: this.temp.clientCode,
             description: this.oldTemp.description,
-            adminPassword: this.temp.adminPassword
+            adminPassword: this.adminPassword
           })
           this.cancel();
           createPlatform(createForm).then(() => {
@@ -313,7 +301,7 @@ export default {
             this.getList()
           })
         } else {
-          console.log('error submit!!')
+          console.log('表单验证失败!!')
           return false
         }
       })
@@ -326,13 +314,13 @@ export default {
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
             description: this.temp.description,
-            adminPassword: this.temp.adminPassword
+            adminPassword: this.adminPassword
           })
           var oldForm = deepCloneJSON({
             clientName: this.oldTemp.clientName,
             clientTag: this.oldTemp.clientTag,
             description: this.oldTemp.description,
-            adminPassword: this.temp.adminPassword
+            adminPassword: this.adminPassword
           })
 
           if (compareObj(oldForm, updateForm)) {
@@ -356,7 +344,7 @@ export default {
             this.getList()
           })
         } else {
-          console.log('error submit!!')
+          console.log('表单验证失败!!')
           return false
         }
       })
@@ -367,6 +355,7 @@ export default {
     },
     resetTemp() {
       this.temp = deepCloneJSON(defaultTemp)
+      this.$store.commit('SET_ADMINPASSWORD', "")
     },
     handleModifyStatus(row) {
       this.resetTemp()
@@ -379,11 +368,10 @@ export default {
       this.dialogModifyStatusVisible = false;
     },
     updateModifyStatus() {
-      if (validatePassword(this.temp.adminPassword)) {
         this.listLoading = true
         var updateForm = deepCloneJSON({
           clientState: this.temp.clientState,
-          adminPassword: this.temp.adminPassword
+          adminPassword: this.adminPassword
         })
         if (compareObj(this.oldTemp.clientState, this.temp.clientState)) {
           this.cancelModifyStatus();
@@ -405,14 +393,6 @@ export default {
           this.listLoading = false
           this.getList()
         })
-      } else {
-        Message({
-          message: '请输入管理员密码',
-          type: 'error',
-          duration: 2 * 1000
-        })
-        return false
-      }
     }
   }
 }

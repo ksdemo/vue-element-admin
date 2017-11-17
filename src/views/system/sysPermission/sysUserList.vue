@@ -352,7 +352,6 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.temp.adminPassword = ''
     },
     handleUpdate(row) {
       this.resetTemp()
