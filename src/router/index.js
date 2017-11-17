@@ -60,7 +60,7 @@ export const asyncRouterMap = [
         icon: 'user',
         children: [
           { path: 'userlist', component: _import('system/sysPermission/sysUserList'), name: '系统用户' },
-          { path: 'rolelist', component: _import('example/table/table'), name: '系统角色' },
+          { path: 'rolelist', component: _import('system/sysPermission/sysRoleList'), name: '系统角色' },
           { path: 'deptlist', component: _import('example/table/table'), name: '系统菜单' }
         ]
       },

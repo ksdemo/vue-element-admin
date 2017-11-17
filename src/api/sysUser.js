@@ -91,20 +91,53 @@ export function getSysRoleList(query) {
     params: query
   })
 }
+// 创建角色信息
+export function createSysRole(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysRoleList',
+    method: 'get',
+    params: query
+  })
+}
+// 更新角色信息
+export function updateSysRole(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysRoleList',
+    method: 'get',
+    params: query
+  })
+}
+// 删除角色信息
+export function deleteSysRole(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysRoleList',
+    method: 'get',
+    params: query
+  })
+}
 
 // 获取角色菜单权限
-export function getSysRoleMenu(query) {
+export function getSysRoleMenuRight(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sresourceServiceList',
+    url: '/system/configs/sysPermission/getSysRoleMenuRight',
+    method: 'get',
+    params: query
+  })
+}
+
+// 修改角色菜单权限
+export function updateSysRoleMenuRight(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysRoleMenuRight',
     method: 'get',
     params: query
   })
 }
 
 // 获取角色菜单功能点权限
-export function getSysRoleMenuBtn(query) {
+export function getSysRoleBtnRight(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sresourceServiceList',
+    url: '/system/configs/sysPermission/getSysRoleMenuRight',
     method: 'get',
     params: query
   })
