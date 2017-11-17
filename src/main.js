@@ -9,8 +9,11 @@ import './icons' // icon
 import './errorLog'// error log
 import './permission' // 权限
 import './mock'  // 该项目所有请求使用mockjs模拟
+// 新增全局组件
+import DialogFooterAdmin from '@/views/components/common/DialogFooterAdmin.vue'
 
 Vue.use(ElementUI)
+Vue.component('dialog-footer-admin', DialogFooterAdmin)
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

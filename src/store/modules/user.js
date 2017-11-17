@@ -15,7 +15,8 @@ const user = {
       articlePlatform: []
     },
     loginType: 1,
-    imgCode: null
+    imgCode: null,
+    adminPassword: ''
   },
 
   mutations: {
@@ -48,6 +49,9 @@ const user = {
     },
     SET_IMGCODE: (state, imgCode) => {
       state.imgCode = imgCode
+    },
+    SET_ADMINPASSWORD: (state, adminPassword) => {
+      state.adminPassword = adminPassword
     }
   },
 

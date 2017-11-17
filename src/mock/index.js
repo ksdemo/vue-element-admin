@@ -4,6 +4,8 @@ import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 // 平台
 import platformAPI from './platform'
+// 系统用户
+import sysUserAPI from './sysUser'
 
 Mock.setup({
   timeout: '350-600'
@@ -37,4 +39,11 @@ Mock.mock(/\/system\/configs\/platform\/resourceInfo/, 'get', platformAPI.resour
 Mock.mock(/\/system\/configs\/platform\/resourceServiceList/, 'get', platformAPI.resourceServiceList)
 Mock.mock(/\/system\/configs\/platform\/getResourceAccount/, 'get', platformAPI.getResourceAccount)
 
+// 权限管理 用户管理
+// 系统用户列表
+Mock.mock(/\/system\/configs\/sysPermission\/getSysUserList/, 'get', sysUserAPI.getSysUserList)
+// 系统用户资料
+Mock.mock(/\/system\/configs\/sysPermission\/getSysUserInfo/, 'get', sysUserAPI.getSysUserInfo)
+// 系统角色列表
+Mock.mock(/\/system\/configs\/sysPermission\/getSysRoleList/, 'get', sysUserAPI.getSysRoleList)
 export default Mock

@@ -15,7 +15,7 @@ export function fetchList(query) {
 // 查询用户列表
 export function getSysUserList(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sysUserList',
+    url: '/system/configs/sysPermission/getSysUserList',
     method: 'get',
     params: query
   })
@@ -23,7 +23,7 @@ export function getSysUserList(query) {
 // 查询用户信息
 export function getSysUserInfo(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sysUserInfo',
+    url: '/system/configs/sysPermission/getSysUserInfo',
     method: 'get',
     params: query
   })
@@ -31,7 +31,7 @@ export function getSysUserInfo(query) {
 // 获取用户角色
 export function getSysUserRole(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sysUserRole',
+    url: '/system/configs/sysPermission/getSysUserRole',
     method: 'get',
     params: query
   })
@@ -40,7 +40,7 @@ export function getSysUserRole(query) {
 // 创建用户帐号
 export function createSysUser(query) {
   return fetch({
-    url: '/system/configs/sysPermission/createSysUser',
+    url: '/system/configs/sysPermission/getSysUserList',
     method: 'get',
     params: query
   })
@@ -49,7 +49,7 @@ export function createSysUser(query) {
 // 修改用户信息
 export function updateSysUser(query) {
   return fetch({
-    url: '/system/configs/sysPermission/updateSysUser',
+    url: '/system/configs/sysPermission/getSysUserList',
     method: 'get',
     params: query
   })
@@ -58,7 +58,7 @@ export function updateSysUser(query) {
 // 修改用户状态
 export function updateSysUserStatus(query) {
   return fetch({
-    url: '/system/configs/sysPermission/updateSysUserStatus',
+    url: '/system/configs/sysPermission/getSysUserList',
     method: 'get',
     params: query
   })
@@ -66,7 +66,15 @@ export function updateSysUserStatus(query) {
 // 修改用户角色
 export function updateSysUserRole(query) {
   return fetch({
-    url: '/system/configs/sysPermission/updateSysUserRole',
+    url: '/system/configs/sysPermission/getSysUserList',
+    method: 'get',
+    params: query
+  })
+}
+// 修改用户密码
+export function updateSysUserPass(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysUserList',
     method: 'get',
     params: query
   })
@@ -78,7 +86,7 @@ export function updateSysUserRole(query) {
 // 获取角色列表
 export function getSysRoleList(query) {
   return fetch({
-    url: '/system/configs/sysPermission/sresourceServiceList',
+    url: '/system/configs/sysPermission/getSysRoleList',
     method: 'get',
     params: query
   })
