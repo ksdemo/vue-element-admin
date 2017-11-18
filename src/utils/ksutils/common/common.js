@@ -79,6 +79,7 @@ export function isArray(obj) {
   }
   return false
 }
+
 export function inArray(param, array) {
   for (var i = 0, iL = array.length; i < iL; i++) {
     if (param === array[i]) {
@@ -87,8 +88,46 @@ export function inArray(param, array) {
   }
   return false
 }
+
+
 export function toArray(arrayLike) {
   return [].slice.call(arrayLike)
+}
+
+// 数组的某个值位置
+export function indexOfArray(value, array) {
+  for (var i = 0; i < array.length; i++) {
+    if (isNaN(value) && isNaN(array[i])) {
+      return i
+    } else if (compareObj(value, array[i])) {
+      return i
+    }
+  }
+  return -1
+}
+
+// 比较两个数组内的值,不论顺序
+export function compareArray(arrayA, arrayB) {
+  if (isArray(arrayA) && isArray(arrayB)) {
+    arrayA = [].concat(arrayA)
+    arrayB = [].concat(arrayB)
+    if (arrayA.length != arrayB.length) {
+      return false
+    } else {
+      for (var i = 0; i < arrayA.length; i++) {
+        var temp = arrayA[i];
+        var j = indexOfArray(temp, arrayB)
+        if (j == -1) {
+          return false
+        } else {
+          arrayB.splice(j, 1);
+        }
+      }
+      return true
+    }
+  } else {
+    return arrayA == arrayB
+  }
 }
 /*  4. 数组 E  */
 /*  5. 对象 S */
@@ -101,33 +140,32 @@ export function inObj(param, obj) {
   return false
 }
 // 获取对象属性长度
-export function getLength(obj){
+export function getLength(obj) {
   var count = 0
-  for(var key in obj){
-    if(obj.hasOwnProperty(key) && obj[key] !== undefined){
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
       count++
     }
   }
   return count
 }
 // 比较两对象的值
-export function compareObj(objA, objB){
-  if(objA == null && objB == null){
+export function compareObj(objA, objB) {
+  if (objA == null && objB == null) {
     return true
-  }else if(typeof objA !== 'object' || typeof objB !== 'object'){
+  } else if (typeof objA !== 'object' || typeof objB !== 'object') {
     return objA == objB
-  }else if(isArray(objA) && isArray(objB)){
+  } else if (isArray(objA) && isArray(objB)) {
     return compareArray(objA, objB)
-  }
-  else{
+  } else {
     var flag = true
-    if(getLength(objA) != getLength(objB)){
+    if (getLength(objA) != getLength(objB)) {
       return false
     }
-    for(var key in objA){
-      if(objA.hasOwnProperty(key) && objA[key] !== undefined){
+    for (var key in objA) {
+      if (objA.hasOwnProperty(key) && objA[key] !== undefined) {
         flag = compareObj(objA[key], objB[key])
-        if(!flag){
+        if (!flag) {
           return false;
         }
       }
@@ -136,41 +174,6 @@ export function compareObj(objA, objB){
   }
 }
 
-// 数组的某个值位置
-export function indexOfArray(array, value){
-  for(var i = 0; i< array.length; i++){
-    if(isNaN(value) && isNaN(array[i])){
-      return i
-    }else if( compareObj(value, array[i])){
-      return i
-    }
-  }
-  return -1
-}
-
-// 比较两个一纬数组的value,不论顺序
-export function compareArray(arrayA, arrayB){
-  if(isArray(arrayA) && isArray(arrayB)){
-    arrayA = [].concat(arrayA)
-    arrayB = [].concat(arrayB)
-    if(arrayA.length != arrayB.length){
-      return false
-    }else{
-      for(var i = 0; i< arrayA.length; i++){
-        var temp = arrayA[i];
-        var j = indexOfArray(arrayB, temp)
-        if( j == -1){
-          return false
-        }else{
-          arrayB.splice(j, 1);
-        }
-      }
-      return true
-    }
-  }else {
-    return arrayA == arrayB
-  }
-}
 // 扩展 克隆 摘取自jquery
 export function extend() {
 
@@ -180,7 +183,8 @@ export function extend() {
   var fnToString = hasOwn.toString
 
   function isPlainObject(obj) {
-    var proto, Ctor
+    var proto,
+      Ctor
 
     // Detect obvious negatives
     // Use toString instead of jQuery.type to catch host objects
@@ -232,10 +236,10 @@ export function extend() {
   }
 
   // 如果只有一个参数，则把jQuery对象赋值给target，即扩展到jQuery对象上
-  if ( length === i ) {
-      target = this;
-      // i减1，指向被扩展对象
-      --i;
+  if (length === i) {
+    target = this;
+    // i减1，指向被扩展对象
+    --i;
   }
 
   // 开始遍历需要被扩展到target上的参数
@@ -382,7 +386,7 @@ export function isMobileUserAgent() {
 
 
 //判断PC端浏览器版本
-export function checkBrowser({ie = 10, chrome = 40, firefox = 40, safari = 500 } = {}) {
+export function checkBrowser({ie = 10, chrome = 40, firefox = 40, safari = 500} = {}) {
   var browser = getBrowserInfo(); //浏览器信息
   //alert(browser);//IE 11.0
   //IE11以下： MSIE 10.0、MSIE9.0等
@@ -390,28 +394,28 @@ export function checkBrowser({ie = 10, chrome = 40, firefox = 40, safari = 500 }
   //firefox: firefox/42.0 [返回的是个数组]
   browser = browser + ''; // 转为字符串
   var verinfo = browser.replace(/[^0-9.]/ig, ""); //浏览器版本
-  var verNum = verinfo.substr(0,verinfo.indexOf('.')) - 0 //浏览器大版本号转数字类型
+  var verNum = verinfo.substr(0, verinfo.indexOf('.')) - 0 //浏览器大版本号转数字类型
   //IE浏览器: 11.0/10.0/9.0
-  if(/ie/.test(browser) && verNum < ie){
+  if (/ie/.test(browser) && verNum < ie) {
     alert('您的IE浏览器版本过低, 请安装最新版本chrome/firefox/QQ浏览器')
     return false
   }
   //chrome浏览器：41.0.2272.89
-  if(/chrome/.test(browser) && verNum < chrome){
+  if (/chrome/.test(browser) && verNum < chrome) {
     alert('您的chrome浏览器版本过低, 请安装最新版本chrome/firefox/QQ浏览器')
     return false
   }
   //Firefox浏览器： 42.0
-  if(/firefox/.test(browser) && verNum < firefox){
+  if (/firefox/.test(browser) && verNum < firefox) {
     alert('您的firefox浏览器版本过低, 请安装最新版本chrome/firefox/QQ浏览器')
     return false
   }
   //safari浏览器： 42.0
-  if(/safari/.test(browser) && verNum < safari){
+  if (/safari/.test(browser) && verNum < safari) {
     alert('您的safari浏览器版本过低, 请安装最新版本chrome/firefox浏览器')
     return false
   }
-  
+
   return true
 
   function getBrowserInfo() {

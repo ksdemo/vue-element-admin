@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="账号/手机号" v-model="listQuery.clientName">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="角色名称" v-model="listQuery.clientName">
       </el-input>
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
@@ -81,14 +81,14 @@
           isLeaf: 'isLeaf'
         }"
         node-key="id"
+        :default-checked-keys="defaultChecked"
+        :check-strictly="true"
         highlight-current
         show-checkbox
         default-expand-all
       >
       <!-- 
       :render-content="renderContent" 
-      :check-strictly="true"
-      :default-checked-keys="defaultChecked" 
       -->
       </el-tree>
     <dialog-footer-admin slot="footer"
@@ -362,18 +362,14 @@ export default {
     /* 修改角色关联菜单 S */
     handleRoleMenu(row){
       this.resetTemp()
+      this.temp = deepCloneJSON(row)
       getSysRoleMenuRight({roleId: row.roleId})
       .then(response => {
         let data = response.data.data
         data = transformRoleMenu(data)
         this.defaultChecked = getRoleMenuChecked(data)
-        console.log(data)
-        console.log(this.defaultChecked)
         this.menuTemp = data;
         this.dialogRoleMenuVisible = true
-        this.$nextTick(()=>{
-          this.$refs.menuTree.setCheckedKeys(this.defaultChecked)
-        })
       })
       
       
@@ -390,15 +386,15 @@ export default {
         console.log('更新状态无变化!!')
         return;
       }
-      return
       var updateForm = deepCloneJSON({
-        user_id: this.temp.user_id,
+        data: JSON.stringify(currentCheckd),
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword
       })
 
       this.listLoading = true
       this.cancelRoleMenu();
+      console.log(updateForm)
       updateSysRoleMenuRight(updateForm).then(() => {
         this.$notify({
           title: '成功',

@@ -164,6 +164,7 @@ export function transformRoleMenu(rawData,isLeaf){
         }
         if(obj.children.length == 0){
           obj.isLeaf = true
+          delete obj.children
         }
       }
       data.push(obj)

@@ -227,7 +227,7 @@ export default {
             "menuId": 12,
             "name": "退货",
             "code": "ReturnGoods",
-            "checkbox": true
+            "checkbox": false
           }, {
             "funcId": 41,
             "menuId": 12,
@@ -239,7 +239,7 @@ export default {
             "menuId": 12,
             "name": "退款",
             "code": "refund",
-            "checkbox": true
+            "checkbox": false
           }]
         }, {
           "menuId": 13,
@@ -247,7 +247,7 @@ export default {
           "url": "orderMinaReturnList",
           "parentId": 11,
           "level": 3,
-          "checkbox": false,
+          "checkbox": true,
           "funcs": [{
             "funcId": 43,
             "menuId": 13,
