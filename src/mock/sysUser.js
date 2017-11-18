@@ -247,19 +247,19 @@ export default {
           "url": "orderMinaReturnList",
           "parentId": 11,
           "level": 3,
-          "checkbox": true,
+          "checkbox": false,
           "funcs": [{
             "funcId": 43,
             "menuId": 13,
             "name": "取消退货",
             "code": "cancelReturnGoods",
-            "checkbox": true
+            "checkbox": false
           }, {
             "funcId": 44,
             "menuId": 13,
             "name": "退款",
             "code": "refund",
-            "checkbox": true
+            "checkbox": false
           }]
         }]
       }, {

@@ -133,3 +133,64 @@ function joinUrl(url, data) {
 export function deepCloneJSON(obj){
   return JSON.parse(JSON.stringify(obj))
 }
+
+
+export function transformRoleMenu(rawData,isLeaf){
+  if(Array.isArray(rawData)){
+    var data = [];
+    rawData.forEach((value,index) => {
+      var obj = {};
+      if(isLeaf){
+        obj.id = value.funcId;
+        obj.parentId = value.menuId
+        obj.isLeaf = true
+        obj.label = value.name
+        obj.checked = value.checkbox
+        obj.code = value.code
+      }else{
+        obj.id = value.menuId;
+        obj.parentId = value.parentId
+        obj.label = value.name
+        obj.checked = value.checkbox
+        obj.code = value.url
+        obj.children = []
+        if(Array.isArray(value.menus) && value.menus.length> 0){
+          let _data = transformRoleMenu(value.menus)
+          obj.children = obj.children.concat(_data)
+        }
+        if(Array.isArray(value.funcs) && value.funcs.length> 0){
+          let _data = transformRoleMenu(value.funcs, true)
+          obj.children = obj.children.concat(_data)
+        }
+      }
+      data.push(obj)
+    })
+    return data
+  }else{
+    console.log("menuData数据格式不合法")
+    return []
+  }
+}
+// 获取选中的id值
+export function getRoleMenuChecked(rawData){
+  var data = [];
+  getChecked(rawData)
+  return data;
+  function getChecked(_rawData){
+    if(Array.isArray(_rawData)){
+      _rawData.forEach((value,index) => {
+        if(value.checked){
+          data.push(value.id);
+        }
+        if(Array.isArray(value.children) && value.children.length> 0){
+          getChecked(value.children)
+        }
+      })
+      return data
+    }else{
+      console.log("getRoleMenuChecked 的 rawData数据格式不合法")
+      return []
+    }
+  }
+}
+

@@ -74,16 +74,20 @@
     <el-dialog title="修改关联菜单" :visible.sync="dialogRoleMenuVisible" @close="cancelRoleMenu">
       <el-tree
         :data="menuTemp"
+        ref="menuTree"
         :props="{
-          children: 'menus',
-          label: 'name'
+          children: 'children',
+          label: 'label',
+          isLeaf: 'isLeaf'
         }"
-        :default-checked-keys="oldMenuTempChecked"
-        node-key="menuId"
+        :check-strictly="true"
+        :default-checked-keys="defaultChecked"
+        node-key="id"
         highlight-current
         show-checkbox
         default-expand-all
       >
+      <!-- :render-content="renderContent" -->
       </el-tree>
     <dialog-footer-admin slot="footer"
       @onenter = 'updateRoleMenu'
@@ -120,7 +124,9 @@ import {
 } from '@/utils/validate'
 import {
   compareObj,
-  deepCloneJSON
+  deepCloneJSON,
+  getRoleMenuChecked,
+  transformRoleMenu
 } from '@/utils/add.js'
 
 import {
@@ -189,7 +195,7 @@ export default {
         }]
       },
       /* 修改角色关联菜单相关 S */
-      oldMenuTempChecked: [],
+      defaultChecked: [],
       menuTemp: [],
       dialogRoleMenuVisible : false
       /* 修改角色相关 E */
@@ -351,75 +357,40 @@ export default {
       this.createPasswordType = this.createPasswordType === 'password' ? 'text' : 'password'
     },
 
-    /* 修改角色关联菜单 共用 S */
+    /* 修改角色关联菜单 S */
     handleRoleMenu(row){
       this.resetTemp()
       getSysRoleMenuRight({roleId: row.roleId})
       .then(response => {
         let data = response.data.data
-        this.oldMenuTempChecked = getMenuChecked(data)
-        this.menuTemp = deepCloneJSON(data)
+        data = transformRoleMenu(data)
+        this.defaultChecked = getRoleMenuChecked(data)
+        console.log(data)
+        console.log(this.defaultChecked)
+        this.menuTemp = data;
         this.dialogRoleMenuVisible = true
       })
-      // 获取选中的id值
-      function getMenuChecked(rawData){
-        var data = [];
-        getChecked(rawData)
-        return data;
-        function getChecked(_rawData){
-          if(Array.isArray(_rawData)){
-            _rawData.forEach((value,index) => {
-              if(value.checkbox){
-                data.push(value.menuId);
-              }
-              if(Array.isArray(value.menus) && value.menus.length> 0){
-                getChecked(value.menus)
-              }
-            })
-            return data
-          }else{
-            console.log("menuData数据格式不合法")
-            return
-          }
-        }
-      }
-      /*
-      function transformRoleMenu(rowData){
-        var data = [];
-        if(Array.isArray(rowData)){
-          rowData.forEach((value,index) => {
-            var obj = {};
-            obj.id = value.menuId;
-            obj.label = value.name
-            obj.checked = value.checkbox
-            if(Array.isArray(value.menus) && value.menus.length> 0){
-              obj.children = transformRoleMenu(value.menus)
-            }
-            data.push(obj)
-          })
-          return data
-        }else{
-          console.log("menuData数据格式不合法")
-          return []
-        }
-      }
-      */
+      
+      
     },
     cancelRoleMenu(){
       this.resetTemp(),
       this.dialogRoleMenuVisible = false
     },
     updateRoleMenu(){
+      var currentCheckd = this.$refs.menuTree.getCheckedKeys()
+      console.log(currentCheckd)
+      if (compareObj(deepCloneJSON(this.defaultChecked), currentCheckd)) {
+        this.cancelRoleMenu();
+        console.log('更新状态无变化!!')
+        return;
+      }
+      return
       var updateForm = deepCloneJSON({
         user_id: this.temp.user_id,
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword
       })
-      if (compareObj(this.oldTemp.roleId, this.temp.roleId)) {
-        this.cancelRoleMenu();
-        console.log('更新状态无变化!!')
-        return;
-      }
 
       this.listLoading = true
       this.cancelRoleMenu();
@@ -437,6 +408,18 @@ export default {
         this.getList()
       })
     },
+    renderContent(h, { node, data, store }) {
+      return (
+        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+          <span>
+            <span>{node.label}</span>
+          </span>
+          <span>
+            <span style="font-size: 12px;" type="text">{ data.code }</span>
+          </span>
+        </span>
+      );
+    }
     /* 修改角色关联菜单 E */
   }
 }
@@ -453,5 +436,9 @@ div.ks-dialog-input:nth-child(2n+1) {
   font-size: 16px;
   color: $dark_gray;
   cursor: pointer;
+}
+.el-tree-node__content{
+  display: flex;
+  align-items: center;
 }
 </style>

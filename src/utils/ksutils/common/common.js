@@ -116,7 +116,10 @@ export function compareObj(objA, objB){
     return true
   }else if(typeof objA !== 'object' || typeof objB !== 'object'){
     return objA == objB
-  }else {
+  }else if(isArray(objA) && isArray(objB)){
+    return compareArray(objA, objB)
+  }
+  else{
     var flag = true
     if(getLength(objA) != getLength(objB)){
       return false
@@ -133,6 +136,41 @@ export function compareObj(objA, objB){
   }
 }
 
+// 数组的某个值位置
+export function indexOfArray(array, value){
+  for(var i = 0; i< array.length; i++){
+    if(isNaN(value) && isNaN(array[i])){
+      return i
+    }else if( compareObj(value, array[i])){
+      return i
+    }
+  }
+  return -1
+}
+
+// 比较两个一纬数组的value,不论顺序
+export function compareArray(arrayA, arrayB){
+  if(isArray(arrayA) && isArray(arrayB)){
+    arrayA = [].concat(arrayA)
+    arrayB = [].concat(arrayB)
+    if(arrayA.length != arrayB.length){
+      return false
+    }else{
+      for(var i = 0; i< arrayA.length; i++){
+        var temp = arrayA[i];
+        var j = indexOfArray(arrayB, temp)
+        if( j == -1){
+          return false
+        }else{
+          arrayB.splice(j, 1);
+        }
+      }
+      return true
+    }
+  }else {
+    return arrayA == arrayB
+  }
+}
 // 扩展 克隆 摘取自jquery
 export function extend() {
 
