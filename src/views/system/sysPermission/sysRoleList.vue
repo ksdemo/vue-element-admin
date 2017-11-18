@@ -86,10 +86,9 @@
         highlight-current
         show-checkbox
         default-expand-all
+        :render-content="renderContent"
       >
-      <!-- 
-      :render-content="renderContent" 
-      -->
+      <!-- -->
       </el-tree>
     <dialog-footer-admin slot="footer"
       @onenter = 'updateRoleMenu'
@@ -107,7 +106,6 @@ import {
 } from 'element-ui'
 
 import {
-  getSysUserInfo,
   getSysRoleList,
   createSysRole,
   updateSysRole,
@@ -289,7 +287,7 @@ export default {
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
-            console.log('更新数据无变化!!')
+            this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
             return;
           }
           updateForm.adminPassword = this.adminPassword
@@ -371,8 +369,6 @@ export default {
         this.menuTemp = data;
         this.dialogRoleMenuVisible = true
       })
-      
-      
     },
     cancelRoleMenu(){
       this.resetTemp(),
@@ -383,7 +379,7 @@ export default {
       console.log(currentCheckd)
       if (compareObj(deepCloneJSON(this.defaultChecked), currentCheckd)) {
         this.cancelRoleMenu();
-        console.log('更新状态无变化!!')
+        this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
         return;
       }
       var updateForm = deepCloneJSON({
@@ -416,7 +412,7 @@ export default {
             <span>{node.label}</span>
           </span>
           <span>
-            <span style="font-size: 12px;" type="text">{ data.code }</span>
+            <span style="font-size: 12px;" type="text">ID: [ { data.id } ]</span>
           </span>
         </span>
       );

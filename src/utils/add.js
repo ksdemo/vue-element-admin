@@ -135,15 +135,16 @@ export function deepCloneJSON(obj){
 }
 
 
-export function transformRoleMenu(rawData,isLeaf){
+export function transformRoleMenu(rawData,isFunc){
   if(Array.isArray(rawData)){
     var data = [];
     rawData.forEach((value,index) => {
       var obj = {};
-      if(isLeaf){
+      if(isFunc){
         obj.id = value.funcId;
         obj.parentId = value.menuId
         obj.isLeaf = true
+        obj.isFunc = true
         obj.label = value.name
         obj.checked = value.checkbox
         obj.code = value.code

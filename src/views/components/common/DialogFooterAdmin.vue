@@ -14,9 +14,6 @@
 </template>
 
 <script>
-import {
-  Message
-} from 'element-ui'
 
 import {
   validatePassword
@@ -48,7 +45,7 @@ export default {
       if(validatePassword(this.adminPassword)){
         this.$emit('onenter', this.adminPassword)
       }else {
-        Message({
+        this.$message({
           message: '请输入管理员密码',
           type: 'error',
           duration: 2 * 1000

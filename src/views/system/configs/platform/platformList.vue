@@ -326,7 +326,7 @@ export default {
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
-            console.log('更新数据无变化!!')
+            this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
             return;
           }
           this.cancel();

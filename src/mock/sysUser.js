@@ -345,116 +345,29 @@ export default {
       "code": 1,
       "msg": "成功",
       "data": [{
-        "menuId": 7,
-        "name": "权限管理",
-        "url": "authority",
-        "parentId": 6,
-        "state": 1,
+        "menuId": 11,
+        "name": "小程序订单管理",
+        "url": "orderMinaList",
+        "parentId": 2,
         "level": 2,
-        "img": null,
-        "sort": 1,
-        "menu": [{
-          "menuId": 8,
-          "name": "用户管理",
-          "url": "userManager",
-          "parentId": 7,
-          "state": 1,
+        "checkbox": true,
+        "funcs": [],
+        "menus": [{
+          "menuId": 12,
+          "name": "小程序订单列表",
+          "url": "orderMinaList",
+          "parentId": 11,
           "level": 3,
-          "img": null,
-          "sort": 1
-        }, {
-          "menuId": 9,
-          "name": "角色管理",
-          "url": "roleManager",
-          "parentId": 7,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 2
-        }, {
-          "menuId": 10,
-          "name": "菜单管理",
-          "url": "menuManager",
-          "parentId": 7,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 3
+          "checkbox": true,
         }]
-      }, {
-        "menuId": 25,
-        "name": "配置管理",
-        "url": "configManager",
-        "parentId": 6,
-        "state": 1,
+      },{
+        "menuId": 30,
+        "name": "小程序对账",
+        "url": "billMinaList",
+        "parentId": 2,
         "level": 2,
-        "img": null,
-        "sort": 2,
-        "menu": [{
-          "menuId": 28,
-          "name": "支付管理",
-          "url": "settingPay",
-          "parentId": 25,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 1
-        }, {
-          "menuId": 29,
-          "name": "平台账号管理",
-          "url": "configPlateform",
-          "parentId": 25,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 999
-        }, {
-          "menuId": 35,
-          "name": "门店列表",
-          "url": "queryOutletList",
-          "parentId": 25,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 999
-        }]
-      }, {
-        "menuId": 43,
-        "name": "监控管理",
-        "url": "goAccess",
-        "parentId": 6,
-        "state": 1,
-        "level": 2,
-        "img": null,
-        "sort": 999,
-        "menu": [{
-          "menuId": 44,
-          "name": "Nginx监控",
-          "url": "goAccess",
-          "parentId": 43,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 999
-        }, {
-          "menuId": 45,
-          "name": "Druid监控",
-          "url": "druid",
-          "parentId": 43,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 999
-        }, {
-          "menuId": 46,
-          "name": "Tomcat监控",
-          "url": "tomcat",
-          "parentId": 43,
-          "state": 1,
-          "level": 3,
-          "img": null,
-          "sort": 999
-        }]
+        "checkbox": true,
+        "funcs": []
       }]
     }
   }

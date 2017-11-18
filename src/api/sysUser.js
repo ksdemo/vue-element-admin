@@ -134,7 +134,7 @@ export function updateSysRoleMenuRight(query) {
   })
 }
 
-// 获取角色菜单功能点权限
+// 获取角色菜单功能点权限 预留
 export function getSysRoleBtnRight(query) {
   return fetch({
     url: '/system/configs/sysPermission/getSysRoleMenuRight',
@@ -143,3 +143,21 @@ export function getSysRoleBtnRight(query) {
   })
 }
 /* 系统角色 相关 E */
+
+/* 系统菜单相关 S */
+// 获取菜单列表
+export function getSysMenuList(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysMenuList',
+    method: 'get',
+    params: query
+  })
+}
+// 更新菜单列表(包括增删改)
+export function updateSysMenuList(query) {
+  return fetch({
+    url: '/system/configs/sysPermission/getSysMenuList',
+    method: 'get',
+    params: query
+  })
+}

@@ -97,9 +97,7 @@ export function toArray(arrayLike) {
 // 数组的某个值位置
 export function indexOfArray(value, array) {
   for (var i = 0; i < array.length; i++) {
-    if (isNaN(value) && isNaN(array[i])) {
-      return i
-    } else if (compareObj(value, array[i])) {
+    if (compareObj(value, array[i])) {
       return i
     }
   }
@@ -108,6 +106,7 @@ export function indexOfArray(value, array) {
 
 // 比较两个数组内的值,不论顺序
 export function compareArray(arrayA, arrayB) {
+  
   if (isArray(arrayA) && isArray(arrayB)) {
     arrayA = [].concat(arrayA)
     arrayB = [].concat(arrayB)
@@ -151,10 +150,12 @@ export function getLength(obj) {
 }
 // 比较两对象的值
 export function compareObj(objA, objB) {
-  if (objA == null && objB == null) {
+  if (typeof objA === 'number' && typeof objB === 'number' && isNaN(objA) && isNaN(objB)) {
+    return true
+  } else if (objA === null && objB === null) {
     return true
   } else if (typeof objA !== 'object' || typeof objB !== 'object') {
-    return objA == objB
+    return objA === objB
   } else if (isArray(objA) && isArray(objB)) {
     return compareArray(objA, objB)
   } else {
