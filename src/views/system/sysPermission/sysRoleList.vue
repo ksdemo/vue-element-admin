@@ -80,14 +80,16 @@
           label: 'label',
           isLeaf: 'isLeaf'
         }"
-        :check-strictly="true"
-        :default-checked-keys="defaultChecked"
         node-key="id"
         highlight-current
         show-checkbox
         default-expand-all
       >
-      <!-- :render-content="renderContent" -->
+      <!-- 
+      :render-content="renderContent" 
+      :check-strictly="true"
+      :default-checked-keys="defaultChecked" 
+      -->
       </el-tree>
     <dialog-footer-admin slot="footer"
       @onenter = 'updateRoleMenu'
@@ -369,6 +371,9 @@ export default {
         console.log(this.defaultChecked)
         this.menuTemp = data;
         this.dialogRoleMenuVisible = true
+        this.$nextTick(()=>{
+          this.$refs.menuTree.setCheckedKeys(this.defaultChecked)
+        })
       })
       
       

@@ -162,6 +162,9 @@ export function transformRoleMenu(rawData,isLeaf){
           let _data = transformRoleMenu(value.funcs, true)
           obj.children = obj.children.concat(_data)
         }
+        if(obj.children.length == 0){
+          obj.isLeaf = true
+        }
       }
       data.push(obj)
     })
