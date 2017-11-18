@@ -101,9 +101,6 @@
   </div>
 </template>
 <script>
-import {
-  Message
-} from 'element-ui'
 
 import {
   getSysRoleList,
@@ -287,7 +284,7 @@ export default {
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
-            this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
+            this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
             return;
           }
           updateForm.adminPassword = this.adminPassword
@@ -379,7 +376,7 @@ export default {
       console.log(currentCheckd)
       if (compareObj(deepCloneJSON(this.defaultChecked), currentCheckd)) {
         this.cancelRoleMenu();
-        this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
+        this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
         return;
       }
       var updateForm = deepCloneJSON({

@@ -132,7 +132,7 @@ export default {
       let menuData = deepCloneJSON(this.menuData)
       if(compareObj(menuData, deepCloneJSON(this.rawMenuData))){
         this.cancelChangeMenu();
-        this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
+        this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
         return
       }
       var updateForm = deepCloneJSON({

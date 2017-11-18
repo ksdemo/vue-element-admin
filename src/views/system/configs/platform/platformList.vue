@@ -100,9 +100,7 @@
   </div>
 </template>
 <script>
-import {
-  Message
-} from 'element-ui'
+
 import {
   getPlatformList,
   createPlatform,
@@ -326,7 +324,7 @@ export default {
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
-            this.$message({ message: '更新数据无变化', type: 'error', duration: 1000 })
+            this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
             return;
           }
           this.cancel();
