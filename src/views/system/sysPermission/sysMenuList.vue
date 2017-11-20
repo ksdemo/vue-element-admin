@@ -72,7 +72,7 @@ function adapt(data) {
 }
 let addId = 10000;
 export default {
-  name: 'sysUserList',
+  name: 'sysMenuList',
   directives: {
     waves
   },

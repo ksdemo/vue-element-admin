@@ -156,10 +156,10 @@ export default {
         "user_id": 8,
         "phone": "3368",
         "login_type": 1,
-        "roleId": null,
+        "roleId": 1,
         "mobile": "18678830362",
         "name": "dongdong",
-        "roleName": "",
+        "roleName": "管理员",
         "state": 1,
         "account": "chendongdong",
         "email": "chendongdong@qq.com"
@@ -208,134 +208,81 @@ export default {
       "code": 1,
       "msg": "成功",
       "data": [{
-        "menuId": 11,
-        "name": "小程序订单管理",
+        "menuId": 1,
+        "name": "系统管理",
         "url": "orderMinaList",
-        "parentId": 2,
-        "level": 2,
+        "parentId": 0,
+        "level": 1,
         "checkbox": true,
         "funcs": [],
-        "menus": [{
-          "menuId": 12,
-          "name": "小程序订单列表",
-          "url": "orderMinaList",
-          "parentId": 11,
-          "level": 3,
-          "checkbox": true,
-          "funcs": [{
-            "funcId": 40,
+        "menus": [
+          {
+            "menuId": 11,
+            "name": "权限管理",
+            "url": "orderMinaList",
+            "parentId": 1,
+            "level": 2,
+            "checkbox": true,
+            "menus": [{
+                "menuId": 111,
+                "name": "系统用户",
+                "code": "ReturnGoods",
+                "checkbox": false
+              }, {
+                "menuId": 112,
+                "name": "系统角色",
+                "code": "cancelReturnGoods",
+                "checkbox": true
+              }, {
+                "menuId": 113,
+                "name": "系统菜单",
+                "code": "refund",
+                "checkbox": false
+              }]
+          }, 
+          {
             "menuId": 12,
-            "name": "退货",
-            "code": "ReturnGoods",
-            "checkbox": false
-          }, {
-            "funcId": 41,
-            "menuId": 12,
-            "name": "取消退货",
-            "code": "cancelReturnGoods",
-            "checkbox": true
-          }, {
-            "funcId": 42,
-            "menuId": 12,
-            "name": "退款",
-            "code": "refund",
-            "checkbox": false
-          }]
-        }, {
-          "menuId": 13,
-          "name": "退货单管理",
-          "url": "orderMinaReturnList",
-          "parentId": 11,
-          "level": 3,
-          "checkbox": true,
-          "funcs": [{
-            "funcId": 43,
-            "menuId": 13,
-            "name": "取消退货",
-            "code": "cancelReturnGoods",
-            "checkbox": false
-          }, {
-            "funcId": 44,
-            "menuId": 13,
-            "name": "退款",
-            "code": "refund",
-            "checkbox": false
-          }]
-        }]
-      }, {
-        "menuId": 30,
-        "name": "小程序对账",
-        "url": "billMinaList",
-        "parentId": 2,
-        "level": 2,
-        "checkbox": true,
-        "funcs": [],
-        "menus": [{
-          "menuId": 31,
-          "name": "对账查询",
-          "url": "billQueryResult",
-          "parentId": 30,
-          "level": 3,
-          "checkbox": true,
-          "funcs": [{
-            "funcId": 58,
-            "menuId": 31,
-            "name": "导出文件",
-            "code": "export",
-            "checkbox": true
-          }]
-        }, {
-          "menuId": 32,
-          "name": "微信明细查询",
-          "url": "getWxBillDetails",
-          "parentId": 30,
-          "level": 3,
-          "checkbox": true,
-          "funcs": [{
-            "funcId": 59,
-            "menuId": 32,
-            "name": "导出文件",
-            "code": "export",
-            "checkbox": true
-          }, {
-            "funcId": 61,
-            "menuId": 32,
-            "name": "查看详情",
-            "code": "detail",
-            "checkbox": false
-          }]
-        }, {
-          "menuId": 33,
-          "name": "对账汇总",
-          "url": "queryStatisticsResult",
-          "parentId": 30,
-          "level": 3,
-          "checkbox": true,
-          "funcs": [{
-            "funcId": 60,
-            "menuId": 33,
-            "name": "导出文件",
-            "code": "export",
-            "checkbox": true
-          }]
-        }]
-      }, {
-        "menuId": 38,
-        "name": "报表管理",
-        "url": "reportManage",
-        "parentId": 2,
-        "level": 2,
-        "checkbox": true,
-        "funcs": [],
-        "menus": [{
-          "menuId": 39,
-          "name": "订单报表",
-          "url": "orderReportManage",
-          "parentId": 38,
-          "level": 3,
-          "checkbox": true,
-          "funcs": []
-        }]
+            "name": "配置管理",
+            "url": "orderMinaReturnList",
+            "parentId": 1,
+            "level": 3,
+            "checkbox": true,
+            "menus": [
+              {
+                "menuId": 114,
+                "name": "平台管理",
+                "code": "cancelReturnGoods",
+                "checkbox": false,
+                "menus": [
+                  {
+                    "menuId": 1115,
+                    "name": "平台列表",
+                    "code": "cancelReturnGoods",
+                    "checkbox": true
+                  },
+                  {
+                    "menuId": 1116,
+                    "name": "授权帐号",
+                    "code": "cancelReturnGoods",
+                    "checkbox": false
+                  },
+                  {
+                    "menuId": 1116,
+                    "name": "授权接口",
+                    "code": "cancelReturnGoods",
+                    "checkbox": false
+                  }
+                ]
+              }, 
+              {
+                "menuId": 115,
+                "name": "其他管理",
+                "code": "refund",
+                "checkbox": false
+              }
+            ]
+          }
+        ]
       }]
     }
   },

@@ -2,7 +2,7 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken, removeToken } from '@/utils/auth' // 验权
+import { getToken } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
 
 // permissiom judge
@@ -19,7 +19,10 @@ router.beforeEach((to, from, next) => {
   if (getToken()) { // 判断是否有token
     if (to.path === '/login') {
       // next({ path: '/' })
-      removeToken();next({ ...to });
+      store.dispatch('FedLogOut').then(() => {
+        Message.error('强制重新登录')
+        next()
+      })
       NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息

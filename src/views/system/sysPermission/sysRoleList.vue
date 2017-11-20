@@ -141,7 +141,7 @@ function adapt(data) {
 }
 
 export default {
-  name: 'sysUserList',
+  name: 'sysRoleList',
   directives: {
     waves
   },
