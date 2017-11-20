@@ -20,7 +20,7 @@ export function getSysUserList(query) {
     params: query
   })
 }
-// 查询用户信息
+// 查询用户信息 未启用
 export function getSysUserInfo(query) {
   return fetch({
     url: '/system/configs/sysPermission/getSysUserInfo',

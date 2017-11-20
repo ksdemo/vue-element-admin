@@ -1,5 +1,12 @@
 import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,checkLoginType, getImgCode, getPhoneCode} from '@/api/login'
 import { getToken, setToken, setRefreshToken, removeToken } from '@/utils/auth'
+import {
+  getSysRoleMenuRight
+} from '@/api/sysUser.js'
+import {
+  getRoleMenuChecked,
+  transformRoleMenu
+} from '@/utils/add.js'
 
 const user = {
   state: {
@@ -16,7 +23,8 @@ const user = {
     },
     loginType: 1,
     imgCode: null,
-    adminPassword: ''
+    adminPassword: '',
+    menus: []
   },
 
   mutations: {
@@ -52,6 +60,9 @@ const user = {
     },
     SET_ADMINPASSWORD: (state, adminPassword) => {
       state.adminPassword = adminPassword
+    },
+    SET_MENUS: (state, menus) => {
+      state.menus = menus
     }
   },
 
@@ -122,7 +133,7 @@ const user = {
         })
       })
     },
-    // 用户名登录
+    // 用户名登录 模拟用
     LoginByUsername({commit}, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
@@ -157,6 +168,23 @@ const user = {
       })
     },
 
+    // 获取用户菜单路由权限
+    GetUserMenus({commit, state}) {
+      return new Promise((resolve, reject) => {
+        getSysRoleMenuRight(state.roles).then(response => {
+          let data = response.data.data
+          data = transformRoleMenu(data)
+          console.log(data)
+          let menus = getRoleMenuChecked(data)
+          console.log(menus)
+          commit('SET_MENUS', menus)
+          resolve(menus)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
     // 第三方验证登录
     // LoginByThirdparty({ commit, state }, code) {
     //   return new Promise((resolve, reject) => {
@@ -177,6 +205,7 @@ const user = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_MENUS', [])
           removeToken()
           resolve()
         }).catch(error => {

@@ -6,10 +6,10 @@ import { getToken } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
 
 // permissiom judge
-function hasPermission(roles, permissionRoles) {
+function hasPermission(roles, menus, menuId) {
   if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
-  if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
+  if (!menuId) return true
+  return  menus.indexOf(menuId) >= 0
 }
 
 // register global progress.
@@ -28,9 +28,12 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
           const roles = res.data.role
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
-            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-            next({ ...to }) // hack方法 确保addRoutes已完成
+          store.dispatch('GetUserMenus', roles ).then( res => {
+            const menus = res
+            store.dispatch('GenerateRoutes', {roles,menus}).then(() => { // 生成可访问的路由表
+              router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+              next({ ...to }) // hack方法 确保addRoutes已完成
+            })
           })
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
@@ -39,8 +42,9 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
+        console.log(store.getters.menus)
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.role)) {
+        if (hasPermission(store.getters.roles, store.getters.menus, to.meta.menuId)) {
           next()//
         } else {
           next({ path: '/401', query: { noGoBack: true }})

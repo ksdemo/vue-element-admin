@@ -150,7 +150,6 @@
 
 import {
   getSysUserList,
-  getSysUserInfo,
   getSysRoleList,
   createSysUser,
   updateSysUser,

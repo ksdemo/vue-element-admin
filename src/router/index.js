@@ -51,6 +51,7 @@ export const asyncRouterMap = [
     redirect: 'noredirect',
     name: '系统管理',
     icon: 'example',
+    meta: { menuId: 1 },
     children: [
       {
         path: '/system/sysPermission',
@@ -58,10 +59,11 @@ export const asyncRouterMap = [
         redirect: '/system/sysPermission/sysUserList',
         name: '权限管理',
         icon: 'user',
+        meta: { menuId: 11 },
         children: [
-          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: '系统用户' },
-          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: '系统角色' },
-          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: '编辑菜单' }
+          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: '系统用户', meta: { menuId: 111 } },
+          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: '系统角色', meta: { menuId: 112 } },
+          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: '编辑菜单', meta: { menuId: 113 } }
         ]
       },
       {
