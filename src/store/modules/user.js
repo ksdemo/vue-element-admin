@@ -174,9 +174,7 @@ const user = {
         getSysRoleMenuRight(state.roles).then(response => {
           let data = response.data.data
           data = transformRoleMenu(data)
-          console.log(data)
           let menus = getRoleMenuChecked(data)
-          console.log(menus)
           commit('SET_MENUS', menus)
           resolve(menus)
         }).catch(error => {

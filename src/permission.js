@@ -42,7 +42,6 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
-        console.log(store.getters.menus)
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
         if (hasPermission(store.getters.roles, store.getters.menus, to.meta.menuId)) {
           next()//
