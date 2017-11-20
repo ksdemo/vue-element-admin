@@ -31,6 +31,12 @@ function filterAsyncRouter(asyncRouterMap, roles) {
   return accessedRouters
 }
 
+/**
+ * 递归过滤符合用户角色权限的路由表，返回需显示为左侧菜单的路由表
+ * @param asyncRouterMap
+ * @param roles
+ */
+
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -40,6 +46,9 @@ const permission = {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
+    },
+    SET_MENUROUTERS: (state, routers) => {
+      state.menuRouters = routers
     }
   },
   actions: {
