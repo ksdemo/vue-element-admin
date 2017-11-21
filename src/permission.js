@@ -4,13 +4,7 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { getToken } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
-
-// permissiom judge
-function hasPermission(roles, menus, menuId) {
-  if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
-  if (!menuId) return true
-  return  menus.indexOf(menuId) >= 0
-}
+import { hasPermission } from '@/utils/common.js' // 验权
 
 // register global progress.
 const whiteList = ['/login', '/authredirect']// 不重定向白名单
@@ -27,10 +21,8 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const roles = res.data.role
-          store.dispatch('GetUserMenus', roles ).then( res => {
-            const menus = res
-            store.dispatch('GenerateRoutes', {roles,menus}).then(() => { // 生成可访问的路由表
+          store.dispatch('GetUserMenus').then( res => { // 拉取menus权限
+            store.dispatch('GenerateRoutes').then(() => { // 生成可访问的路由表
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
               next({ ...to }) // hack方法 确保addRoutes已完成
             })

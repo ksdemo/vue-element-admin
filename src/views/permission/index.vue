@@ -3,6 +3,7 @@
     <div style='margin-bottom:15px;'>你的权限： {{roles}}</div>
     切换权限：
     <el-radio-group v-model="role">
+      <el-radio-button label="admin"></el-radio-button>
       <el-radio-button label="editor"></el-radio-button>
     </el-radio-group>
   </div>
@@ -24,8 +25,9 @@ export default{
   },
   watch: {
     role(val) {
+      console.log(val)
       this.$store.dispatch('ChangeRole', val).then(() => {
-        this.$router.push({ path: '/permission/index?' + +new Date() })
+        this.$router.push({ path: '/permission/index?r=' + +new Date() })
       })
     }
   }

@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import {request} from '@/utils/add.js'
+import {request} from '@/utils/common.js'
 import md5 from 'js-md5';
 /*
 export function fetchList(query) {

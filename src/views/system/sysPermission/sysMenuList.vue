@@ -65,7 +65,7 @@ import {
   deepCloneJSON,
   getRoleMenuChecked,
   transformRoleMenu
-} from '@/utils/add.js'
+} from '@/utils/common.js'
 
 function adapt(data) {
   return data;

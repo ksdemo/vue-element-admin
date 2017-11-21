@@ -6,7 +6,7 @@ import {
 import {
   getRoleMenuChecked,
   transformRoleMenu
-} from '@/utils/add.js'
+} from '@/utils/common.js'
 
 const user = {
   state: {
@@ -50,6 +50,9 @@ const user = {
       state.avatar = avatar
     },
     SET_ROLES: (state, roles) => {
+      if(typeof roles !== 'object'){
+        roles = [roles]
+      }
       state.roles = roles || [];
     },
     SET_LOGINTYPE: (state, loginType) => {

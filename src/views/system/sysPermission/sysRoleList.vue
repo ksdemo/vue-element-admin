@@ -124,7 +124,7 @@ import {
   deepCloneJSON,
   getRoleMenuChecked,
   transformRoleMenu
-} from '@/utils/add.js'
+} from '@/utils/common.js'
 
 import {
   statusTypeOptions

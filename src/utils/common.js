@@ -199,3 +199,9 @@ export function getRoleMenuChecked(rawData){
   }
 }
 
+// permissiom judge
+export function hasPermission(roles, menus, menuId) {
+  if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
+  if (!menuId) return true
+  return  menus.indexOf(menuId) >= 0
+}

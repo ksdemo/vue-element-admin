@@ -1,6 +1,6 @@
 import {AUTH_CLIENT_ID, AUTH_CLIENT_SECRET, AUTH_PASSWORD_ID, AUTH_PASSWORD_SECRET} from '@/config'
 import fetch from '@/utils/fetch'
-import {request, randomString, requestImg} from '@/utils/add.js'
+import {request, randomString, requestImg} from '@/utils/common.js'
 import { getToken } from '@/utils/auth'
 import md5 from 'js-md5';
 
