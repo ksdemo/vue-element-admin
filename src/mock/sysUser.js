@@ -308,37 +308,5 @@ export default {
         ]
       }]
     }
-  },
-  // 系统菜单列表
-  getSysMenuList() {
-    return {
-      "code": 1,
-      "msg": "成功",
-      "data": [{
-        "menuId": 11,
-        "name": "小程序订单管理",
-        "url": "orderMinaList",
-        "parentId": 2,
-        "level": 2,
-        "checkbox": true,
-        "funcs": [],
-        "menus": [{
-          "menuId": 12,
-          "name": "小程序订单列表",
-          "url": "orderMinaList",
-          "parentId": 11,
-          "level": 3,
-          "checkbox": true,
-        }]
-      },{
-        "menuId": 30,
-        "name": "小程序对账",
-        "url": "billMinaList",
-        "parentId": 2,
-        "level": 2,
-        "checkbox": true,
-        "funcs": []
-      }]
-    }
   }
 }

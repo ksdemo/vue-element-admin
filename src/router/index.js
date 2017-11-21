@@ -63,7 +63,7 @@ export const asyncRouterMap = [
         children: [
           { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: '系统用户', meta: { menuId: 111 } },
           { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: '系统角色', meta: { menuId: 112 } },
-          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: '编辑菜单', meta: { menuId: 113 } }
+          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: '系统菜单', meta: { menuId: 113 } }
         ]
       },
       {

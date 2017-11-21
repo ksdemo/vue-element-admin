@@ -50,5 +50,5 @@ Mock.mock(/\/system\/configs\/sysPermission\/getSysRoleList/, 'get', sysUserAPI.
 Mock.mock(/\/system\/configs\/sysPermission\/getSysRoleMenuRight/, 'get', sysUserAPI.getSysRoleMenuRight)
 
 // 系统菜单列表
-Mock.mock(/\/system\/configs\/sysPermission\/getSysMenuList/, 'get', sysUserAPI.getSysMenuList)
+Mock.mock(/\/system\/configs\/sysPermission\/getSysMenuList/, 'get', sysUserAPI.getSysRoleMenuRight)
 export default Mock
