@@ -232,7 +232,30 @@ export default {
                 "menuId": 112,
                 "name": "系统角色",
                 "code": "cancelReturnGoods",
-                "checkbox": true
+                "checkbox": true,
+                "funcs":[
+                  {
+                    "funcId": 1111,
+                    "name": "添加",
+                    "code": "refund",
+                    "checkbox": true
+                  },{
+                    "funcId": 1112,
+                    "name": "删除",
+                    "code": "refund",
+                    "checkbox": false
+                  },{
+                    "funcId": 1113,
+                    "name": "编辑",
+                    "code": "refund",
+                    "checkbox": true
+                  },{
+                    "funcId": 1114,
+                    "name": "关联菜单",
+                    "code": "refund",
+                    "checkbox": false
+                  }
+                ]
               }, {
                 "menuId": 113,
                 "name": "系统菜单",

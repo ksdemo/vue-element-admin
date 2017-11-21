@@ -4,7 +4,6 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { getToken } from '@/utils/auth' // 验权
 import { Message } from 'element-ui'
-import { hasPermission } from '@/utils/common.js' // 验权
 
 // register global progress.
 const whiteList = ['/login', '/authredirect']// 不重定向白名单
@@ -35,7 +34,7 @@ router.beforeEach((to, from, next) => {
         })
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, store.getters.menus, to.meta.menuId)) {
+        if (store.getters.hasPermission(to.meta.menuId)) {
           next()//
         } else {
           next({ path: '/401', query: { noGoBack: true }})

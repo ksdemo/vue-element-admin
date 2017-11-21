@@ -1,3 +1,4 @@
+import { hasPermission } from '@/utils/common.js' // 验权, 注意,路由和按钮共用验权
 const getters = {
   sidebar: state => state.app.sidebar,
   visitedViews: state => state.app.visitedViews,
@@ -10,6 +11,9 @@ const getters = {
   menus: state => state.user.menus,
   setting: state => state.user.setting,
   permission_routers: state => state.permission.routers,
-  addRouters: state => state.permission.addRouters
+  addRouters: state => state.permission.addRouters,
+  hasPermission:  (state) => (menuId) => {
+    return hasPermission(state.user.roles, state.user.menus, menuId)
+  }
 }
 export default getters
