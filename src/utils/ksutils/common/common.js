@@ -95,17 +95,17 @@ export function toArray(arrayLike) {
 }
 
 // 数组的某个值位置
-export function indexOfArray(value, array) {
+export function indexOfArray(value, array, strict) {
   for (var i = 0; i < array.length; i++) {
-    if (compareObj(value, array[i])) {
+    if (compareObj(value, array[i], strict)) {
       return i
     }
   }
   return -1
 }
 
-// 比较两个数组内的值,不论顺序
-export function compareArray(arrayA, arrayB) {
+// 比较两个数组内的值,不论顺序 , strict情况下比较顺序
+export function compareArray(arrayA, arrayB, strict) {
   
   if (isArray(arrayA) && isArray(arrayB)) {
     arrayA = [].concat(arrayA)
@@ -116,7 +116,7 @@ export function compareArray(arrayA, arrayB) {
       for (var i = 0; i < arrayA.length; i++) {
         var temp = arrayA[i];
         var j = indexOfArray(temp, arrayB)
-        if (j == -1) {
+        if (j == -1 || (strict && j!=i)) {
           return false
         } else {
           arrayB.splice(j, 1);
@@ -148,8 +148,8 @@ export function getLength(obj) {
   }
   return count
 }
-// 比较两对象的值
-export function compareObj(objA, objB) {
+// 比较两对象的值 ,strict模式比较数组的key
+export function compareObj(objA, objB, strict) {
   if (typeof objA === 'number' && typeof objB === 'number' && isNaN(objA) && isNaN(objB)) {
     return true
   } else if (objA === null && objB === null) {
@@ -157,7 +157,7 @@ export function compareObj(objA, objB) {
   } else if (typeof objA !== 'object' || typeof objB !== 'object') {
     return objA === objB
   } else if (isArray(objA) && isArray(objB)) {
-    return compareArray(objA, objB)
+    return compareArray(objA, objB, strict)
   } else {
     var flag = true
     if (getLength(objA) != getLength(objB)) {
@@ -165,7 +165,7 @@ export function compareObj(objA, objB) {
     }
     for (var key in objA) {
       if (objA.hasOwnProperty(key) && objA[key] !== undefined) {
-        flag = compareObj(objA[key], objB[key])
+        flag = compareObj(objA[key], objB[key], strict)
         if (!flag) {
           return false;
         }

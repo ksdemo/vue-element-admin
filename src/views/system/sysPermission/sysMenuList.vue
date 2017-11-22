@@ -22,7 +22,6 @@
           isLeaf: 'isLeaf'
         }"
         node-key="id"
-        accordion
         :filter-node-method="filterNode"
         :default-checked-keys="defaultChecked"
         :check-strictly="true"
@@ -32,6 +31,7 @@
         :render-content="renderContent"
       >
       </el-tree>
+      <!-- accordion -->
     </div>
     <!-- 操作按钮 -->
     <div style="margin-top: 20px; text-align: right">
@@ -107,7 +107,7 @@ export default {
         let _data = response.data.data
         _data = transformRoleMenu(_data)
         let data = [{
-          "id": 0,
+          "id": -1,
           "label": "顶级",
           "children": _data
         }]
@@ -136,7 +136,7 @@ export default {
         return
       }
       var updateForm = deepCloneJSON({
-        menuData: menuData,
+        menuData: menuData[0].children,
         adminPassword: this.adminPassword
       })
       this.listLoading = true
@@ -164,7 +164,7 @@ export default {
         inputErrorMessage: '菜单名称不正确'
       })
       .then(({ value }) => {
-        let newChild = { id: addId++, label: value, children: [], parentId: data.id};
+        let newChild = { id: 'N'+(addId++), label: value, children: [], parentId: data.id};
         if (!data.children) {
           this.$set(data, 'children', []);
         }
@@ -177,7 +177,28 @@ export default {
           duration: 1000
         })
       });
-      
+    },
+    appendFunc(data) {
+      this.$prompt('请输入功能名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\w+/,
+        inputErrorMessage: '功能名称不正确'
+      })
+      .then(({ value }) => {
+        let newChild = { id: 'N'+(addId++), label: value, children: [], parentId: data.id, isFunc: true};
+        if (!data.children) {
+          this.$set(data, 'children', []);
+        }
+        data.children.push(newChild);
+      })
+      .catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消',
+          duration: 1000
+        })
+      });
     },
     removeMenu(node, data) {
       const parent = node.parent;
@@ -208,16 +229,29 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     renderContent(h, { node, data, store }) {
+      var hideTop = data.id == -1 ? 'display: none;' : 'font-size: 12px; margin-left: 10px;';
+      var hideFunc =  data.isFunc ? 'display: none;' : 'font-size: 12px;';
+      var toggleExpand = (node)=>{
+        if(node.expanded){
+          node.collapse()
+        }else if(node.childNodes && node.childNodes.length > 0){
+          node.expand()
+        }
+      }
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
           <span>
-            <span>{node.label}</span>
+            <span style={data.isFunc ? 'display:none' : ''}  on-click={ () => toggleExpand(node) } >{node.label}</span>
+            <el-button type="text" style={!data.isFunc ? 'display:none' : 'font-size: 12px;color: #97a1be'}>{node.label}</el-button>
           </span>
           <span>
-            <span style="font-size: 12px;margin-right:12px" type="text">ID: [ { data.id } ]</span>
-            <el-button style="font-size: 12px;" type="text" on-click={ () => this.editMenu(data) }>编辑</el-button>
-            <el-button style="font-size: 12px;" type="text" on-click={ () => this.appendMenu(data) }>增加子菜单</el-button>
-            <el-button style="font-size: 12px;" type="text" on-click={ () => this.removeMenu(node, data) }>删除</el-button>
+            <span style="font-size: 12px;margin-right:12px;width:6em;text-align:left;display:inline-block" type="text">ID: [ { data.id } ]</span>
+            <span style="width:220px;display:inline-block">
+              <el-button style={hideTop} type="text" on-click={ () => this.editMenu(data) }>编辑</el-button>
+              <el-button style={hideTop} type="text" on-click={ () => this.removeMenu(node, data) }>删除</el-button>
+              <el-button style={ hideFunc } type="text" on-click={ () => this.appendMenu(data) }>添加子菜单</el-button>
+              <el-button style={ (data.id == -1 || data.isFunc) ? 'display: none;' : 'font-size: 12px;' } type="text" on-click={ () => this.appendFunc(data) }>添加子功能</el-button>
+            </span>
           </span>
         </span>
       );

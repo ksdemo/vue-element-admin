@@ -145,7 +145,7 @@ export default {
       "pageSize": 10
     }
   },
-  // 系统用户信息
+  // 系统用户信息 未启用
   getSysUserInfo(config) {
     return {
       "code": 1,
