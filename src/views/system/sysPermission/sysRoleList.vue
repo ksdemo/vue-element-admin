@@ -409,7 +409,8 @@ export default {
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
           <span>
-            <span>{node.label}</span>
+            <span style={data.isFunc ? 'display:none' : ''} >{node.label}</span>
+            <el-button type="text" style={!data.isFunc ? 'display:none' : 'font-size: 12px;color: #97a1be'}>{node.label}</el-button>
           </span>
           <span>
             <span style="font-size: 12px;" type="text">ID: [ { data.id } ]</span>
