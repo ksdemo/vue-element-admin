@@ -28,14 +28,6 @@ export const constantRouterMap = [
       hidden: true,
       children: [{ path: 'dashboard', component: _import('dashboard/index') }]
     }
-/*  ,{
-    path: '/introduction',
-    component: Layout,
-    redirect: '/introduction/index',
-    icon: 'people',
-    noDropdown: true,
-    children: [{ path: 'index', component: _import('introduction/index'), name: '简述' }]
-  }*/
 ]
 
 export default new Router({
@@ -45,6 +37,28 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  {
+    path: '/itcUser',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '用户管理',
+    icon: 'user',
+    children: [
+      { path: 'itcUserList', component: _import('itc/itcUser/itcUserList'), name: '普通用户' },
+      { path: 'itcDriverList', component: _import('itc/itcUser/itcUserList'), name: '司机用户' }
+    ]
+  },
+  {
+    path: '/itcOrder',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '订单管理',
+    icon: 'clipboard',
+    children: [
+      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: '订单列表' },
+      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理' }
+    ]
+  },
   {
     path: '/system',
     component: Layout,
@@ -58,7 +72,6 @@ export const asyncRouterMap = [
         component: _import('example/table/index'),
         redirect: '/system/sysPermission/sysUserList',
         name: '权限管理',
-        icon: 'user',
         meta: { menuId: 11 },
         children: [
           { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: '系统用户', meta: { menuId: 111 } },
@@ -71,7 +84,6 @@ export const asyncRouterMap = [
         component: _import('example/table/index'),
         redirect: 'noredirect',
         name: '配置管理',
-        icon: 'table',
         children: [
           { path: '/system/configs/platform', 
             component: _import('example/table/index'), 
@@ -82,23 +94,11 @@ export const asyncRouterMap = [
               { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: '授权帐号' },
               { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: '授权接口' }
             ]
-          },
+          }
         ]
       }
     ]
   },
-/*  {
-    path: '/system2',
-    component: Layout,
-    redirect: 'noredirect',
-    name: '系统管理',
-    icon: 'example',
-    children: [
-      { path: 'userlist', component: _import('system/userlist'), name: '用户管理' },
-      { path: 'rolelist', component: _import('example/table/table'), name: '角色管理' },
-      { path: 'deptlist', component: _import('example/table/table'), name: '部门管理' }
-    ]
-  },*/
   {
     path: '/permission',
     component: Layout,
