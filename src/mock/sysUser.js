@@ -227,7 +227,7 @@ export default {
                 "menuId": 111,
                 "name": "用户管理",
                 "code": "ReturnGoods",
-                "checkbox": false
+                "checkbox": true
               }, {
                 "menuId": 112,
                 "name": "系统角色2",
@@ -241,19 +241,19 @@ export default {
                     "checkbox": true
                   },{
                     "funcId": 1112,
-                    "name": "删除",
+                    "name": "删除2",
                     "code": "refund",
                     "checkbox": false
                   },{
                     "funcId": 1113,
-                    "name": "编辑",
+                    "name": "编辑2",
                     "code": "refund",
                     "checkbox": true
                   },{
                     "funcId": 1114,
-                    "name": "关联菜单",
+                    "name": "关联菜单2",
                     "code": "refund",
-                    "checkbox": false
+                    "checkbox": true
                   }
                 ]
               }, {

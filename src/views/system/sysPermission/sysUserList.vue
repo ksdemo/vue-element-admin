@@ -41,7 +41,7 @@
           <span>{{scope.row.roleName}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="状态" width="150">
+      <el-table-column align="center" label="状态" width="100">
         <template scope="scope">
           <el-tag :type="scope.row.state | statusTagFilter">{{scope.row.state | statusNameFilter }}</el-tag>
         </template>
