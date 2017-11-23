@@ -42,7 +42,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'itcUser',
-    meta: { menuId: 1, label: '用户管理' },
+    meta: { label: '用户管理' },
     icon: 'user',
     children: [
       { path: 'itcUserList', component: _import('itc/itcUser/itcUserList'), name: 'itcUserList', meta: { label: '普通用户' }},
@@ -54,11 +54,11 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: '订单管理',
-    label: '订单管理',
+    meta: { label: '订单管理' },
     icon: 'clipboard',
     children: [
-      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: '订单列表', label: '订单列表' },
-      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理', label: '退货单管理' }
+      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: 'itcUserList', meta: { label: '订单列表' }},
+      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理', meta: { label: '退货单管理' } }
     ]
   },
   {
@@ -66,21 +66,19 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'system',
-    label: '系统管理',
+    meta: { menuId: 1 ,label: '系统管理' },
     icon: 'example',
-    meta: { menuId: 1 },
     children: [
       {
         path: '/system/sysPermission',
         component: _import('example/table/index'),
         redirect: '/system/sysPermission/sysUserList',
         name: 'sysPermission',
-        label: '用户管理',
-        meta: { menuId: 11 },
+        meta: { menuId: 11, label: '用户管理' },
         children: [
-          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: 'sysUserList', label: '用户管理', meta: { menuId: 111 } },
-          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: 'sysRoleList', label: '角色管理', meta: { menuId: 112 } },
-          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: 'sysMenuList', label: '菜单管理', meta: { menuId: 113 } }
+          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: 'sysUserList',  meta: { menuId: 111 ,label: '用户管理'} },
+          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: 'sysRoleList', meta: { menuId: 112 , label: '角色管理'} },
+          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: 'sysMenuList', meta: { menuId: 113 , label: '菜单管理'} }
         ]
       },
       {
@@ -88,17 +86,17 @@ export const asyncRouterMap = [
         component: _import('example/table/index'),
         redirect: 'noredirect',
         name: 'sysConfigs',
-        label: '配置管理',
+        meta: { label: '配置管理'},
         children: [
           { path: '/system/configs/platform', 
             component: _import('example/table/index'), 
             redirect: 'noredirect',
             name: 'sysPlatform',
-            label: '平台管理',
+            meta: {label: '平台管理'},
             children: [
-              { path: 'platformList', component: _import('system/configs/platform/platformList'), name: 'platformList', label: '平台列表' },
-              { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: 'authAccountList', label: '授权帐号' },
-              { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: 'resourcesList', label: '授权接口' }
+              { path: 'platformList', component: _import('system/configs/platform/platformList'), name: 'platformList', meta: {label: '平台列表'} },
+              { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: 'authAccountList', meta: {label: '授权帐号'} },
+              { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: 'resourcesList', meta: {label: '授权接口'}  }
             ]
           }
         ]
@@ -111,9 +109,8 @@ export const asyncRouterMap = [
     redirect: '/permission/index',
     name: '权限测试',
     icon: 'lock',
-    meta: { role: ['admin'] },
     noDropdown: true,
-    children: [{ path: 'index', component: _import('permission/index'), name: '权限测试页', meta: { role: ['admin'] }}]
+    children: [{ path: 'index', component: _import('permission/index'), name: '权限测试页' }]
   },
   {
     path: '/icon',

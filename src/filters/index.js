@@ -2,24 +2,6 @@ import {
   statusTypeOptions
 } from '@/config'
 
-// arr to obj
-const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
-
-export function statusNameFilter(clientState) {
-  return statusTypeKeyValue[clientState]
-}
-export function statusTagFilter(status) {
-  for (var i = 0; i < statusTypeOptions.length; i++) {
-    if (statusTypeOptions[i].key == status) {
-      return statusTypeOptions[i].tag
-    }
-  }
-  return ''
-}
-
 function pluralize(time, label) {
   if (time === 1) {
     return time + label
@@ -122,4 +104,28 @@ export function html2Text(val) {
 
 export function toThousandslsFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
+}
+
+// arr to obj
+const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
+
+// 禁用状态名称
+export function statusNameFilter(clientState) {
+  return statusTypeKeyValue[clientState]
+}
+// 禁用状态tag的className
+export function statusTagFilter(status) {
+  for (var i = 0; i < statusTypeOptions.length; i++) {
+    if (statusTypeOptions[i].key == status) {
+      return statusTypeOptions[i].tag
+    }
+  }
+  return ''
+}
+// menu label
+export function menuLabelFilter(route) {
+  return route.meta && route.meta.label || route.name
 }

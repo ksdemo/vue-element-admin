@@ -14,7 +14,7 @@ function filterAsyncRouter(asyncRouterMap, getters) {
       }
       // 以服务端返回的数据来更改router配置
       if(menuId && getters.menusFlatted[menuId]){
-        route.label = getters.menusFlatted[menuId].label
+        route.meta.label = getters.menusFlatted[menuId].label
       }
       return true
     }
