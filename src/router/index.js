@@ -41,11 +41,12 @@ export const asyncRouterMap = [
     path: '/itcUser',
     component: Layout,
     redirect: 'noredirect',
-    name: '用户管理',
+    name: 'itcUser',
+    label: '用户管理',
     icon: 'user',
     children: [
-      { path: 'itcUserList', component: _import('itc/itcUser/itcUserList'), name: '普通用户' },
-      { path: 'itcDriverList', component: _import('itc/itcUser/itcUserList'), name: '司机用户' }
+      { path: 'itcUserList', component: _import('itc/itcUser/itcUserList'), name: 'itcUserList', label: '普通用户' },
+      { path: 'itcDriverList', component: _import('itc/itcUser/itcUserList'), name: 'itcDriverList', label: '司机用户' }
     ]
   },
   {
@@ -53,17 +54,19 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: '订单管理',
+    label: '订单管理',
     icon: 'clipboard',
     children: [
-      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: '订单列表' },
-      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理' }
+      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: '订单列表', label: '订单列表' },
+      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理', label: '退货单管理' }
     ]
   },
   {
     path: '/system',
     component: Layout,
     redirect: 'noredirect',
-    name: '系统管理',
+    name: 'system',
+    label: '系统管理',
     icon: 'example',
     meta: { menuId: 1 },
     children: [
@@ -71,28 +74,31 @@ export const asyncRouterMap = [
         path: '/system/sysPermission',
         component: _import('example/table/index'),
         redirect: '/system/sysPermission/sysUserList',
-        name: '权限管理',
+        name: 'sysPermission',
+        label: '用户管理',
         meta: { menuId: 11 },
         children: [
-          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: '系统用户', meta: { menuId: 111 } },
-          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: '系统角色', meta: { menuId: 112 } },
-          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: '系统菜单', meta: { menuId: 113 } }
+          { path: 'sysUserList', component: _import('system/sysPermission/sysUserList'), name: 'sysUserList', label: '用户管理', meta: { menuId: 111 } },
+          { path: 'sysRoleList', component: _import('system/sysPermission/sysRoleList'), name: 'sysRoleList', label: '角色管理', meta: { menuId: 112 } },
+          { path: 'sysMenuList', component: _import('system/sysPermission/sysMenuList'), name: 'sysMenuList', label: '菜单管理', meta: { menuId: 113 } }
         ]
       },
       {
         path: '/system/configs',
         component: _import('example/table/index'),
         redirect: 'noredirect',
-        name: '配置管理',
+        name: 'sysConfigs',
+        label: '配置管理',
         children: [
           { path: '/system/configs/platform', 
             component: _import('example/table/index'), 
             redirect: 'noredirect',
-            name: '平台管理',
+            name: 'sysPlatform',
+            label: '平台管理',
             children: [
-              { path: 'platformList', component: _import('system/configs/platform/platformList'), name: '平台列表' },
-              { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: '授权帐号' },
-              { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: '授权接口' }
+              { path: 'platformList', component: _import('system/configs/platform/platformList'), name: 'platformList', label: '平台列表' },
+              { path: 'authAccountList', component: _import('system/configs/platform/authAccountList'), name: 'authAccountList', label: '授权帐号' },
+              { path: 'resourcesList', component: _import('system/configs/platform/resourceList'), name: 'resourcesList', label: '授权接口' }
             ]
           }
         ]

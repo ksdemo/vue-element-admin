@@ -209,7 +209,7 @@ export default {
       "msg": "成功",
       "data": [{
         "menuId": 1,
-        "name": "系统管理",
+        "name": "系统管理2",
         "url": "orderMinaList",
         "parentId": 0,
         "level": 1,
@@ -218,25 +218,25 @@ export default {
         "menus": [
           {
             "menuId": 11,
-            "name": "权限管理",
+            "name": "用户管理",
             "url": "orderMinaList",
             "parentId": 1,
             "level": 2,
             "checkbox": true,
             "menus": [{
                 "menuId": 111,
-                "name": "系统用户",
+                "name": "用户管理",
                 "code": "ReturnGoods",
                 "checkbox": false
               }, {
                 "menuId": 112,
-                "name": "系统角色",
+                "name": "系统角色2",
                 "code": "cancelReturnGoods",
                 "checkbox": true,
                 "funcs":[
                   {
                     "funcId": 1111,
-                    "name": "添加",
+                    "name": "添加2",
                     "code": "refund",
                     "checkbox": true
                   },{

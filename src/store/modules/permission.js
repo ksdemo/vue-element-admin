@@ -7,9 +7,14 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function filterAsyncRouter(asyncRouterMap, getters) {
   const accessedRouters = asyncRouterMap.filter(route => {
-    if (getters.hasPermission(route.meta && route.meta.menuId)) {
+    let menuId = route.meta && route.meta.menuId;
+    if (getters.hasPermission(menuId)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouter(route.children, getters)
+      }
+      // 以服务端返回的数据来更改router配置
+      if(menuId && getters.menusFlatted[menuId]){
+        route.label = getters.menusFlatted[menuId].label
       }
       return true
     }
@@ -43,11 +48,11 @@ const permission = {
       return new Promise(resolve => {
         const roles = getters.roles
         let accessedRouters
-        if (roles.indexOf('admin') >= 0) {
-          accessedRouters = asyncRouterMap
-        } else {
+        // if (roles.indexOf('admin') >= 0) {
+        //   accessedRouters = asyncRouterMap
+        // } else {
           accessedRouters = filterAsyncRouter(asyncRouterMap, getters)
-        }
+        // }
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

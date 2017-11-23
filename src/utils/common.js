@@ -191,17 +191,46 @@ export function getRoleMenuChecked(rawData){
           getChecked(value.children)
         }
       })
-      return data
     }else{
       console.log("getRoleMenuChecked 的 rawData数据格式不合法")
-      return []
+    }
+  }
+}
+
+// 扁平化
+export function getRoleMenuFlatted(rawData){
+  var data = {};
+  flatten(rawData)
+  return data;
+  function flatten(_rawData){
+    if(Array.isArray(_rawData)){
+      _rawData.forEach((value) => {
+        if(value.id){
+          data[value.id] = value;
+          if(Array.isArray(value.children) && value.children.length > 0){
+            flatten(value.children)
+          }
+          if(value.children){
+            delete value.children
+          }
+        }else {
+          console.warn("getRoleMenuFlatted 的 rawData数据中: ", value, "无ID值")
+        }
+      })
+    }else{
+      console.warn("getRoleMenuFlatted 的 rawData数据格式不合法")
     }
   }
 }
 
 // permissiom judge
-export function hasPermission(roles, menus, menuId) {
+export function hasPermission(roles, menusFlatted, menuId) {
   if (roles.indexOf('admin') >= 0) return true // admin权限 直接通过
   if (!menuId) return true
-  return  menus.indexOf(menuId) >= 0
+  if(menusFlatted[menuId]){
+    return menusFlatted[menuId].checked
+  }else{
+    console.warn('本地文件配置了menuId: [' + menuId + '] 但服务端返回的数据不存在!!!')
+    return false
+  }
 }

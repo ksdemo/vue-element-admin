@@ -5,6 +5,7 @@ import {
 } from '@/api/sysUser.js'
 import {
   getRoleMenuChecked,
+  getRoleMenuFlatted,
   transformRoleMenu
 } from '@/utils/common.js'
 
@@ -24,7 +25,8 @@ const user = {
     loginType: 1,
     imgCode: null,
     adminPassword: '',
-    menus: []
+    menusFlatted : {},
+    menusChecked: []
   },
 
   mutations: {
@@ -64,8 +66,11 @@ const user = {
     SET_ADMINPASSWORD: (state, adminPassword) => {
       state.adminPassword = adminPassword
     },
-    SET_MENUS: (state, menus) => {
-      state.menus = menus
+    SET_MENUSFLATTED: (state, data) => {
+      state.menusFlatted = data
+    },
+    SET_MENUSChECKED: (state, data) => {
+      state.menusChecked = data
     }
   },
 
@@ -177,9 +182,11 @@ const user = {
         getSysRoleMenuRight(state.roles).then(response => {
           let data = response.data.data
           data = transformRoleMenu(data)
-          let menus = getRoleMenuChecked(data)
-          commit('SET_MENUS', menus)
-          resolve(menus)
+          let menusFlatted = getRoleMenuFlatted(data)
+          commit('SET_MENUSFLATTED', menusFlatted)
+          let menusChecked = getRoleMenuChecked(data)
+          commit('SET_MENUSChECKED', menusChecked)
+          resolve()
         }).catch(error => {
           reject(error)
         })
