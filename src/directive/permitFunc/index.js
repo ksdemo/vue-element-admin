@@ -1,13 +1,10 @@
-import permitFunc from './permitFunc'
+import permitFunc from './permitFunc.js'
+
+const PermitFunc = {};
 
 const install = function(Vue) {
-  Vue.directive('permitFunc', permitFunc)
+  Vue.directive('permit-func', permitFunc)
 }
 
-if (window.Vue) {
-  window.permitFunc = permitFunc
-  Vue.use(install); // eslint-disable-line
-}
-
-permitFunc.install = install
-export default permitFunc
+PermitFunc.install = install
+export default PermitFunc

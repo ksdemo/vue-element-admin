@@ -243,7 +243,7 @@ export default {
                     "funcId": 1112,
                     "name": "删除2",
                     "code": "refund",
-                    "checkbox": false
+                    "checkbox": true
                   },{
                     "funcId": 1113,
                     "name": "编辑2",
@@ -251,7 +251,7 @@ export default {
                     "checkbox": true
                   },{
                     "funcId": 1114,
-                    "name": "关联菜单2",
+                    "name": "关联功能2",
                     "code": "refund",
                     "checkbox": true
                   }
