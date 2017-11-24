@@ -97,7 +97,7 @@
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
           <el-select class="filter-item" v-model="temp.state" placeholder="请选择" style="width: 179px">
-            <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
+            <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.label" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>

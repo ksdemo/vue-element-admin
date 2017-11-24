@@ -108,7 +108,7 @@ export function toThousandslsFilter(num) {
 
 // arr to obj
 const statusTypeKeyValue = statusTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
+  acc[cur.key] = cur.label
   return acc
 }, {})
 

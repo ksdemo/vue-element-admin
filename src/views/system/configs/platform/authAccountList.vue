@@ -65,7 +65,7 @@
         </el-form-item>
         <el-form-item label="授权类型" class="ks-dialog-input" prop='clientType'>
           <el-select class="filter-item" v-model="temp.clientType" placeholder="请选择" style="width: 179px">
-            <el-option v-for="item in clientTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
+            <el-option v-for="item in clientTypeOptions" :key="item.key" :label="item.label" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
@@ -125,7 +125,7 @@
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
           <el-select class="filter-item" v-model="temp.clientState" placeholder="请选择" style="width: 179px">
-            <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
+            <el-option v-for="item in  statusTypeOptions" :key="item.key" :label="item.label" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>

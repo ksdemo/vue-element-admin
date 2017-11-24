@@ -57,8 +57,8 @@ export const asyncRouterMap = [
     meta: { label: '订单管理' },
     icon: 'clipboard',
     children: [
-      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: 'itcUserList', meta: { label: '订单列表' }},
-      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: '退货单管理', meta: { label: '退货单管理' } }
+      { path: 'itcOrderList', component: _import('itc/itcUser/itcUserList'), name: 'itcOrderList', meta: { label: '订单列表' }},
+      { path: 'itcOrderReturnList', component: _import('itc/itcUser/itcUserList'), name: 'itcOrderReturnList', meta: { label: '退货单管理' } }
     ]
   },
   {
