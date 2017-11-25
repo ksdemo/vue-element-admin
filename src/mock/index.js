@@ -6,6 +6,8 @@ import remoteSearchAPI from './remoteSearch'
 import platformAPI from './system/sysConfigsPlatform'
 // 系统用户
 import sysUserAPI from './system/sysUser'
+// itc用户
+import itcUserAPI from './itc/itcUser'
 
 Mock.setup({
   timeout: '350-600'
@@ -51,4 +53,7 @@ Mock.mock(/\/system\/configs\/sysPermission\/getSysRoleMenuRight/, 'get', sysUse
 
 // 系统菜单列表
 Mock.mock(/\/system\/configs\/sysPermission\/getSysMenuList/, 'get', sysUserAPI.getSysRoleMenuRight)
+
+// ITC 用户管理
+Mock.mock(/\/itc\/itcUser\/getItcUserList/, 'get', itcUserAPI.getItcUserList)
 export default Mock

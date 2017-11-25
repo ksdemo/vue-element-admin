@@ -1,8 +1,8 @@
 {
-  "name": "juicy",
+  "name": "itcmanager",
   "version": "2.2.1",
   "description": "A Vue.js admin",
-  "author": "Pan <panfree23@gmail.com>",
+  "author": "smat0096 <smat0096@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {

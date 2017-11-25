@@ -1,3 +1,159 @@
+import EXIF from './lib/exif-js/exif.js'
+
+function imgReader(file, options, cb) {
+  if (!file) return;
+  // 移动端
+  options.maxWidth = options.maxWidth || 800;
+  options.maxHeight = options.maxHeight || 1200;
+  options.maxSize = options.maxSize || 1024 * 1e3; // 1M, 单位kb
+  let Orientation
+  EXIF.getData(file, function() {
+    Orientation = EXIF.getTag(file, 'Orientation');
+  });
+  let reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function(e) {
+    reader.onload = null
+    var base64 = reader.result;
+    var image = new Image();
+    image.src = base64;
+    image.onload = function() {
+      // resize
+      var expectRect = getExpectRect(this, options)
+      var expectWidth = expectRect.width;
+      var expectHeight = expectRect.height;
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      canvas.width = expectWidth;
+      canvas.height = expectHeight;
+      ctx.drawImage(this, 0, 0, expectWidth, expectHeight);
+
+      //rotate 修复ios上传图片的时候 被旋转的问题
+      if (Orientation != "" && Orientation != 1) {
+        switch (Orientation) {
+          case 6: //需要顺时针（向左）90度旋转
+            rotateImg(this, 'left', canvas);
+            break;
+          case 8: //需要逆时针（向右）90度旋转
+            rotateImg(this, 'right', canvas);
+            break;
+          case 3: //需要180度旋转
+            rotateImg(this, 'right', canvas); //转两次
+            rotateImg(this, 'right', canvas);
+            break;
+        }
+      }
+
+      base64 = canvas.toDataURL("image/jpeg", 0.8);
+      let scale = file.size / options.maxSize
+      if (scale > 1) {
+        imgScale(base64, options.scale, _base64 => {
+          cb && cb(_base64)
+        })
+      } else {
+        cb && cb(base64)
+      }
+      console.log(base64);
+    };
+  }
+}
+function imgResize(src,){
+
+}
+// 获取缩放宽高
+function getExpectRect(image, options) {
+  var naturalWidth = image.naturalWidth;
+  var naturalHeight = image.naturalHeight;
+  var P = naturalWidth / naturalHeight;
+  var expectWidth = image.naturalWidth;
+  var expectHeight = image.naturalHeight;
+  if (options.width && options.height) {
+    expectWidth = options.width
+    expectHeight = options.height
+  } else if (options.width) {
+    expectWidth = options.width
+    expectHeight = expectWidth / P
+  } else if (options.height) {
+    expectHeight = options.height
+    expectWidth = expectHeight * P
+  } else if (naturalWidth > naturalHeight && naturalWidth > options.maxWidth) {
+    expectWidth = options.maxWidth
+    expectHeight = expectWidth / P
+  } else if (naturalHeight > naturalWidth && naturalHeight > options.maxHeight) {
+    expectHeight = options.maxHeight
+    expectWidth = expectHeight * P
+  }
+  return {
+    width: expectWidth,
+    height: expectHeight
+  }
+}
+
+//图片缩放
+function imgScale(imgUrl, quality, cb) {
+  let img = new Image();
+  let canvas = document.createElement('canvas');
+  let cxt = canvas.getContext('2d');
+  img.src = imgUrl;
+  img.onload = function() {
+    //缩放后图片的宽高
+    let width = img.naturalWidth / quality;
+    let height = img.naturalHeight / quality;
+    canvas.width = width;
+    canvas.height = height;
+    cxt.drawImage(this, 0, 0, width, height);
+    let dataURL = canvas.toDataURL('image/jpeg');
+    cb && cb(dataURL)
+  }
+}
+
+//图片旋转
+function rotateImg(img, direction, canvas) {
+  var min_step = 0;
+  var max_step = 3;
+  if (img == null) return;
+  var height = img.height;
+  var width = img.width;
+  var step = 2;
+  if (step == null) {
+    step = min_step;
+  }
+  if (direction == 'right') {
+    step++;
+    step > max_step && (step = min_step);
+  } else {
+    step--;
+    step < min_step && (step = max_step);
+  }
+  var degree = step * 90 * Math.PI / 180;
+  var ctx = canvas.getContext('2d');
+  switch (step) {
+    case 0:
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0);
+      break;
+    case 1:
+      canvas.width = height;
+      canvas.height = width;
+      ctx.rotate(degree);
+      ctx.drawImage(img, 0, -height);
+      break;
+    case 2:
+      canvas.width = width;
+      canvas.height = height;
+      ctx.rotate(degree);
+      ctx.drawImage(img, -width, -height);
+      break;
+    case 3:
+      canvas.width = height;
+      canvas.height = width;
+      ctx.rotate(degree);
+      ctx.drawImage(img, -width, 0);
+      break;
+  }
+}
+
 export function uploadPreview(option, callback) {
   window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL
   var res,

@@ -135,7 +135,7 @@
             // 剪裁图片的宽
             width: {
                 type: Number,
-                default: 200
+                default: 400
             },
             // 剪裁图片的高
             height: {

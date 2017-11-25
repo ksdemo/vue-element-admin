@@ -123,11 +123,10 @@ export const asyncRouterMap = [
   {
     path: '/components',
     component: Layout,
-    redirect: '/components/index',
+    redirect: '/components/tinymce',
     name: '组件',
     icon: 'component',
     children: [
-      { path: 'index', component: _import('components/index'), name: '介绍 ' },
       { path: 'tinymce', component: _import('components/tinymce'), name: '富文本编辑器' },
       { path: 'markdown', component: _import('components/markdown'), name: 'Markdown' },
       { path: 'jsoneditor', component: _import('components/jsonEditor'), name: 'JSON编辑器' },

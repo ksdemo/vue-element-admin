@@ -1,6 +1,6 @@
 import { extend } from './common.js'
 
-function getFormData(data) {
+export function getFormData(data) {
   var formData = new FormData()
   if (data.constructor !== Object) {
     throw new Error('getFormData 参数错误')
@@ -15,7 +15,7 @@ function getFormData(data) {
   return formData
 }
 
-function joinUrlParam(data) {
+export function joinUrlParam(data) {
   var str = '';
   if (data.constructor === Object) {
     for (var key in data) {
@@ -30,7 +30,7 @@ function joinUrlParam(data) {
   return str
 }
 
-function joinUrl(url, data) {
+export function joinUrl(url, data) {
   url += /\?/.test(url) ? '&' : '?';
   return url + joinUrlParam(data)
 }

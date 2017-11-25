@@ -3,11 +3,11 @@
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="账号/手机号" v-model="listQuery.mainQuery">
       </el-input>
-      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCert" placeholder="认证状态">
+      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.isIdcardCert" placeholder="认证状态">
         <el-option v-for="item in idcardCertOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
-      <el-select v-show="listQuery.idcardCert == 1" @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCertState" placeholder="认证结果">
+      <el-select v-show="listQuery.isIdcardCert == 1" @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCertState" placeholder="认证结果">
         <el-option v-for="item in idcardCertStateOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
@@ -42,18 +42,18 @@
       </el-table-column>
       <el-table-column align="center" label="实名认证" width="200">
         <template scope="scope">
-          <el-tag :type="scope.row.state | idcardCertTagFilter">{{scope.row.state | idcardCertFilter }}</el-tag>
-          <el-tag v-if="scope.row.state == 1" :type="scope.row.state | idcardCertStateTagFilter">{{scope.row.state | idcardCertStateFilter }}</el-tag>
+          <el-tag class="cursor" @click.native="handleIdcardcer(scope.row)" :type="scope.row.is_idcard_cert | idcardCertTagFilter">{{scope.row.is_idcard_cert | idcardCertFilter }}</el-tag>
+          <el-tag v-if="scope.row.is_idcard_cert == 1" :type="scope.row.idcard_cert_state | idcardCertStateTagFilter">{{scope.row.idcard_cert_state | idcardCertStateFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" min-width="180">
+      <el-table-column align="center" label="操作" min-width="200">
         <template scope="scope">
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button size="small" type="danger" @click="handleChangePassword(scope.row)">修改密码</el-button>
           <!--
-          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">实名信息</el-button>
-          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">认证结果</el-button>
+          <el-button size="small" type="danger" @click="handleChangeIdcert(scope.row)">实名信息</el-button>
+          <el-button size="small" type="danger" @click="handleChangeIdcert(scope.row)">认证结果</el-button>
           -->
         </template>
       </el-table-column>
@@ -67,7 +67,7 @@
     <!-- 创建/编辑用户信息-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form class="small-space" :inline="true" :model="temp" :rules="createItcUserRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createItcUser">
-        <el-form-item label="用户帐号" class="ks-dialog-input" prop='account'>
+        <el-form-item v-if="dialogStatus=='create'" label="用户帐号" class="ks-dialog-input" prop='account'>
           <el-input v-model="temp.account"></el-input>
         </el-form-item> 
         <el-form-item v-if="dialogStatus=='create'" label="用户密码" class="ks-dialog-input" prop='password'>
@@ -77,14 +77,8 @@
         <el-form-item label="用户昵称" class="ks-dialog-input" prop='name'>
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱" class="ks-dialog-input" prop='email'>
-          <el-input v-model="temp.email"></el-input>
-        </el-form-item>
         <el-form-item label="手机号" class="ks-dialog-input" prop='mobile'>
           <el-input  v-model="temp.mobile"></el-input>
-        </el-form-item>
-        <el-form-item label="分机号" class="ks-dialog-input" prop='phone'>
-          <el-input  v-model="temp.phone"></el-input>
         </el-form-item>
       </el-form>
       <dialog-footer-admin slot="footer"
@@ -129,19 +123,25 @@
       </dialog-footer-admin>
     </el-dialog>
 
-    <!-- 修改用户角色-->
-    <el-dialog title="修改用户角色" :visible.sync="dialogUserRoleVisible" @close="cancelChangeUserRole">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
-          <el-form-item label="用户角色" class="ks-dialog-input" prop='roleId'>
-            <el-select style="width: 200px" class="filter-item" v-model="temp.roleId" placeholder="请选择">
-              <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.name" :value="item.roleId">
-              </el-option>
-            </el-select>
-          </el-form-item>
+    <!-- 创建/修改用户实名认证信息-->
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogIdcertVisible" @close="cancelIdcert">
+      <el-form class="small-space" :model="idcertTemp" label-position="left" label-width="6em" style='width: 500px; margin-left:50px;'>
+        <el-form-item label="姓名" prop="realname">
+          <el-input type="text" v-model="idcertTemp.realname" auto-complete="off" style="width: 179px"></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="idNum">
+          <el-input type="text" v-model="idcertTemp.idNum" auto-complete="off" style="width: 179px"></el-input>
+        </el-form-item>
+        
       </el-form>
+      <div style="margin-left: 50px; margin-right: 20px;">
+        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :addData="{'type' : 10}"></dropzone>
+        <div style="height:20px"></div>
+        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :addData="{'type' : 11}"></dropzone>
+      </div>
     <dialog-footer-admin slot="footer"
-      @onenter = 'updateChangeUserRole'
-      @oncancel= 'cancelChangeUserRole'
+      @onenter = 'enterIdcert'
+      @oncancel= 'cancelIdcert'
     >
     </dialog-footer-admin>
   </el-dialog>
@@ -157,16 +157,19 @@ import {
   updateItcUser,
   updateItcUserStatus,
   updateItcUserPass,
-  updateItcUserRole
+
+  createItcIdcert,
+  getItcIdcert,
+  updateItcIdcert,
+  updateItcIdcertState
 } from '@/api/itc/itcUser.js'
 
-import {
-  parseTime
-} from '@/utils'
+
 import {
   validateRequired,
   validatePassword
 } from '@/utils/validate'
+
 import {
   compareObj,
   deepCloneJSON
@@ -177,6 +180,8 @@ import {
   idcardCertOptions,
   idcardCertStateOptions
 } from '@/config'
+
+import Dropzone from '@/components/Dropzone/dailogDropzone.vue'
 
 const defaultTemp = {
   "update_time": "",
@@ -193,6 +198,13 @@ const defaultTemp = {
   "email": "",
   "password": ""
 }
+const defaultIdcardCertTemp = {
+  "user_id": "",
+  "realname": "",
+  "idNum": "",
+  "faceImg": "",
+  "backImg": ""
+}
 
 function adapt(data) {
   return data;
@@ -200,6 +212,7 @@ function adapt(data) {
 
 export default {
   name: 'ItcUserList',
+  components: { Dropzone },
   data() {
     const validateAccount = (rule, value, callback) => {
       if (!validateRequired(value)) {
@@ -243,20 +256,18 @@ export default {
       listQuery: {
         pageNo: 1,
         pageSize: 20,
-        idcardCert: undefined,
+        isIdcardCert: undefined,
         idcardCertState: undefined,
         mainQuery: undefined,
         sort: '+id'
       },
-      oldTemp: '',
+      oldTemp: {},
       temp: deepCloneJSON(defaultTemp),
+      oldIdcertTemp : {},
+      idcertTemp : deepCloneJSON(defaultIdcardCertTemp),
       statusTypeOptions,
       idcardCertOptions,
       idcardCertStateOptions,
-      roleOptions: [{
-        name: '测试',
-        roleId: 'test'
-      }],
       sortOptions: [{
         label: '按ID升序列',
         key: '+id'
@@ -306,7 +317,7 @@ export default {
       },
       /* 修改密码相关 E */
       /* 修改角色相关 S */
-      dialogUserRoleVisible : false
+      dialogIdcertVisible : false
       /* 修改角色相关 E */
     }
   },
@@ -321,7 +332,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      if(this.listQuery.idcardCert == 0){
+      if(this.listQuery.isIdcardCert == 0){
         this.listQuery.idcardCertState = undefined
       }
       getItcUserList(this.listQuery).then(response => {
@@ -432,6 +443,7 @@ export default {
       this.temp = deepCloneJSON(defaultTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
+    /* 修改用户状态相关 S  */
     handleModifyStatus(row) {
       this.resetTemp()
       this.oldTemp = deepCloneJSON(row)
@@ -470,7 +482,7 @@ export default {
         this.getList()
       })
     },
-
+    /* 修改用户状态相关 E  */
     showCreatePasswordType() {
       this.createPasswordType = this.createPasswordType === 'password' ? 'text' : 'password'
     },
@@ -520,32 +532,56 @@ export default {
       })
     },
     /* 修改密码相关 E */
-    /* 修改角色相关 共用 temp S */
-    handleChangeUserRole(row){
-      this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
-      this.dialogUserRoleVisible = true
+
+    /* 实名认证信息相关 共用 dialogStatus S */
+    resetIdcertTemp(){
+      this.idcertTemp = deepCloneJSON(defaultIdcardCertTemp)
     },
-    cancelChangeUserRole(){
+    handleIdcardcer(row){
+      if(row.is_idcard_cert === 0){
+        this.handleCreateIdcert(row)
+      }else if(row.is_idcard_cert === 1){
+        this.handleUpdateIdcert(row)
+      }
+    },
+    handleCreateIdcert(row) {
+      this.resetIdcertTemp()
+      this.idcertTemp.user_id = row.user_id
+      this.dialogStatus = 'create'
+      this.dialogIdcertVisible = true
+    },
+    handleUpdateIdcert(row) {
+      this.resetIdcertTemp()
+      this.idcertTemp.user_id = row.user_id
+      this.dialogStatus = 'update'
+      this.dialogIdcertVisible = true
+    },
+    enterIdcert(){
+      if(this.dialogStatus=='create'){
+        this.createIdcert()
+      }else{
+        this.updateIdcert()
+      }
+    },
+    cancelIdcert(){
       this.resetTemp(),
-      this.dialogUserRoleVisible = false
+      this.dialogIdcertVisible = false
     },
-    updateChangeUserRole(){
+    createIdcert(){
       var updateForm = deepCloneJSON({
         user_id: this.temp.user_id,
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword
       })
       if (compareObj(this.oldTemp.roleId, this.temp.roleId)) {
-        this.cancelChangeUserRole();
+        this.cancelIdcert();
         console.log('更新状态无变化!!')
         return;
       }
 
       this.listLoading = true
-      this.cancelChangeUserRole();
-      updateItcUserRole(updateForm).then(() => {
+      this.cancelIdcert();
+      updateItcIdcert(updateForm).then(() => {
         this.$notify({
           title: '成功',
           message: '更新成功',
@@ -559,11 +595,51 @@ export default {
         this.getList()
       })
     },
-    /* 修改角色相关 E */
+    updateIdcert(){
+      var updateForm = deepCloneJSON({
+        user_id: this.temp.user_id,
+        roleId: this.temp.roleId,
+        adminPassword: this.adminPassword
+      })
+      if (compareObj(this.oldTemp.roleId, this.temp.roleId)) {
+        this.cancelIdcert();
+        console.log('更新状态无变化!!')
+        return;
+      }
+
+      this.listLoading = true
+      this.cancelIdcert();
+      updateItcIdcert(updateForm).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.listLoading = false
+        this.getList()
+      }).catch(() => {
+        this.listLoading = false
+        this.getList()
+      })
+    },
+    idcardFaceImgS(file) {
+      this.$message({ message: '上传成功', type: 'success' })
+    },
+    idcardFaceImgR(file) {
+      this.$message({ message: '删除成功', type: 'success' })
+    },
+    idcardBackImgS(file) {
+      this.$message({ message: '上传成功', type: 'success' })
+    },
+    idcardBackImgR(file) {
+      this.$message({ message: '删除成功', type: 'success' })
+    }
+    /* 实名认证信息相关 E */
   }
 }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
 $dark_gray:#889aa4;
 div.ks-dialog-input:nth-child(2n+1) {
   margin-right: 60px !important;
@@ -575,5 +651,12 @@ div.ks-dialog-input:nth-child(2n+1) {
   font-size: 16px;
   color: $dark_gray;
   cursor: pointer;
+}
+.cursor{
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 </style>
