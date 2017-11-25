@@ -1,17 +1,21 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="账号/手机号" v-model="listQuery.clientName">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="账号/手机号" v-model="listQuery.mainQuery">
       </el-input>
-      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.roleId" placeholder="请选择认证状态">
-        <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.name" :value="item.roleId">
+      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCert" placeholder="认证状态">
+        <el-option v-for="item in idcardCertOptions" :key="item.key" :label="item.label" :value="item.key">
+        </el-option>
+      </el-select>
+      <el-select v-show="listQuery.idcardCert == 1" @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCertState" placeholder="认证结果">
+        <el-option v-for="item in idcardCertStateOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" type="primary" icon="search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
     </div>
 
@@ -31,23 +35,26 @@
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="实名认证" width="100">
+      <el-table-column align="center" label="状态" width="150">
         <template scope="scope">
           <el-tag :type="scope.row.state | statusTagFilter">{{scope.row.state | statusNameFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="状态" width="100">
+      <el-table-column align="center" label="实名认证" width="200">
         <template scope="scope">
-          <el-tag :type="scope.row.state | statusTagFilter">{{scope.row.state | statusNameFilter }}</el-tag>
+          <el-tag :type="scope.row.state | idcardCertTagFilter">{{scope.row.state | idcardCertFilter }}</el-tag>
+          <el-tag v-if="scope.row.state == 1" :type="scope.row.state | idcardCertStateTagFilter">{{scope.row.state | idcardCertStateFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="180">
         <template scope="scope">
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">实名认证</el-button>
           <el-button size="small" type="danger" @click="handleChangePassword(scope.row)">修改密码</el-button>
-          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">订单记录</el-button>
+          <!--
+          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">实名信息</el-button>
+          <el-button size="small" type="danger" @click="handleChangeUserRole(scope.row)">认证结果</el-button>
+          -->
         </template>
       </el-table-column>
     </el-table>
@@ -151,9 +158,8 @@ import {
   updateItcUserStatus,
   updateItcUserPass,
   updateItcUserRole
-} from '@/api/itcUser.js'
+} from '@/api/itc/itcUser.js'
 
-import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
   parseTime
 } from '@/utils'
@@ -167,7 +173,9 @@ import {
 } from '@/utils/common.js'
 
 import {
-  statusTypeOptions
+  statusTypeOptions,
+  idcardCertOptions,
+  idcardCertStateOptions
 } from '@/config'
 
 const defaultTemp = {
@@ -192,9 +200,6 @@ function adapt(data) {
 
 export default {
   name: 'ItcUserList',
-  directives: {
-    waves
-  },
   data() {
     const validateAccount = (rule, value, callback) => {
       if (!validateRequired(value)) {
@@ -238,13 +243,16 @@ export default {
       listQuery: {
         pageNo: 1,
         pageSize: 20,
-        roleId: undefined,
-        clientName: undefined,
+        idcardCert: undefined,
+        idcardCertState: undefined,
+        mainQuery: undefined,
         sort: '+id'
       },
       oldTemp: '',
       temp: deepCloneJSON(defaultTemp),
       statusTypeOptions,
+      idcardCertOptions,
+      idcardCertStateOptions,
       roleOptions: [{
         name: '测试',
         roleId: 'test'
@@ -313,6 +321,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      if(this.listQuery.idcardCert == 0){
+        this.listQuery.idcardCertState = undefined
+      }
       getItcUserList(this.listQuery).then(response => {
         let data = adapt(response.data)
         this.list = data.data

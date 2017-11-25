@@ -3,9 +3,9 @@ import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 // 平台
-import platformAPI from './platform'
+import platformAPI from './system/sysConfigsPlatform'
 // 系统用户
-import sysUserAPI from './sysUser'
+import sysUserAPI from './system/sysUser'
 
 Mock.setup({
   timeout: '350-600'

@@ -32,3 +32,29 @@ export const sysUserLoginType = [
     'label': '手机登录'
   }
 ]
+
+// itc用户的实名认证提交状态
+export const idcardCertOptions = [
+  {
+    'key': 0,
+    'label': '未提交',
+    'tag': 'warning'
+  }, {
+    'key': 1,
+    'label': '已提交',
+    'tag': 'primary'
+  }
+]
+
+// itc用户的实名认证结果
+export const idcardCertStateOptions = [
+  {
+    'key': 0,
+    'label': '失败',
+    'tag': 'danger'
+  }, {
+    'key': 1,
+    'label': '成功',
+    'tag': 'success'
+  }
+]

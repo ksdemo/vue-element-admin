@@ -1,5 +1,7 @@
 import {
-  statusTypeOptions
+  statusTypeOptions,
+  idcardCertOptions,
+  idcardCertStateOptions
 } from '@/config'
 
 function pluralize(time, label) {
@@ -119,13 +121,53 @@ export function statusNameFilter(clientState) {
 // 禁用状态tag的className
 export function statusTagFilter(status) {
   for (var i = 0; i < statusTypeOptions.length; i++) {
-    if (statusTypeOptions[i].key == status) {
+    if (statusTypeOptions[i].key === status) {
       return statusTypeOptions[i].tag
     }
   }
   return ''
 }
+
+// 实名认证提交状态
+export function idcardCertFilter(status) {
+  for (var i = 0; i < idcardCertOptions.length; i++) {
+    if (idcardCertOptions[i].key === status) {
+      return idcardCertOptions[i].label
+    }
+  }
+  return ''
+}
+// 实名认证提交状态Tag
+export function idcardCertTagFilter(status) {
+  for (var i = 0; i < idcardCertOptions.length; i++) {
+    if (idcardCertOptions[i].key === status) {
+      return idcardCertOptions[i].tag
+    }
+  }
+  return ''
+}
+
+// 实名认证认证结果状态
+export function idcardCertStateFilter(status) {
+  for (var i = 0; i < idcardCertStateOptions.length; i++) {
+    if (idcardCertStateOptions[i].key === status) {
+      return idcardCertStateOptions[i].label
+    }
+  }
+  return ''
+}
+
+// 实名认证认证结果状态Tag
+export function idcardCertStateTagFilter(status) {
+  for (var i = 0; i < idcardCertStateOptions.length; i++) {
+    if (idcardCertStateOptions[i].key === status) {
+      return idcardCertStateOptions[i].tag
+    }
+  }
+  return ''
+}
+
 // menu label
-export function menuLabelFilter(route) {
+export function routeLabelFilter(route) {
   return route.meta && route.meta.label || route.name
 }

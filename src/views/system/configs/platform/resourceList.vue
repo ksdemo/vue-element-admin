@@ -122,7 +122,7 @@ import {
   updateResource,
   updateResourceAccount,
   modifyStatusResource
-} from '@/api/platform.js'
+} from '@/api/system/sysConfigsPlatform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
   validateRequired,

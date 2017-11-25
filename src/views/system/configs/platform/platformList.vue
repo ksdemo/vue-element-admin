@@ -106,7 +106,7 @@ import {
   createPlatform,
   updatePlatform,
   modifyStatusPlatform
-} from '@/api/platform.js'
+} from '@/api/system/sysConfigsPlatform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
   parseTime

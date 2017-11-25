@@ -2,7 +2,7 @@ import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,
 import { getToken, setToken, setRefreshToken, removeToken } from '@/utils/auth'
 import {
   getSysRoleMenuRight
-} from '@/api/sysUser.js'
+} from '@/api/system/sysUser.js'
 import {
   getRoleMenuChecked,
   getRoleMenuFlatted,

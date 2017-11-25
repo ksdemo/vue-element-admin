@@ -156,7 +156,7 @@ import {
   updateSysUserStatus,
   updateSysUserPass,
   updateSysUserRole
-} from '@/api/sysUser.js'
+} from '@/api/system/sysUser.js'
 
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
