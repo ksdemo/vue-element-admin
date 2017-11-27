@@ -5,7 +5,7 @@ import md5 from 'js-md5';
 export function fetchList(query) {
   return request({
     url: '/article/list',
-    type: 'get',
+    method: 'get',
     data: query
   })
 }

@@ -1,5 +1,5 @@
 "use strict";
-import {joinUrlParam ,getFormData} from '@/utils/ksutils/common/request.js'
+import {jsonToUrl, base64ToBlob, createObjectURL, revokeObjectURL} from '@/utils/ksutils/common/transcode.js'
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -845,7 +845,11 @@ var Dropzone = function (_Emitter) {
               var thumbnailElement = _ref5;
 
               thumbnailElement.alt = file.name;
-              thumbnailElement.src = dataUrl;
+              var _objectURL = createObjectURL(base64ToBlob(dataUrl))
+              thumbnailElement.src = _objectURL;
+              thumbnailElement.onload = function(){
+                revokeObjectURL(_objectURL)
+              }
             }
 
             return setTimeout(function () {
@@ -2480,7 +2484,7 @@ var Dropzone = function (_Emitter) {
         formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
       }
       */
-      formData = joinUrlParam(formData)
+      formData = jsonToUrl(formData)
       this.submitRequest(xhr, formData, files);
     }
 

@@ -1,49 +1,34 @@
-import EXIF from './lib/exif-js/exif.js'
+import EXIF from '../lib/exif-js/exif.js'
+import { isMobileUserAgent } from './common.js'
+import { blobToBase64, createObjectURL, revokeObjectURL } from './transcode.js'
 
-function imgReader(file, options, cb) {
+export function imgReader(file, options, cb) {
   if (!file) return;
   // 移动端
+  options.width = options.width || '';
+  options.height = options.height || '';
   options.maxWidth = options.maxWidth || 800;
   options.maxHeight = options.maxHeight || 1200;
   options.maxSize = options.maxSize || 1024 * 1e3; // 1M, 单位kb
-  let Orientation
-  EXIF.getData(file, function() {
-    Orientation = EXIF.getTag(file, 'Orientation');
-  });
-  let reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = function(e) {
-    reader.onload = null
-    var base64 = reader.result;
-    var image = new Image();
+
+  blobToBase64(file, function(base64) {
+    var image = document.createElement("img");
     image.src = base64;
     image.onload = function() {
       // resize
-      var expectRect = getExpectRect(this, options)
-      var expectWidth = expectRect.width;
-      var expectHeight = expectRect.height;
       var canvas = document.createElement("canvas");
+      var expectRect = getExpectRect(this, options)
       var ctx = canvas.getContext("2d");
-      canvas.width = expectWidth;
-      canvas.height = expectHeight;
-      ctx.drawImage(this, 0, 0, expectWidth, expectHeight);
+      canvas.width = expectRect.width;
+      canvas.height = expectRect.height;
+      ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
 
-      //rotate 修复ios上传图片的时候 被旋转的问题
-      if (Orientation != "" && Orientation != 1) {
-        switch (Orientation) {
-          case 6: //需要顺时针（向左）90度旋转
-            rotateImg(this, 'left', canvas);
-            break;
-          case 8: //需要逆时针（向右）90度旋转
-            rotateImg(this, 'right', canvas);
-            break;
-          case 3: //需要180度旋转
-            rotateImg(this, 'right', canvas); //转两次
-            rotateImg(this, 'right', canvas);
-            break;
-        }
+      //修复ios上传图片的时候 被旋转的问题
+      if (isMobileUserAgent() === 'ipad' || isMobileUserAgent() === 'iphone') {
+        drawImageIOSFix(image, file, canvas)
       }
 
+      // 读取数据
       base64 = canvas.toDataURL("image/jpeg", 0.8);
       let scale = file.size / options.maxSize
       if (scale > 1) {
@@ -53,20 +38,43 @@ function imgReader(file, options, cb) {
       } else {
         cb && cb(base64)
       }
+
       console.log(base64);
     };
+  })
+}
+
+//修复ios上传图片的时候 被旋转的问题
+export function drawImageIOSFix(img, file, canvas) {
+  let Orientation
+  EXIF.getData(file, function() {
+    Orientation = EXIF.getTag(file, 'Orientation');
+  });
+  if (Orientation != "" && Orientation != 1) {
+    switch (Orientation) {
+      case 6: //需要顺时针（向左）90度旋转
+        rotateImg(img, 'left', canvas);
+        break;
+      case 8: //需要逆时针（向右）90度旋转
+        rotateImg(img, 'right', canvas);
+        break;
+      case 3: //需要180度旋转
+        rotateImg(img, 'right', canvas); //转两次
+        rotateImg(img, 'right', canvas);
+        break;
+    }
   }
 }
-function imgResize(src,){
 
-}
+
 // 获取缩放宽高
-function getExpectRect(image, options) {
-  var naturalWidth = image.naturalWidth;
-  var naturalHeight = image.naturalHeight;
+export function getExpectRect(img, options) {
+  var naturalWidth = img.naturalWidth;
+  var naturalHeight = img.naturalHeight;
+  var expectWidth = img.naturalWidth;
+  var expectHeight = img.naturalHeight;
   var P = naturalWidth / naturalHeight;
-  var expectWidth = image.naturalWidth;
-  var expectHeight = image.naturalHeight;
+
   if (options.width && options.height) {
     expectWidth = options.width
     expectHeight = options.height
@@ -90,11 +98,11 @@ function getExpectRect(image, options) {
 }
 
 //图片缩放
-function imgScale(imgUrl, quality, cb) {
-  let img = new Image();
+export function imgScale(imgSrc, quality, cb) {
+  let img = document.createElement("img");
   let canvas = document.createElement('canvas');
   let cxt = canvas.getContext('2d');
-  img.src = imgUrl;
+  img.src = imgSrc;
   img.onload = function() {
     //缩放后图片的宽高
     let width = img.naturalWidth / quality;
@@ -108,7 +116,7 @@ function imgScale(imgUrl, quality, cb) {
 }
 
 //图片旋转
-function rotateImg(img, direction, canvas) {
+export function rotateImg(img, direction, canvas) {
   var min_step = 0;
   var max_step = 3;
   if (img == null) return;
@@ -155,7 +163,6 @@ function rotateImg(img, direction, canvas) {
 }
 
 export function uploadPreview(option, callback) {
-  window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL
   var res,
     button = option.button,
     input = option.input,
@@ -197,7 +204,7 @@ export function uploadPreview(option, callback) {
       // 可用 read.onreadystatechange
       read.onload = function() { // 读取成功后回调
         read.onload = null
-        var objectURL = window.URL.createObjectURL(file)
+        var objectURL = createObjectURL(file)
         res = {
           'success': true,
           'data': read.result, // 传入base64数据格式
@@ -208,7 +215,7 @@ export function uploadPreview(option, callback) {
           image.src = objectURL
           if (revoke) {
             image.onload = function() {
-              window.URL.revokeObjectURL(objectURL)
+              revokeObjectURL(objectURL)
             }
           }
         }

@@ -18,7 +18,7 @@ export function getClientToken() {
   }
   return request({
     url,
-    type: 'post',
+    method: 'post',
     data,
     headers
   })
@@ -43,47 +43,48 @@ export function getPasswordToken(userInfo) {
     vcode: userInfo.vcode
     //: 'd525e685b8f0c89e5d981a6b86feb6d4'
   };
-  console.log(data);
   return request({
     url,
-    type: 'post',
+    method: 'post',
     data,
     headers
   })
 }
 
+// 获取登录方式
 export function checkLoginType(username){
   return request({
     url: "/cms/sysLogin/checkLoginType",
-    type: 'get',
+    method: 'get',
     data: {
       username
     }
   })
 }
 
+// 获取验证码图片
 export function getImgCode(){
   return requestImg({
     url: "/cms/sysLogin/getImgCode",
-    type: 'get',
+    method: 'get',
     data: {
       imgKey:  +new Date() + '_' + randomString(),
       access_token : getToken()
     }
   })
 }
-
+// 获取手机验证码
 export function getPhoneCode(username){
   return request({
     url: "/cms/sysLogin/getSmsCode",
-    type: 'get',
+    method: 'get',
     data: {
       username:  username,
       access_token : getToken()
     }
   })
 }
-
+// 模拟数据, 登录
 export function loginByUsername (username, password) {
   const data = {
     username,
@@ -96,6 +97,7 @@ export function loginByUsername (username, password) {
   })
 }
 
+// 模拟数据 登出
 export function logout() {
   return fetch({
     url: '/login/logout',
@@ -103,6 +105,7 @@ export function logout() {
   })
 }
 
+// 模拟 获取登录用户信息
 export function getUserInfo(token) {
   return fetch({
     url: '/user/info',

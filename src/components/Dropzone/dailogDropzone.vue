@@ -14,7 +14,7 @@
 //import Dropzone from 'dropzone'
 import Dropzone from '@/assets/dropzone/dropzone.js'
 import 'dropzone/dist/dropzone.css'
-import {ajax, request, joinUrlParam ,getFormData} from '@/utils/ksutils/common/request.js'
+import {ajax, request} from '@/utils/ksutils/common/request.js'
   // import { getToken } from 'api/qiniu';
 
 Dropzone.autoDiscover = false
@@ -114,16 +114,21 @@ export default {
     }
 
     this.dropzone.on('success', file => {
-      vm.$emit('dropzone-success', file, vm.dropzone.element)
+      var res = JSON.parse(file.xhr.responseText)
+      if (res.code == 0) {
+        vm.$emit('dropzone-success', file, vm.dropzone.element)
+      } else {
+        vm.$emit('dropzone-error', file)
+      }
     })
-    this.dropzone.on('addedfile', file => {
-      vm.$emit('dropzone-fileAdded', file)
+    this.dropzone.on('error', (file, error, xhr) => {
+      vm.$emit('dropzone-error', file, error, xhr)
     })
     this.dropzone.on('removedfile', file => {
       vm.$emit('dropzone-removedFile', file)
     })
-    this.dropzone.on('error', (file, error, xhr) => {
-      vm.$emit('dropzone-error', file, error, xhr)
+    this.dropzone.on('addedfile', file => {
+      vm.$emit('dropzone-fileAdded', file)
     })
     this.dropzone.on('successmultiple', (file, error, xhr) => {
       vm.$emit('dropzone-successmultiple', file, error, xhr)

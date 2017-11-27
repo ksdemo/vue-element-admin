@@ -1,6 +1,6 @@
 import { Message } from 'element-ui'
 // add
-import {ajax, request as ajax2} from '@/utils/ksutils/common/request.js'
+import {joinUrl, request as ajax} from '@/utils/ksutils/common/request.js'
 import {compareObj} from '@/utils/ksutils/common/common.js'
 import { getToken } from '@/utils/auth'
 
@@ -19,8 +19,9 @@ export function request(options){
     }
     options.headers = headers;
   }
+  // options.requestType = 'xhr';
   return new Promise((resolve, reject)=>{
-    ajax2(options)
+    ajax(options)
       .then(res =>{
         if(res.code == 0 ){
           resolve(res)
@@ -52,29 +53,25 @@ export function requestImg(options){
     var url = BASE_API + options.url;
     url = joinUrl(url, options.data);
     resolve(url)
-    /*
+    /* 
     var Authorization = 'Bearer ' + getToken();
     var headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
       Authorization
     }
     var xhr = new XMLHttpRequest();
     xhr.open("get", url, true);
-    xhr.responseType = "arraybuffer";
+    xhr.responseType = "blob";
     xhr.timeout = 5000;
     for (var name in headers) {
       if (typeof headers[name] !== 'undefined' && headers.hasOwnProperty(name)) {
         xhr.setRequestHeader(name, headers[name])
       }
     }
-    xhr.onload = function(res) {
-      if (this.status == 200) {
-          console.log(res)
-          var data = this.response
-          console.log(data)
-          var blob = new Blob([data], {
-              type: 'image/jpeg'
-          })
+    console.log(xhr)
+    xhr.onload = function(e) {
+      if (xhr.status == 200) {
+          console.log(xhr.response)
+          var blob = new Blob([xhr.response], {type: 'image/png'});
           console.log(blob)
           var read = new FileReader() // 新建一个读取文件对象
           read.readAsDataURL(blob) // 读取文件
@@ -85,6 +82,7 @@ export function requestImg(options){
             console.log(read.result)
             resolve(imgCode)
           }
+          
 
       }else{
         reject('获取验证图片失败')
@@ -109,25 +107,6 @@ export function randomString(len) {
         ranstr += $chars.charAt(Math.floor(Math.random() * maxPos));
     }
     return ranstr;
-}
-
-function joinUrlParam(data) {
-  var str = '';
-  if (data.constructor === Object) {
-    for (var key in data) {
-      var value = data[key];
-      if (data.hasOwnProperty(key) && typeof value !== 'undefined') {
-        typeof value === 'object' && (value = JSON.stringify(value))
-        str += '&' + key + '=' + encodeURIComponent(value)
-      }
-    }
-  }
-  str = str.replace(/^\s+|^\&+|\s+$|\&+$/g, '')
-  return str
-}
-function joinUrl(url, data) {
-  url += /\?/.test(url) ? '&' : '?';
-  return url + joinUrlParam(data)
 }
 
 export function deepCloneJSON(obj){

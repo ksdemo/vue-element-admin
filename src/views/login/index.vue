@@ -25,7 +25,7 @@
         </span>
         <el-input name="vcode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.vcode" autoComplete="off"
           placeholder="验证码" />
-          <span class='show-vcode' @click='getVcodeImg'  v-if="loginType === 0"><img :src="imgVcode" alt="点击刷新验证码"></span>
+          <span class='show-vcode' @click='getVcodeImg'  v-if="loginType === 0"><img :src="imgVcode" alt="点击刷新验证码" title="点击刷新验证码"></span>
           <span class='show-pcode' @click='getPhoneCode'  v-if="loginType === 1"><el-button >发送验证码</el-button></span>
       </el-form-item>
 
