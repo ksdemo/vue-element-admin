@@ -1,4 +1,4 @@
-import EXIF from '../lib/exif-js/exif.js'
+import EXIF from '../lib/exif-js/exif.js' //EXIF
 import { isMobileUserAgent } from './common.js'
 import { blobToBase64, createObjectURL, revokeObjectURL } from './transcode.js'
 
@@ -38,8 +38,6 @@ export function imgReader(file, options, cb) {
       } else {
         cb && cb(base64)
       }
-
-      console.log(base64);
     };
   })
 }

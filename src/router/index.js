@@ -20,6 +20,7 @@ export const constantRouterMap = [
     { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
     { path: '/404', component: _import('errorPage/404'), hidden: true },
     { path: '/401', component: _import('errorPage/401'), hidden: true },
+    { path: '/test', component: _import('test/test'), hidden: true },
     {
       path: '/',
       component: Layout,

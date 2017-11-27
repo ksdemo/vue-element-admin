@@ -135,9 +135,10 @@
         
       </el-form>
       <div style="margin-left: 50px; margin-right: 20px;">
-        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :addData="{'type' : 10}"></dropzone>
+        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :params="{'type' : 10}"></dropzone>
         <div style="height:20px"></div>
-        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :addData="{'type' : 11}"></dropzone>
+        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :params="{'type' : 11}"></dropzone>
+        <image-upload label-width="6em" label="测试" url="https://httpbin.org/post" :params="{'type' : 11}" :defaultImg="idcertTemp.backImg" ></image-upload>
       </div>
     <dialog-footer-admin slot="footer"
       @onenter = 'enterIdcert'
@@ -182,6 +183,7 @@ import {
 } from '@/config'
 
 import Dropzone from '@/components/Dropzone/dailogDropzone.vue'
+import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
 
 const defaultTemp = {
   "update_time": "",
@@ -203,7 +205,7 @@ const defaultIdcardCertTemp = {
   "realname": "",
   "idNum": "",
   "faceImg": "",
-  "backImg": ""
+  "backImg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=477576474,3698736735&fm=173&s=03E6DC054440F75156B8518E0300C091&w=600&h=431&img.JPEG"
 }
 
 function adapt(data) {
@@ -212,7 +214,10 @@ function adapt(data) {
 
 export default {
   name: 'ItcUserList',
-  components: { Dropzone },
+  components: { 
+    Dropzone
+    // , ImageUpload 
+  },
   data() {
     const validateAccount = (rule, value, callback) => {
       if (!validateRequired(value)) {

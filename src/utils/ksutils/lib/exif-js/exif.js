@@ -1,15 +1,15 @@
-(function() {
+/*(function() {*/
 
     var debug = false;
 
-    var root = this;
+/*    var root = this;*/
 
     var EXIF = function(obj) {
         if (obj instanceof EXIF) return obj;
         if (!(this instanceof EXIF)) return new EXIF(obj);
         this.EXIFwrapped = obj;
     };
-
+/*
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
             exports = module.exports = EXIF;
@@ -18,6 +18,8 @@
     } else {
         root.EXIF = EXIF;
     }
+*/
+    export default EXIF
 
     var ExifTags = EXIF.Tags = {
 
@@ -795,11 +797,11 @@
     EXIF.readFromBinaryFile = function(file) {
         return findEXIFinJPEG(file);
     }
-
+/*
     if (typeof define === 'function' && define.amd) {
         define('exif-js', [], function() {
             return EXIF;
         });
     }
-}.call(this));
+}.call(this));*/
 

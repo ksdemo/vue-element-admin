@@ -41,6 +41,8 @@ export function createObjectURL(blob) {
 
 // 释放 ObjectURL 资源
 export function revokeObjectURL(objectURL) {
+  console.log(typeof objectURL)
+  console.log(objectURL.toString())
   let URL = window.URL || window.webkitURL || window.mozURL || window.msURL
   return objectURL && URL.revokeObjectURL(objectURL)
 }

@@ -1,178 +1,91 @@
 <template>
-  <div class="ddz_container">
-    <label class="ddz_label" :style="{width : labelWidth}" >{{label}}</label>
-    <div class="ddz_wrap">
-      <div :ref="id" :action="url" class="dropzone" :id="id" >
-        <input type="file" :name="paramName" class="file">
-      </div>
+  <div class="iu_container">
+    <input class="iu_file" type="file" ref="file" @change="handleFileChange">
+    <label class="iu_label" v-if="label" :style="{width : labelWidth}" >{{label}}</label>
+    <div class="iu_box" ref="wrap" @click="handleClickBox" >
+      <img :src="imgsrc" alt="" class="iu_image" @load.native="revokeImg" >
     </div>
   </div>
-
 </template>
 
 <script>
-import 'dropzone/dist/dropzone.css'
-import {imgReader} from '@/utils/ksutils/common/image.js'
-
+import {imgReader} from '../common/image.js'
+import {createObjectURL, revokeObjectURL, base64ToBlob} from '../common/transcode.js'
 
 export default {
+  name: 'ImageUpload',
   data() {
     return {
-      dropzone: '',
+      imgsrc: '',
       initOnce: true
     }
   },
   mounted() {
-    const element = document.getElementById(this.id)
-    const vm = this
-    // var dataURL = file.dataURL
-    // var pos = dataURL.indexOf(",")+1;
-    // dataURL = dataURL.substring(pos, dataURL.length - pos);//去掉base64头
-    // formData.imageBase64 = dataURL.
-    let suffix = file.type.replace('image/','')
-    formData.append('suffix', suffix);
-    console.log(suffix)
-    console.log(file)
-        // formData.append('token', file.token);
-        // formData.append('key', file.key);
-    xhr.setRequestHeader('Authorization', '');
-    vm.initOnce = false
-  /**/
+    this.imgsrc = this.defaultImg
     
   },
   methods: {
-    removeAllFiles() {
-      this.dropzone.removeAllFiles(true)
+    handleFileChange(){
+      var vm = this;
+      var file = vm.$refs.file.files[0]
+      console.log(typeof vm.imgsrc)
+      imgReader( file ,{}, function(base64){
+        var blob = base64ToBlob(base64)
+        vm.imgsrc = createObjectURL(blob);
+        console.log(vm.imgsrc)
+        console.log(vm.imgsrc.toString())
+      })
     },
-    processQueue() {
-      this.dropzone.processQueue()
+    handleClickBox(){
+      console.log(this.$refs.file)
+      this.$refs.file.click();
     },
-    pasteImg(event) {
-      const items = (event.clipboardData || event.originalEvent.clipboardData).items
-      if (items[0].kind === 'file') {
-        this.dropzone.addFile(items[0].getAsFile())
-      }
-    },
-    initImages(val) {
-      if (!val) return
-      if (Array.isArray(val)) {
-        val.map((v, i) => {
-          const mockFile = { name: 'name' + i, size: 12345, url: v }
-          this.dropzone.options.addedfile.call(this.dropzone, mockFile)
-          this.dropzone.options.thumbnail.call(this.dropzone, mockFile, v)
-          mockFile.previewElement.classList.add('dz-success')
-          mockFile.previewElement.classList.add('dz-complete')
-          return true
-        })
-      } else {
-        const mockFile = { name: 'name', size: 12345, url: val }
-        this.dropzone.options.addedfile.call(this.dropzone, mockFile)
-        this.dropzone.options.thumbnail.call(this.dropzone, mockFile, val)
-        mockFile.previewElement.classList.add('dz-success')
-        mockFile.previewElement.classList.add('dz-complete')
+    revokeImg(){
+      if(false){
+        revokeObjectURL(this.imgsrc);
       }
     }
 
   },
-  destroyed() {
-    document.removeEventListener('paste', this.pasteImg)
-    this.dropzone.destroy()
-  },
-  watch: {
-    defaultImg(val) {
-      if (val.length === 0) {
-        this.initOnce = false
-        return
-      }
-      if (!this.initOnce) return
-      this.initImages(val)
-      this.initOnce = false
-    }
-  },
   props: {
-    id: {
-      type: String,
-      required: true
-    },
-    paramName: {
-      type: String,
-      default: 'imageBase64'
-    },
     url: {
       type: String,
       required: true
     },
-    clickable: {
-      type: Boolean,
-      default: true
-    },
-    defaultMsg: {
-      type: String,
-      default: '上传图片'
+    params: {
+      type: Object
     },
     label: {
       type: String,
-      default: '图片:'
+      default: ''
     },
     labelWidth:{
       type: String,
       default: '6em'
     },
-    acceptedFiles: {
-      type: String
-    },
-    thumbnailHeight: {
-      type: Number,
-      default: 263
-    },
-    thumbnailWidth: {
-      type: Number,
-      default: 420
-    },
-    showRemoveLink: {
-      type: Boolean,
-      default: true
-    },
-    maxFilesize: {
-      type: Number,
-      default: 2 //MB
-    },
-    maxFiles: {
-      type: Number,
-      default: 1
-    },
-    autoProcessQueue: {
-      type: Boolean,
-      default: true
-    },
-    useCustomDropzoneOptions: {
-      type: Boolean,
-      default: false
-    },
+
     defaultImg: {
       default: false
-    },
-    couldPaste: {
-      default: false
-    },
-    addData:{
-      type: Object,
-      default: {}
     }
   }
 }
 </script>
 
 <style>
-    .dropzone {
+    .iu_container{
+      display:flex;
+    }
+    .iu_box {
+        flex: 1;
         border: 2px solid #E5E5E5;
         font-family: 'Roboto', sans-serif;
         color: #777;
         transition: background-color .2s linear;
         padding: 5px;
+        min-height: 150px;
     }
-
-    .dropzone:hover {
+    
+    .iu_box:hover {
         background-color: #F6F6F6;
     }
 
@@ -180,21 +93,13 @@ export default {
         color: #CCC;
     }
 
-    .dropzone .dz-image img {
+    .iu_box .iu_image_box img {
         width: 100%;
         height: 100%;
     }
 
-    .dropzone input[name='file'] {
+    .iu_file {
         display: none;
-    }
-
-    .dropzone input.file {
-        display: none;
-    }
-
-    .dropzone .dz-preview .dz-image {
-        border-radius: 0px;
     }
 
     .dropzone .dz-preview:hover .dz-image img {
@@ -204,7 +109,7 @@ export default {
         height: 100%;
     }
 
-    .dropzone .dz-preview .dz-details {
+    .iu_details {
         bottom: 0px;
         top: 0px;
         color: white;
@@ -212,11 +117,8 @@ export default {
         transition: opacity .2s linear;
         text-align: left;
     }
-    .dropzone .dz-preview .dz-details .dz-size{
+    .iu-size{
       margin-bottom: 3em;
-    }
-    .dropzone .dz-preview .dz-details .dz-filename span, .dropzone .dz-preview .dz-details .dz-size span {
-        background-color: transparent;
     }
 
     .dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
@@ -249,20 +151,14 @@ export default {
         opacity: 1;
     }
 
-    .dropzone .dz-preview .dz-success-mark, .dropzone .dz-preview .dz-error-mark {
+    .dz-error-mark {
         margin-left: -40px;
         margin-top: -50px;
     }
 
-    .dropzone .dz-preview .dz-success-mark i, .dropzone .dz-preview .dz-error-mark i {
+    .dz-error-mark i {
         color: white;
         font-size: 5rem;
     }
 
-    .ddz_container{
-      display:flex;
-    }
-    .ddz_wrap{
-      flex: 1
-    }
 </style>

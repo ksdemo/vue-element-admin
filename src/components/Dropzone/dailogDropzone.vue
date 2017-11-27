@@ -82,11 +82,11 @@ export default {
       sending: (file, xhr, formData) => {
         xhr.setRequestHeader('Authorization', 'Bearer 8563c2cc-8acc-4332-a797-38f38fcb1ab3');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        let addData = vm.addData
-        if(addData){
-          for(var key in addData){
-            if(addData.hasOwnProperty(key) && addData[key] !== undefined){
-              formData[key] = addData[key]
+        let params = vm.params
+        if(params){
+          for(var key in params){
+            if(params.hasOwnProperty(key) && params[key] !== undefined){
+              formData[key] = params[key]
             }
           }
         }
@@ -249,7 +249,7 @@ export default {
     couldPaste: {
       default: false
     },
-    addData:{
+    params:{
       type: Object,
       default: {}
     }
