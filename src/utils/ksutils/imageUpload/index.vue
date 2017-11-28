@@ -9,14 +9,14 @@
           <div class="iu_size">
             <span><strong>{{result.size | sizeFilter}}</strong></span>
           </div>
-          <div class="iu_progress">
-            <span class="iu_progress_inside" style="width: 100%;">
-            </span>
-          </div>
           <div class="iu_uploadtips">
             <span>{{uploadTips}}</span>
           </div>
           <a href="javascript:;" @click="handleCancel" class="iu_remove">{{cancelTips}}</a>
+        </div>
+        <div class="iu_progress" v-show="isUploading">
+          <span class="iu_progressbar" :style="{width: progressWidth}">
+          </span>
         </div>
       </div>
       <div v-else class="iu_noimg">{{noimgTips}}</div>
@@ -53,6 +53,7 @@ export default {
         size: 0
       },
       temporary: false,
+      progressWidth: '55%',
       noimgTips: '上传图片',
       isUploading: false,
       uploadTips: '上传中',
@@ -156,7 +157,11 @@ export default {
         url,
         data,
         dataType: 'formData',
+        requestType: 'xhr',
         method: 'POST',
+        uploading: function(percent){
+          vm.progressWidth = percent
+        },
         headers:{
           Authorization: 'Bearer ' + getToken()
         }
@@ -251,8 +256,8 @@ export default {
     .iu_preview:hover .iu_details {
         opacity: 1;
     }
-    .iu_details.temporary{
-        opacity: 1;
+    .temporary{
+        opacity: 1 !important;
     }
     .iu_details {
       position: absolute;
@@ -281,8 +286,8 @@ export default {
       display: block;
       top: 50%;
       left: 50%;
-      margin-left: -40px;
-      margin-top: -40px;
+      margin-left: -1em;
+      margin-top: -2em;
       font-size: 30px;
     }
     .iu_remove {
@@ -299,7 +304,31 @@ export default {
       font-weight: 800;
       letter-spacing: 1.1px;
     }
-
+    .iu_progress{
+      opacity: 1;
+      z-index: 1000;
+      pointer-events: none;
+      position: absolute;
+      height: 16px;
+      left: 50%;
+      top: 50%;
+      width: 50%;
+      min-width: 100px;
+      transform: translate(-50%,-50%) scale(1);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .iu_progressbar{
+      background: #333;
+      background: linear-gradient(to bottom, #666, #444);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      transition: width 300ms ease-in-out;
+    }
     .dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
         border: none;
     }

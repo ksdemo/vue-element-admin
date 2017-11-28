@@ -27,6 +27,8 @@ const defaultOptions = {
   'error': function() {},
   // 完结回调; return:  [success: string | json ] | [error: undefined]
   'complete': function() {},
+  'uploading': function(){},
+  'downloading': function(){},
   // 返回数据类型, 空字符串 (默认), "text" ,"json", "arraybuffer", "blob", "document" 参考:  https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/responseType
   'responseType': 'json',
   'requestType': 'fetch'
@@ -85,7 +87,6 @@ export function getXhrData(xhr, responseType) {
     case 'json':
       resData = xhr.responseText
       if (typeof resData === 'string') {
-        console.log(xhr, 1)
         resData = JSON.parse(resData);
       } else if (typeof resData === 'object') {
         console.log(xhr, 2)
@@ -113,6 +114,17 @@ export function getXhrData(xhr, responseType) {
       break;
   }
   return resData
+}
+
+function getProgress(event) {
+  if (event.lengthComputable) {
+    console.log(event.target);
+    var percentComplete = (event.loaded / event.total * 100 )
+    percentComplete > 100 && (percentComplete = 100)
+    percentComplete = percentComplete.toFixed(2)+"%"
+    return percentComplete
+  }
+  return ''
 }
 
 export function ajax(options, callback) {
@@ -171,9 +183,29 @@ export function ajax(options, callback) {
   }
   // fix: ie8 status error
   // window.XDomainRequest && (xhr.readyState = 2)
+
+  // 上传回调 progress 只支持 POST
+  if(method === 'POST' && (typeof options.uploading === 'function')  && xhr.upload){
+    console.log(' uploading')
+    xhr.upload.onprogress = function(event){
+      console.log(event)
+      var percentComplete = getProgress(event)
+      options.uploading(percentComplete)
+    }
+  }
+
+  // 下载回调 progress 只支持 GET
+  if( method === 'GET' && (typeof options.downloading === 'function') && ('onprogress' in xhr)){
+    xhr.onprogress = function(event){
+      var percentComplete = getProgress(event)
+      options.downloading(percentComplete)
+    }
+  }
+  debugger;
   xhr.send(data)
   return xhr
 }
+
 
 export function jsonp(options, callback) {
   var defaults = {

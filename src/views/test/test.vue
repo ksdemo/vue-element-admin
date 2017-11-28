@@ -12,7 +12,7 @@ import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
 export default {
   data() {
     return {
-      "backImg": ''//"https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=477576474,3698736735&fm=173&s=03E6DC054440F75156B8518E0300C091&w=600&h=431&img.JPEG"
+      "backImg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=477576474,3698736735&fm=173&s=03E6DC054440F75156B8518E0300C091&w=600&h=431&img.JPEG"
     }
   },
   components: { ImageUpload },
