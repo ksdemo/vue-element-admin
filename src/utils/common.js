@@ -13,8 +13,8 @@ export function request(options){
   if(!options.headers){
     let Authorization = 'Bearer ' + getToken();
     let headers = {
-      'Accept': 'application/json, text/plain, */*',
-      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+      // 'Accept': 'application/json, text/plain, */*',
+      // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
       Authorization
     }
     options.headers = headers;

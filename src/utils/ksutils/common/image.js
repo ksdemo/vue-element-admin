@@ -1,9 +1,42 @@
 import EXIF from '../lib/exif-js/exif.js' //EXIF
 import { isMobileUserAgent } from './common.js'
-import { blobToBase64, createObjectURL, revokeObjectURL } from './transcode.js'
+import { splitBase64,getBase64Size, blobToBase64, createObjectURL, revokeObjectURL } from './transcode.js'
 
+// 检测图片是否合法
+export function valiImg(file){
+  if(!file){
+    return false
+  }
+  var type = file.type;
+  var arr = file.type.match(/^image\/(jpeg|jpg|gif|png|bmp)$/i)
+  if(!arr){
+    alert('请上传合法图片类型!')
+    return false
+  }
+  return type
+}
+
+// 创建结果
+export function createResult(canvas, options){
+  var base64 = canvas.toDataURL(options.mime);
+  var splited = splitBase64(base64)
+  var size= getBase64Size(base64)
+  var result = {
+    base64: base64,
+    width: canvas.width,
+    height: canvas.height,
+    str: splited.str,
+    mime: splited.mime,
+    suffix: splited.mime.replace('image/', ''),
+    size: size
+  }
+  return result
+}
+
+// 主函数
 export function imgReader(file, options, cb) {
-  if (!file) return;
+  var mime = valiImg(file)
+  if (!mime) return;
   // 移动端
   options.width = options.width || '';
   options.height = options.height || '';
@@ -12,13 +45,16 @@ export function imgReader(file, options, cb) {
   options.maxSize = options.maxSize || 1024 * 1e3; // 1M, 单位kb
 
   blobToBase64(file, function(base64) {
+    options.mime = options.mime || splitBase64(base64).mime // 指定图片类型
     var image = document.createElement("img");
     image.src = base64;
     image.onload = function() {
-      // resize
+
       var canvas = document.createElement("canvas");
-      var expectRect = getExpectRect(this, options)
       var ctx = canvas.getContext("2d");
+      
+      // resize
+      var expectRect = getExpectRect(this, options)
       canvas.width = expectRect.width;
       canvas.height = expectRect.height;
       ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
@@ -27,41 +63,11 @@ export function imgReader(file, options, cb) {
       if (isMobileUserAgent() === 'ipad' || isMobileUserAgent() === 'iphone') {
         drawImageIOSFix(image, file, canvas)
       }
-
       // 读取数据
-      base64 = canvas.toDataURL("image/jpeg", 0.8);
-      let scale = file.size / options.maxSize
-      if (scale > 1) {
-        imgScale(base64, options.scale, _base64 => {
-          cb && cb(_base64)
-        })
-      } else {
-        cb && cb(base64)
-      }
+      cb && cb(createResult(canvas, options))
+
     };
   })
-}
-
-//修复ios上传图片的时候 被旋转的问题
-export function drawImageIOSFix(img, file, canvas) {
-  let Orientation
-  EXIF.getData(file, function() {
-    Orientation = EXIF.getTag(file, 'Orientation');
-  });
-  if (Orientation != "" && Orientation != 1) {
-    switch (Orientation) {
-      case 6: //需要顺时针（向左）90度旋转
-        rotateImg(img, 'left', canvas);
-        break;
-      case 8: //需要逆时针（向右）90度旋转
-        rotateImg(img, 'right', canvas);
-        break;
-      case 3: //需要180度旋转
-        rotateImg(img, 'right', canvas); //转两次
-        rotateImg(img, 'right', canvas);
-        break;
-    }
-  }
 }
 
 
@@ -96,20 +102,41 @@ export function getExpectRect(img, options) {
 }
 
 //图片缩放
-export function imgScale(imgSrc, quality, cb) {
+export function imgScale(imgSrc, scale, mime, cb) {
   let img = document.createElement("img");
   let canvas = document.createElement('canvas');
   let cxt = canvas.getContext('2d');
   img.src = imgSrc;
   img.onload = function() {
     //缩放后图片的宽高
-    let width = img.naturalWidth / quality;
-    let height = img.naturalHeight / quality;
+    let width = img.naturalWidth / scale;
+    let height = img.naturalHeight / scale;
     canvas.width = width;
     canvas.height = height;
     cxt.drawImage(this, 0, 0, width, height);
-    let dataURL = canvas.toDataURL('image/jpeg');
-    cb && cb(dataURL)
+    cb && cb(canvas)
+  }
+}
+
+//修复ios上传图片的时候 被旋转的问题
+export function drawImageIOSFix(img, file, canvas) {
+  let Orientation
+  EXIF.getData(file, function() {
+    Orientation = EXIF.getTag(file, 'Orientation');
+  });
+  if (Orientation != "" && Orientation != 1) {
+    switch (Orientation) {
+      case 6: //需要顺时针（向左）90度旋转
+        rotateImg(img, 'left', canvas);
+        break;
+      case 8: //需要逆时针（向右）90度旋转
+        rotateImg(img, 'right', canvas);
+        break;
+      case 3: //需要180度旋转
+        rotateImg(img, 'right', canvas); //转两次
+        rotateImg(img, 'right', canvas);
+        break;
+    }
   }
 }
 

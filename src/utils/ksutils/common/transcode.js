@@ -7,18 +7,49 @@ export function blobToBase64(blob, cb) {
     cb(reader.result)
   }
 }
+
+// string 转 Uint8 arraybuffer
+export function strToU8arr(str){
+  var n = str.length,
+      u8arr = new Uint8Array(n); //Uint8类型的arraybuffer, 固定长度的缓冲对象
+  while (n--) {
+    u8arr[n] = str.charCodeAt(n);
+  }
+  return u8arr
+}
+
+// 分离 base64图片编码的头部和数据部分
+export function splitBase64(base64){
+  var arr = base64.split(','),
+      mime = arr[0].match(/:(.*?);/)[1], //mime类型
+      str = arr[1];
+  return {
+    str,
+    mime
+  }
+}
+
+// 获取base64的文件大小
+export function getBase64Size(base64) {
+  let str = splitBase64(base64).str;
+  var equalIndex= str.indexOf('=');
+  if(str.indexOf('=')>0){
+      str=str.substring(0, equalIndex);
+  }
+  var strLength=str.length;
+  var fileLength=parseInt(strLength-(strLength/8)*2);
+  return fileLength
+}
+
+
 // base64 转 blob
 export function base64ToBlob(base64) {
-  var arr = base64.split(','),
-    mime = arr[0].match(/:(.*?);/)[1], //mime类型
-    bstr = atob(arr[1]), // 解码base64数据为arraybuffer字符串,对应btoa为编码 ,https://developer.mozilla.org/zh-CN/docs/Web/API/WindowBase64/atob
-    n = bstr.length, // 
-    u8arr = new Uint8Array(n); //arraybuffer, 固定长度的缓冲对象
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
+  var splited = splitBase64(base64),
+      bstr = atob(splited.str), // 解码base64,https://developer.mozilla.org/zh-CN/docs/Web/API/WindowBase64/atob
+      u8arr = strToU8arr(bstr);
+
   return new Blob([u8arr], {
-    type: mime
+    type: splited.mime
   });
 }
 
@@ -41,10 +72,12 @@ export function createObjectURL(blob) {
 
 // 释放 ObjectURL 资源
 export function revokeObjectURL(objectURL) {
-  console.log(typeof objectURL)
-  console.log(objectURL.toString())
   let URL = window.URL || window.webkitURL || window.mozURL || window.msURL
-  return objectURL && URL.revokeObjectURL(objectURL)
+  try{
+    URL.revokeObjectURL(objectURL)
+  }catch(e){
+    console.warn(e)
+  }
 }
 
 

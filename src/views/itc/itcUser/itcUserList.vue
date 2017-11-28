@@ -137,8 +137,8 @@
       <div style="margin-left: 50px; margin-right: 20px;">
         <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :params="{'type' : 10}"></dropzone>
         <div style="height:20px"></div>
-        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :params="{'type' : 11}"></dropzone>
-        <image-upload label-width="6em" label="测试" url="https://httpbin.org/post" :params="{'type' : 11}" :defaultImg="idcertTemp.backImg" ></image-upload>
+        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :params="{'type' : 11}"></dropzone><!-- 
+        <image-upload label-width="6em" label="测试" url="https://httpbin.org/post" :params="{'type' : 11}" :defaultImg="idcertTemp.backImg" ></image-upload> -->
       </div>
     <dialog-footer-admin slot="footer"
       @onenter = 'enterIdcert'
@@ -183,7 +183,7 @@ import {
 } from '@/config'
 
 import Dropzone from '@/components/Dropzone/dailogDropzone.vue'
-import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
+// import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
 
 const defaultTemp = {
   "update_time": "",

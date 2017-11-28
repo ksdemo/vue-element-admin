@@ -50,7 +50,7 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import socialSign from './socialsignin'
-
+import { setToken } from '@/utils/auth'
 export default {
   components: { socialSign },
   name: 'login',
@@ -143,6 +143,7 @@ export default {
           // this.$store.dispatch('getPasswordToken', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: '/' })
+            setToken('5aee725f-7ec5-4954-ae08-cbeb968e7832')
             // this.showDialog = true
           }).catch(() => {
             this.loading = false
