@@ -1,11 +1,12 @@
-import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,checkLoginType, getImgCode, getPhoneCode} from '@/api/login'
+import { loginByUsername, logout, getUserInfo, getClientToken, getPasswordToken,checkLoginType, getImgCode, getPhoneCode, loginByCode} from '@/api/login'
 import { getToken, setToken, setRefreshToken, removeToken } from '@/utils/auth'
 import {
   getSysRoleMenuRight
 } from '@/api/system/sysUser.js'
 import {
   getRoleMenuFlatted,
-  transformRoleMenu
+  transformRoleMenu,
+  randomString
 } from '@/utils/common.js'
 
 const user = {
@@ -23,6 +24,7 @@ const user = {
     },
     loginType: 1,
     imgCode: null,
+    imgKey: '',
     adminPassword: '',
     menusFlatted : {}
   },
@@ -57,6 +59,9 @@ const user = {
     },
     SET_LOGINTYPE: (state, loginType) => {
       state.loginType = loginType
+    },
+    SET_IMGKEY: (state, imgKey) => {
+      state.imgKey = imgKey
     },
     SET_IMGCODE: (state, imgCode) => {
       state.imgCode = imgCode
@@ -98,8 +103,14 @@ const user = {
     },
     // 获取验证码图片
     getImgCode({commit},param) {
+      var imgKey = randomString(32)
+      commit('SET_IMGKEY', imgKey)
+      var params = {
+        imgKey: imgKey,
+        access_token : getToken()
+      }
       return new Promise((resolve, reject) => {
-        getImgCode(param)
+        getImgCode(params)
         .then(response => {
           commit('SET_IMGCODE', response)
           resolve(response)
@@ -119,14 +130,35 @@ const user = {
         })
       })
     },
+    // 密码+验证码登录 
+    loginByCode({commit, state}, userInfo) {
+      
+      var loginInfo = {
+        username: userInfo.username.trim(),
+        password: userInfo.password,
+        code: userInfo.vcode,
+        imgKey: state.imgKey,
+        loginType: state.loginType
+      }
+      return new Promise((resolve, reject) => {
+        loginByCode(loginInfo).then(response => {
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 获取密码token
     getPasswordToken({commit}, userInfo) {
-      userInfo.username = userInfo.username.trim()
+      var loginInfo = {
+        username: userInfo.username.trim(),
+        password: userInfo.password
+      }
       return new Promise((resolve, reject) => {
-        getPasswordToken(userInfo).then(response => {
-          const data = response.data || response
-          let token = data.token || data.access_token;
-          let refreshtoken = data.token || data.refresh_token;
+        getPasswordToken(loginInfo).then(response => {
+          const data = response.data
+          let token = data.access_token;
+          let refreshtoken = data.refresh_token;
           setToken(token)
           commit('SET_TOKEN', token)
           setRefreshToken(refreshtoken)

@@ -140,12 +140,15 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-          // this.$store.dispatch('getPasswordToken', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: '/' })
-            setToken('5aee725f-7ec5-4954-ae08-cbeb968e7832')
-            // this.showDialog = true
-          }).catch(() => {
+          // this.$store.dispatch('loginByCode', this.loginForm).then(() => {
+          //   this.$store.dispatch('getPasswordToken', this.loginForm).then(() => {
+              this.loading = false
+              this.$router.push({ path: '/' })
+                // this.showDialog = true
+            // }).catch(() => {
+            //   this.loading = false
+            // })
+          }).catch(()=>{
             this.loading = false
           })
         } else {

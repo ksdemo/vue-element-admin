@@ -277,6 +277,7 @@ export default {
         padding: 5px;
         min-height: 150px;
         position: relative;
+        cursor: pointer;
     }
     
     .iu_preview:hover {

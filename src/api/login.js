@@ -38,10 +38,8 @@ export function getPasswordToken(userInfo) {
   let password = md5(userInfo.password);
   var data = {
     grant_type: 'password',
-    username: userInfo.username,// : 'admin',
-    password,
-    vcode: userInfo.vcode
-    //: 'd525e685b8f0c89e5d981a6b86feb6d4'
+    username: userInfo.username,
+    password
   };
   return request({
     url,
@@ -63,14 +61,11 @@ export function checkLoginType(username){
 }
 
 // 获取验证码图片
-export function getImgCode(){
+export function getImgCode(params){
   return requestImg({
     url: "/cms/sysLogin/getImgCode",
     method: 'get',
-    data: {
-      imgKey:  +new Date() + '_' + randomString(),
-      access_token : getToken()
-    }
+    data: params
   })
 }
 // 获取手机验证码
@@ -84,6 +79,24 @@ export function getPhoneCode(username){
     }
   })
 }
+
+// 验证码登录
+export function loginByCode (loginInfo) {
+  let data = {
+    username: loginInfo.username,
+    password: md5(loginInfo.password),
+    code: loginInfo.code,
+    imgKey: loginInfo.imgKey,
+    loginType: loginInfo.loginType
+  }
+  return request({
+    url: '/cms/sysLogin/sysLogin',
+    method: 'post',
+    data : data
+  })
+}
+
+
 // 模拟数据, 登录
 export function loginByUsername (username, password) {
   const data = {

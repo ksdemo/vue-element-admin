@@ -27,7 +27,7 @@ export function request(options){
           resolve(res)
         }else{
           Message({
-            message: res.message,
+            message: res.msg,
             type: 'error',
             duration: 5 * 1000
           })
@@ -106,7 +106,6 @@ export function randomString(len) {
     for (var i = 0; i < len; i++) {
         ranstr += $chars.charAt(Math.floor(Math.random() * maxPos));
     }
-    console.log(ranstr)
     return ranstr;
 }
 
