@@ -227,7 +227,8 @@ export default {
   props: {
     url: {
       type: String,
-      required: true
+      default: "https://httpbin.org/post"
+      //required: true
     },
     params: {
       type: Object
@@ -294,6 +295,7 @@ export default {
 
     .iu_imgwrap{
       position: relative;
+      max-width: 100%;
     }
 
     img.iu_img {

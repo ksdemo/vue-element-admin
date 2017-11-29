@@ -99,13 +99,14 @@ export function requestImg(options){
 
 // 随机字符串
 export function randomString(len) {
-    len = len || 6;
+    len = len || 32;
     var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789';
     var maxPos = $chars.length;
     var ranstr = '';
     for (var i = 0; i < len; i++) {
         ranstr += $chars.charAt(Math.floor(Math.random() * maxPos));
     }
+    console.log(ranstr)
     return ranstr;
 }
 

@@ -110,5 +110,18 @@ export default {
         "email": "chendongdong@qq.com"
       }
     }
+  },
+  getItcIdcertInfo(){
+  return {  
+      "code": 1,
+      "msg": "成功",
+      "data": {
+        "user_id": "1",
+        "realname": "张三",
+        "idNum": "431000000000000000",
+        "faceImg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=477576474,3698736735&fm=173&s=03E6DC054440F75156B8518E0300C091&w=600&h=431&img.JPEG",
+        "backImg": ""
+      }
+    }
   }
 }

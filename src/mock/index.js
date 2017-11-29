@@ -55,5 +55,8 @@ Mock.mock(/\/system\/configs\/sysPermission\/getSysRoleMenuRight/, 'get', sysUse
 Mock.mock(/\/system\/configs\/sysPermission\/getSysMenuList/, 'get', sysUserAPI.getSysRoleMenuRight)
 
 // ITC 用户管理
+// 获取用户列表
 Mock.mock(/\/itc\/itcUser\/getItcUserList/, 'get', itcUserAPI.getItcUserList)
+// 获取用户实名认证信息
+Mock.mock(/\/itc\/itcUser\/getItcIdcertInfo/, 'get', itcUserAPI.getItcIdcertInfo)
 export default Mock

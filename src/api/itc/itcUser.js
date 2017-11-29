@@ -75,9 +75,9 @@ export function createItcIdcert(query) {
 }
 
 // 用户实名认证信息 查 
-export function getItcIdcert(query) {
+export function getItcIdcertInfo(query) {
   return fetch({
-    url: '/itc/itcUser/getItcIdcert',
+    url: '/itc/itcUser/getItcIdcertInfo',
     method: 'get',
     params: query
   })

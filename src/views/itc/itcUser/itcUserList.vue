@@ -42,8 +42,9 @@
       </el-table-column>
       <el-table-column align="center" label="实名认证" width="200">
         <template scope="scope">
-          <el-tag class="cursor" @click.native="handleIdcardcer(scope.row)" :type="scope.row.is_idcard_cert | idcardCertTagFilter">{{scope.row.is_idcard_cert | idcardCertFilter }}</el-tag>
-          <el-tag v-if="scope.row.is_idcard_cert == 1" :type="scope.row.idcard_cert_state | idcardCertStateTagFilter">{{scope.row.idcard_cert_state | idcardCertStateFilter }}</el-tag>
+          <el-tag class="cursor" @click.native="handleIdcardcert(scope.row)" :type="scope.row.is_idcard_cert | idcardCertTagFilter">{{scope.row.is_idcard_cert | idcardCertFilter }}</el-tag>
+          <!-- <el-tag v-if="scope.row.is_idcard_cert == 1" :type="scope.row.idcard_cert_state | idcardCertStateTagFilter">{{scope.row.idcard_cert_state | idcardCertStateFilter }}</el-tag> -->
+          <el-switch v-if="scope.row.is_idcard_cert == 1" v-model="scope.row.idcard_cert_state" :on-value="1" on-text="成功" :off-value="0" off-text="失败" @change="idcertChangeState(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" min-width="200">
@@ -135,10 +136,35 @@
         
       </el-form>
       <div style="margin-left: 50px; margin-right: 20px;">
-        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :params="{'type' : 10}"></dropzone>
+        <!-- 
+          <dropzone label-width="6em" v-on:dropzone-removedFile="idcardFaceImgR" v-on:dropzone-success="idcardFaceImgS" id="idcardFaceImg" label="身份证正面" url="/rest/file/credentialsUpload" :params="{'type' : 10}"></dropzone> 
+        -->
+        <image-upload 
+          label-width="6em" 
+          label="身份证正面" 
+          url="https://httpbin.org/post" 
+          :params="{'type' : 10}" 
+          :defaultImg="idcertTemp.faceImg" 
+          box-width="500px" 
+          img-width="400px"
+          @oncancel="IDFaceCancel"
+          @onsuccess="IDFaceSuccess"
+          @onerror="IDFaceError"
+        >
+        </image-upload>
         <div style="height:20px"></div>
-        <dropzone label-width="6em" v-on:dropzone-removedFile="idcardBackImgR" v-on:dropzone-success="idcardBackImgS" id="idcardBackImg" label="身份证背面" url="https://httpbin.org/post" :params="{'type' : 11}"></dropzone><!-- 
-        <image-upload label-width="6em" label="测试" url="https://httpbin.org/post" :params="{'type' : 11}" :defaultImg="idcertTemp.backImg" ></image-upload> -->
+        <image-upload 
+          label="身份证背面" 
+          url="https://httpbin.org/post" 
+          :params="{'type' : 10}" 
+          :defaultImg="idcertTemp.backImg" 
+          box-width="500px" 
+          img-width="400px"
+          @oncancel="IDBackCancel"
+          @onsuccess="IDBackSuccess"
+          @onerror="IDBackError"
+        >
+        </image-upload>
       </div>
     <dialog-footer-admin slot="footer"
       @onenter = 'enterIdcert'
@@ -159,8 +185,8 @@ import {
   updateItcUserStatus,
   updateItcUserPass,
 
+  getItcIdcertInfo,
   createItcIdcert,
-  getItcIdcert,
   updateItcIdcert,
   updateItcIdcertState
 } from '@/api/itc/itcUser.js'
@@ -183,7 +209,7 @@ import {
 } from '@/config'
 
 import Dropzone from '@/components/Dropzone/dailogDropzone.vue'
-// import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
+import ImageUpload from '@/utils/ksutils/imageUpload/index.vue'
 
 const defaultTemp = {
   "update_time": "",
@@ -216,7 +242,7 @@ export default {
   name: 'ItcUserList',
   components: { 
     Dropzone
-    // , ImageUpload 
+    , ImageUpload 
   },
   data() {
     const validateAccount = (rule, value, callback) => {
@@ -330,6 +356,9 @@ export default {
     adminPassword(){
       return this.$store.state.user.adminPassword
     }
+  },
+  watch:{
+
   },
   created() {
     this.getList()
@@ -542,7 +571,27 @@ export default {
     resetIdcertTemp(){
       this.idcertTemp = cloneJSON(defaultIdcardCertTemp)
     },
-    handleIdcardcer(row){
+    validataIdcertTemp(){
+      var idcertTemp = this.idcertTemp
+      if(!validateRequired(idcertTemp.user_id)){
+        this.$message({ message: '用户ID未写入, 请联系管理员修复', type: 'error' })
+        return false
+      }else if(!validateRequired(idcertTemp.realname)){
+        this.$message({ message: '请输入用户真实姓名', type: 'error' })
+        return false
+      }else if(!validateRequired(idcertTemp.idNum)){
+        this.$message({ message: '请输入用户身份证号', type: 'error' })
+        return false
+      }else if(!validateRequired(idcertTemp.faceImg)){
+        this.$message({ message: '请上传用户身份证正面照', type: 'error' })
+        return false
+      }else if(!validateRequired(idcertTemp.backImg)){
+        this.$message({ message: '请上传用户身份证背面照', type: 'error' })
+        return false
+      }
+      return true
+    },
+    handleIdcardcert(row){
       if(row.is_idcard_cert === 0){
         this.handleCreateIdcert(row)
       }else if(row.is_idcard_cert === 1){
@@ -557,9 +606,15 @@ export default {
     },
     handleUpdateIdcert(row) {
       this.resetIdcertTemp()
-      this.idcertTemp.user_id = row.user_id
-      this.dialogStatus = 'update'
-      this.dialogIdcertVisible = true
+      getItcIdcertInfo({user_id: row.user_id})
+      .then(response => {
+        let data = response.data.data
+        data.user_id = row.user_id;
+        this.oldIdcertTemp = cloneJSON(data)
+        this.idcertTemp = cloneJSON(data)
+        this.dialogStatus = 'update'
+        this.dialogIdcertVisible = true
+      })
     },
     enterIdcert(){
       if(this.dialogStatus=='create'){
@@ -573,77 +628,102 @@ export default {
       this.dialogIdcertVisible = false
     },
     createIdcert(){
-      var updateForm = cloneJSON({
-        user_id: this.temp.user_id,
-        roleId: this.temp.roleId,
-        adminPassword: this.adminPassword
-      })
-      if (compareObj(this.oldTemp.roleId, this.temp.roleId)) {
+      if(this.validataIdcertTemp()){
+        var updateForm = cloneJSON(this.idcertTemp)
+        updateForm.adminPassword = this.adminPassword
+        this.listLoading = true
         this.cancelIdcert();
-        console.log('更新状态无变化!!')
-        return;
-      }
-
-      this.listLoading = true
-      this.cancelIdcert();
-      updateItcIdcert(updateForm).then(() => {
-        this.$notify({
-          title: '成功',
-          message: '更新成功',
-          type: 'success',
-          duration: 2000
+        createItcIdcert(updateForm).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '更新实名认证信息成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.listLoading = false
+          this.getList()
+        }).catch(() => {
+          this.listLoading = false
+          this.getList()
         })
-        this.listLoading = false
-        this.getList()
-      }).catch(() => {
-        this.listLoading = false
-        this.getList()
-      })
+      }
     },
     updateIdcert(){
-      var updateForm = cloneJSON({
-        user_id: this.temp.user_id,
-        roleId: this.temp.roleId,
-        adminPassword: this.adminPassword
-      })
-      if (compareObj(this.oldTemp.roleId, this.temp.roleId)) {
+      if(this.validataIdcertTemp()){
+        var updateForm = cloneJSON(this.idcertTemp)
+        if (compareObj(this.oldIdcertTemp, updateForm)) {
+          this.cancelIdcert();
+          console.log('更新状态无变化!!')
+          return;
+        }
+        updateForm.adminPassword = this.adminPassword
+        this.listLoading = true
         this.cancelIdcert();
-        console.log('更新状态无变化!!')
-        return;
+        updateItcIdcert(updateForm).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '更新实名认证信息成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.listLoading = false
+          this.getList()
+        }).catch(() => {
+          this.listLoading = false
+          this.getList()
+        })
       }
-
-      this.listLoading = true
-      this.cancelIdcert();
-      updateItcIdcert(updateForm).then(() => {
+    },
+    IDFaceSuccess(res) {
+      this.$message({ message: '身份证正面上传成功', type: 'success' })
+    },
+    IDFaceCancel() {
+      this.idcertTemp.faceImg = undefined;
+      this.$message({ message: '身份证正面删除成功', type: 'success' })
+    },
+    IDFaceError(res) {
+      this.idcertTemp.faceImg = undefined;
+      this.$message({ message: '身份证正面上传失败', type: 'error' })
+    },
+    IDBackSuccess(res) {
+      this.$message({ message: '身份证背面上传成功', type: 'success' })
+    },
+    IDBackCancel() {
+      this.idcertTemp.backImg = undefined;
+      this.$message({ message: '身份证背面删除成功', type: 'success' })
+    },
+    IDBackError(res) {
+      this.idcertTemp.backImg = undefined;
+      this.$message({ message: '身份证背面上传失败', type: 'error' })
+    },
+    /* 实名认证信息相关 E */
+    /* 实名认证状态相关 S */
+    idcertChangeState(row){
+      updateItcIdcertState({
+        'user_id' : row.user_id,
+        'idcard_cert_state': row.idcard_cert_state
+      })
+      .then(() => {
         this.$notify({
           title: '成功',
-          message: '更新成功',
+          message: '更新实名认证状态成功',
           type: 'success',
           duration: 2000
         })
-        this.listLoading = false
-        this.getList()
       }).catch(() => {
-        this.listLoading = false
-        this.getList()
+        this.$notify({
+          title: '失败',
+          message: '更新实名认证状态失败',
+          type: 'error',
+          duration: 2000
+        })
       })
-    },
-    idcardFaceImgS(file) {
-      this.$message({ message: '上传成功', type: 'success' })
-    },
-    idcardFaceImgR(file) {
-      this.$message({ message: '删除成功', type: 'success' })
-    },
-    idcardBackImgS(file) {
-      this.$message({ message: '上传成功', type: 'success' })
-    },
-    idcardBackImgR(file) {
-      this.$message({ message: '删除成功', type: 'success' })
     }
-    /* 实名认证信息相关 E */
+    /* 实名认证状态相关 E */
   }
 }
 </script>
+
 <style rel="stylesheet/scss" lang="scss" scoped>
 $dark_gray:#889aa4;
 div.ks-dialog-input:nth-child(2n+1) {
