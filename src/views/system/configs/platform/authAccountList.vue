@@ -177,7 +177,7 @@ import {
 } from '@/utils/validate'
 import {
   compareObj,
-  deepCloneJSON
+  cloneJSON
 } from '@/utils/common.js'
 import {
   clientTypeOptions,
@@ -278,7 +278,7 @@ export default {
         clientName: '',
         sort: '+id'
       },
-      temp: deepCloneJSON(defaultTemp),
+      temp: cloneJSON(defaultTemp),
       oldTemp: '',
       sortOptions: [{
         label: '按ID升序列',
@@ -344,7 +344,7 @@ export default {
       // 关联接口相关
       resourceClientCode: '',
       oldResourceTemp: '',
-      resourceTemp: deepCloneJSON(defaultResourceTemp),
+      resourceTemp: cloneJSON(defaultResourceTemp),
       dialogResourceVisible: false
     }
   },  
@@ -429,8 +429,8 @@ export default {
       this.resetTemp()
       this.getAuthAccountInfo(row)
         .then(data => {
-          this.oldTemp = deepCloneJSON(data)
-          this.temp = deepCloneJSON(data)
+          this.oldTemp = cloneJSON(data)
+          this.temp = cloneJSON(data)
           this.dialogStatus = 'update'
           this.dialogFormVisible = true
         })
@@ -446,7 +446,7 @@ export default {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = deepCloneJSON(this.temp)
+          var createForm = cloneJSON(this.temp)
           console.log(createForm)
           this.cancel();
           createAuthAccount(createForm).then(() => {
@@ -472,8 +472,8 @@ export default {
       this.$refs.createAuthAccount.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = deepCloneJSON(this.temp)
-          var oldForm = deepCloneJSON(this.oldTemp)
+          var updateForm = cloneJSON(this.temp)
+          var oldForm = cloneJSON(this.oldTemp)
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
@@ -507,14 +507,14 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = deepCloneJSON(defaultTemp)
+      this.temp = cloneJSON(defaultTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
     // 更改状态
     handleModifyStatus(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus() {
@@ -523,7 +523,7 @@ export default {
     },
     updateModifyStatus() {
       this.listLoading = true
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         clientState: this.temp.clientState,
         adminPassword: this.adminPassword
       })
@@ -557,7 +557,7 @@ export default {
 
     // 关联接口相关
     resetResourceTemp() {
-      this.resourceTemp = deepCloneJSON(defaultResourceTemp)
+      this.resourceTemp = cloneJSON(defaultResourceTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
     cancelResource() {
@@ -574,8 +574,8 @@ export default {
             "clientCode": row.clientCode,
             "list": data
           }
-          this.oldResourceTemp = deepCloneJSON(resourceForm)
-          this.resourceTemp = deepCloneJSON(resourceForm)
+          this.oldResourceTemp = cloneJSON(resourceForm)
+          this.resourceTemp = cloneJSON(resourceForm)
           this.dialogResourceVisible = true
         })
     },

@@ -14,7 +14,6 @@
 //import Dropzone from 'dropzone'
 import Dropzone from '@/assets/dropzone/dropzone.js'
 import 'dropzone/dist/dropzone.css'
-import {ajax, request} from '@/utils/ksutils/common/request.js'
   // import { getToken } from 'api/qiniu';
 
 Dropzone.autoDiscover = false

@@ -121,7 +121,7 @@ import {
 } from '@/utils/validate'
 import {
   compareObj,
-  deepCloneJSON,
+  cloneJSON,
   getRoleMenuChecked,
   transformRoleMenu
 } from '@/utils/common.js'
@@ -166,7 +166,7 @@ export default {
         sort: '+id'
       },
       oldTemp: '',
-      temp: deepCloneJSON(defaultTemp),
+      temp: cloneJSON(defaultTemp),
       statusTypeOptions,
       sortOptions: [{
         label: '按ID升序列',
@@ -235,8 +235,8 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
     },
@@ -251,7 +251,7 @@ export default {
       this.$refs.createSysRole.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = deepCloneJSON(this.temp)
+          var createForm = cloneJSON(this.temp)
           createForm.adminPassword = this.adminPassword
 
           this.cancel();
@@ -279,8 +279,8 @@ export default {
       this.$refs.createSysRole.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = deepCloneJSON(this.temp)
-          var oldForm = deepCloneJSON(this.oldTemp)
+          var updateForm = cloneJSON(this.temp)
+          var oldForm = cloneJSON(this.oldTemp)
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
@@ -314,14 +314,14 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = deepCloneJSON(defaultTemp)
+      this.temp = cloneJSON(defaultTemp)
       this.menuTemp = []
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
     handleDeleteRole(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.deleteRoleVisible = true
     },
     cancelDeleteRole() {
@@ -329,7 +329,7 @@ export default {
       this.deleteRoleVisible = false;
     },
     updateDeleteRole() {
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword
       })
@@ -357,7 +357,7 @@ export default {
     /* 修改角色关联菜单 S */
     handleRoleMenu(row){
       this.resetTemp()
-      this.temp = deepCloneJSON(row)
+      this.temp = cloneJSON(row)
       getSysRoleMenuRight({roleId: row.roleId})
       .then(response => {
         let data = response.data.data
@@ -374,12 +374,12 @@ export default {
     updateRoleMenu(){
       var currentCheckd = this.$refs.menuTree.getCheckedKeys()
       console.log(currentCheckd)
-      if (compareObj(deepCloneJSON(this.defaultChecked), currentCheckd)) {
+      if (compareObj(cloneJSON(this.defaultChecked), currentCheckd)) {
         this.cancelRoleMenu();
         this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
         return;
       }
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         data: JSON.stringify(currentCheckd),
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword

@@ -117,7 +117,7 @@ import {
 } from '@/utils/validate'
 import {
   compareObj,
-  deepCloneJSON
+  cloneJSON
 } from '@/utils/common.js'
 
 import {
@@ -176,7 +176,7 @@ export default {
         sort: '+id'
       },
       oldTemp: '',
-      temp: deepCloneJSON(defaultTemp),
+      temp: cloneJSON(defaultTemp),
       statusTypeOptions,
       sortOptions: [{
         label: '按ID升序列',
@@ -261,8 +261,8 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
     },
@@ -277,7 +277,7 @@ export default {
       this.$refs.createPlatform.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = deepCloneJSON({
+          var createForm = cloneJSON({
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
             clientCode: this.temp.clientCode,
@@ -308,13 +308,13 @@ export default {
       this.$refs.createPlatform.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = deepCloneJSON({
+          var updateForm = cloneJSON({
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
             description: this.temp.description,
             adminPassword: this.adminPassword
           })
-          var oldForm = deepCloneJSON({
+          var oldForm = cloneJSON({
             clientName: this.oldTemp.clientName,
             clientTag: this.oldTemp.clientTag,
             description: this.oldTemp.description,
@@ -352,13 +352,13 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = deepCloneJSON(defaultTemp)
+      this.temp = cloneJSON(defaultTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
     handleModifyStatus(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON( row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON( row)
+      this.temp = cloneJSON(row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus() {
@@ -367,7 +367,7 @@ export default {
     },
     updateModifyStatus() {
         this.listLoading = true
-        var updateForm = deepCloneJSON({
+        var updateForm = cloneJSON({
           clientState: this.temp.clientState,
           adminPassword: this.adminPassword
         })

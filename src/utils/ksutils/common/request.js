@@ -22,13 +22,12 @@ const defaultOptions = {
   // 同jquery指接收数据类型不同, 此处指发送数据类型,同时设置对应头部
   'dataType': 'urlencoded',
   // 成功回调; return:  string | json
-  'success': function() {},
+  'success': undefined,
   // 错误回调; return:  xhr.status
-  'error': function() {},
+  'error': undefined,
   // 完结回调; return:  [success: string | json ] | [error: undefined]
-  'complete': function() {},
-  'uploading': function(){},
-  'downloading': function(){},
+  'complete': undefined,
+  'progress': undefined,
   // 返回数据类型, 空字符串 (默认), "text" ,"json", "arraybuffer", "blob", "document" 参考:  https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/responseType
   'responseType': 'json',
   'requestType': 'fetch'
@@ -89,7 +88,6 @@ export function getXhrData(xhr, responseType) {
       if (typeof resData === 'string') {
         resData = JSON.parse(resData);
       } else if (typeof resData === 'object') {
-        console.log(xhr, 2)
         resData = resData;
       } else {
         console.warn("json resData 数据格式错误")
@@ -118,13 +116,21 @@ export function getXhrData(xhr, responseType) {
 
 function getProgress(event) {
   if (event.lengthComputable) {
-    console.log(event.target);
     var percentComplete = (event.loaded / event.total * 100 )
     percentComplete > 100 && (percentComplete = 100)
     percentComplete = percentComplete.toFixed(2)+"%"
     return percentComplete
   }
   return ''
+}
+
+export function clearXhrEvent(xhr){
+  if(typeof xhr === 'object'){
+    xhr.ontimeout = null;
+    xhr.onreadystatechange = null;
+    xhr.upload && (xhr.upload.onprogress =null)
+    xhr.onprogress =null;
+  }
 }
 
 export function ajax(options, callback) {
@@ -185,23 +191,19 @@ export function ajax(options, callback) {
   // window.XDomainRequest && (xhr.readyState = 2)
 
   // 上传回调 progress 只支持 POST
-  if(method === 'POST' && (typeof options.uploading === 'function')  && xhr.upload){
-    console.log(' uploading')
+  if(options.progress && xhr.upload){
     xhr.upload.onprogress = function(event){
-      console.log(event)
       var percentComplete = getProgress(event)
-      options.uploading(percentComplete)
+      options.progress(percentComplete, event, xhr)
     }
   }
-
   // 下载回调 progress 只支持 GET
-  if( method === 'GET' && (typeof options.downloading === 'function') && ('onprogress' in xhr)){
+  if( options.progress){
     xhr.onprogress = function(event){
       var percentComplete = getProgress(event)
-      options.downloading(percentComplete)
+      options.progress(percentComplete, event, xhr)
     }
   }
-  debugger;
   xhr.send(data)
   return xhr
 }

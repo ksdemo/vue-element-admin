@@ -109,7 +109,7 @@ export function randomString(len) {
     return ranstr;
 }
 
-export function deepCloneJSON(obj){
+export function cloneJSON(obj){
   return JSON.parse(JSON.stringify(obj))
 }
 

@@ -22,6 +22,7 @@ export function createResult(canvas, options){
   var splited = splitBase64(base64)
   var size= getBase64Size(base64)
   var result = {
+    filename: options.filename,
     base64: base64,
     width: canvas.width,
     height: canvas.height,
@@ -43,6 +44,7 @@ export function imgReader(file, options, cb) {
   options.maxWidth = options.maxWidth || 800;
   options.maxHeight = options.maxHeight || 1200;
   options.maxSize = options.maxSize || 1024 * 1e3; // 1M, 单位kb
+  options.filename = options.filename || file.name;
 
   blobToBase64(file, function(base64) {
     options.mime = options.mime || splitBase64(base64).mime // 指定图片类型

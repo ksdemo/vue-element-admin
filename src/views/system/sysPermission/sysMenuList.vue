@@ -62,7 +62,7 @@ import waves from '@/directive/waves/index.js' // 水波纹指令
 
 import {
   compareObj,
-  deepCloneJSON,
+  cloneJSON,
   getRoleMenuChecked,
   transformRoleMenu
 } from '@/utils/common.js'
@@ -111,8 +111,8 @@ export default {
           "label": "顶级",
           "children": _data
         }]
-        this.rawMenuData = deepCloneJSON(data)
-        this.menuData = deepCloneJSON(data);
+        this.rawMenuData = cloneJSON(data)
+        this.menuData = cloneJSON(data);
         this.listLoading = false
       })
     },
@@ -129,13 +129,13 @@ export default {
       this.dialogFormVisible = false;
     },
     updateChangeMenu() {
-      let menuData = deepCloneJSON(this.menuData)
-      if(compareObj(menuData, deepCloneJSON(this.rawMenuData))){
+      let menuData = cloneJSON(this.menuData)
+      if(compareObj(menuData, cloneJSON(this.rawMenuData))){
         this.cancelChangeMenu();
         this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
         return
       }
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         menuData: menuData[0].children,
         adminPassword: this.adminPassword
       })

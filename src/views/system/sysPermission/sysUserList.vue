@@ -168,7 +168,7 @@ import {
 } from '@/utils/validate'
 import {
   compareObj,
-  deepCloneJSON
+  cloneJSON
 } from '@/utils/common.js'
 
 import {
@@ -248,7 +248,7 @@ export default {
         sort: '+id'
       },
       oldTemp: '',
-      temp: deepCloneJSON(defaultTemp),
+      temp: cloneJSON(defaultTemp),
       statusTypeOptions,
       roleOptions: [{
         name: '测试',
@@ -351,8 +351,8 @@ export default {
     },
     handleUpdate(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
     },
@@ -367,7 +367,7 @@ export default {
       this.$refs.createSysUser.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var createForm = deepCloneJSON(this.temp)
+          var createForm = cloneJSON(this.temp)
           createForm.adminPassword = this.adminPassword
 
           this.cancel();
@@ -395,8 +395,8 @@ export default {
       this.$refs.createSysUser.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = deepCloneJSON(this.temp)
-          var oldForm = deepCloneJSON(this.oldTemp)
+          var updateForm = cloneJSON(this.temp)
+          var oldForm = cloneJSON(this.oldTemp)
           if (compareObj(oldForm, updateForm)) {
             this.cancel();
             this.listLoading = false
@@ -430,13 +430,13 @@ export default {
       this.dialogFormVisible = false
     },
     resetTemp() {
-      this.temp = deepCloneJSON(defaultTemp)
+      this.temp = cloneJSON(defaultTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
     handleModifyStatus(row) {
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogModifyStatusVisible = true
     },
     cancelModifyStatus() {
@@ -444,7 +444,7 @@ export default {
       this.dialogModifyStatusVisible = false;
     },
     updateModifyStatus() {
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         user_id: this.temp.user_id,
         clientState: this.temp.state,
         adminPassword: this.adminPassword
@@ -497,7 +497,7 @@ export default {
       this.$refs.changePassword.validate(valid => {
         if (valid) {
           this.listLoading = true
-          var updateForm = deepCloneJSON(this.changePasswordTemp)
+          var updateForm = cloneJSON(this.changePasswordTemp)
           updateForm.adminPassword = this.adminPassword
           this.cancelChangePassword();
           console.log(updateForm)
@@ -524,8 +524,8 @@ export default {
     /* 修改角色相关 共用 temp S */
     handleChangeUserRole(row){
       this.resetTemp()
-      this.oldTemp = deepCloneJSON(row)
-      this.temp = deepCloneJSON(row)
+      this.oldTemp = cloneJSON(row)
+      this.temp = cloneJSON(row)
       this.dialogUserRoleVisible = true
     },
     cancelChangeUserRole(){
@@ -533,7 +533,7 @@ export default {
       this.dialogUserRoleVisible = false
     },
     updateChangeUserRole(){
-      var updateForm = deepCloneJSON({
+      var updateForm = cloneJSON({
         user_id: this.temp.user_id,
         roleId: this.temp.roleId,
         adminPassword: this.adminPassword

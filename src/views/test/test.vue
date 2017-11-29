@@ -1,7 +1,20 @@
 <template>
   <div class="app-container">
     123123
-  <image-upload label-width="6em" label="测试" url="https://httpbin.org/post" :params="{'type' : 11}" :defaultImg="backImg" box-width="500px" img-width="380px" ></image-upload>
+  <image-upload 
+    label-width="6em" 
+    label="测试" 
+    url="https://httpbin.org/post" 
+    :params="{'type' : 11}" 
+    :defaultImg="backImg" 
+    box-width="500px" 
+    img-width="380px"
+    @onaccept="IUAccept"
+    @oncancel="IUCancel"
+    @onsuccess="IUSuccess"
+    @onerror="IUError"
+  >
+  </image-upload>
   <!-- "https://httpbin.org/post" /rest/file/credentialsUpload -->
   </div>
 </template>
@@ -17,7 +30,18 @@ export default {
   },
   components: { ImageUpload },
   methods: {
-    
+    IUAccept(result){
+      console.log('accept', result)
+    },
+    IUCancel(result){
+      console.log('cancel', result)
+    },
+    IUSuccess(response){
+      console.log('success', response)
+    },
+    IUError(response){
+      console.log('error', response)
+    }
   }
 }
 </script>
