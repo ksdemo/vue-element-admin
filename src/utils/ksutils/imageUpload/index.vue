@@ -215,7 +215,7 @@ export default {
         method: 'POST',
         progress: vm.setProgress,
         // dataType: 'formData',
-       //  headers:{ Authorization: 'Bearer ' + getToken() },
+        headers:{ Authorization: 'Bearer ' + getToken() },
         success : vm.uploadSuccess,
         error: vm.uploadFailed
       })

@@ -8,8 +8,9 @@ export {compareObj}
 
 export function request(options){
   const BASE_API = process.env.BASE_API
-  options.url = BASE_API + options.url
-
+  if(!/^http/.test(options.url)){
+    options.url = BASE_API + options.url
+  }
   if(!options.headers){
     let Authorization = 'Bearer ' + getToken();
     let headers = {

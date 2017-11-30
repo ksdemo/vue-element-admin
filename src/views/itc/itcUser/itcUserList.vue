@@ -142,7 +142,7 @@
         <image-upload 
           label-width="6em" 
           label="身份证正面" 
-          url="https://httpbin.org/post" 
+          :url= "BASE_API+'/rest/file/credentialsUpload'" 
           :params="{'type' : 10}" 
           :defaultImg="idcertTemp.faceImg" 
           box-width="500px" 
@@ -155,8 +155,8 @@
         <div style="height:20px"></div>
         <image-upload 
           label="身份证背面" 
-          url="https://httpbin.org/post" 
-          :params="{'type' : 10}" 
+          :url="BASE_API+'/rest/file/credentialsUpload'" 
+          :params="{'type' : 11}" 
           :defaultImg="idcertTemp.backImg" 
           box-width="500px" 
           img-width="400px"
@@ -281,6 +281,7 @@ export default {
     };
 
     return {
+      BASE_API: process.env.BASE_API,
       list: null,
       totalCount: null,
       listLoading: true,

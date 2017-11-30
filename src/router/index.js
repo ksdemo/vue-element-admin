@@ -114,7 +114,8 @@ export const asyncRouterMap = [
     icon: 'lock',
     noDropdown: true,
     children: [{ path: 'index', component: _import('permission/index'), name: '权限测试页' }]
-  },
+  }, 
+  /*
   {
     path: '/icon',
     component: Layout,
@@ -122,7 +123,6 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: _import('svg-icons/index'), name: 'icons' }]
   },
-  
   {
     path: '/components',
     component: Layout,
