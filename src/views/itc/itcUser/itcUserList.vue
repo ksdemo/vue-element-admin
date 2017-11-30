@@ -675,6 +675,7 @@ export default {
       }
     },
     IDFaceSuccess(res) {
+      console.log(res);
       this.$message({ message: '身份证正面上传成功', type: 'success' })
     },
     IDFaceCancel() {

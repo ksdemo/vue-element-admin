@@ -173,13 +173,10 @@ const user = {
       return new Promise((resolve, reject) => {
         dispatch('loginByCode', userInfo)
         .then(() => {
-            dispatch('getPasswordToken', userInfo)
-            .then(() => {
-              resolve()
-            })
-            .catch(() => {
-              reject()
-            })
+          return dispatch('getPasswordToken', userInfo)
+        }, reject)
+        .then(()=>{
+          resolve();
         })
         .catch(()=>{
           reject()
