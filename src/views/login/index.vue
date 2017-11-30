@@ -139,17 +139,13 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          // this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-          this.$store.dispatch('loginByCode', this.loginForm).then(() => {
-            this.$store.dispatch('getPasswordToken', this.loginForm).then(() => {
+          this.$store.dispatch('LoginByUsername', this.loginForm)
+          .then(() => {
               this.loading = false
               this.$router.push({ path: '/' })
                 // this.showDialog = true
-            })
-            .catch(() => {
-              this.loading = false
-            })
-          }).catch(()=>{
+          })
+          .catch(()=>{
             this.loading = false
           })
         } else {

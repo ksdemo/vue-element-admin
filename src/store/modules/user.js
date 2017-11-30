@@ -168,7 +168,26 @@ const user = {
         })
       })
     },
+    // 用户名登录 
+    LoginByUsername({commit,dispatch}, userInfo) {
+      return new Promise((resolve, reject) => {
+        dispatch('loginByCode', userInfo)
+        .then(() => {
+            dispatch('getPasswordToken', userInfo)
+            .then(() => {
+              resolve()
+            })
+            .catch(() => {
+              reject()
+            })
+        })
+        .catch(()=>{
+          reject()
+        })
+      })
+    },
     // 用户名登录 模拟用
+    /*
     LoginByUsername({commit}, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
@@ -182,7 +201,7 @@ const user = {
           reject(error)
         })
       })
-    },
+    },*/
 
     // 获取用户信息
     GetUserInfo({commit, state}) {
