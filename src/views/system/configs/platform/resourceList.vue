@@ -162,7 +162,7 @@ const defaultResourceTemp = {
   "list": []
 }
 export default {
-  name: 'table_demo',
+  name: 'resourceList',
   directives: {
     waves
   },

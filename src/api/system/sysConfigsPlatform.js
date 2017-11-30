@@ -1,5 +1,5 @@
 import fetch from '@/utils/fetch'
-import {request} from '@/utils/common.js'
+import {request, cloneJSON} from '@/utils/common.js'
 import md5 from 'js-md5';
 /*
 export function fetchList(query) {
@@ -12,19 +12,21 @@ export function fetchList(query) {
 */
 // 获取平台列表
 export function getPlatformList(query) {
-  return fetch({
-    url: '/system/configs/platform/platformList',
-    method: 'get',
-    params: query
+  return request({
+    url: '/cms/oauth2Client/platformList',
+    method: 'post',
+    data: query
   })
 }
 
 // 创建平台
 export function createPlatform(query) {
-  return fetch({
-    url: '/system/configs/platform/platformList',
-    method: 'get',
-    params: query
+  var data = cloneJSON(query)
+  data.adminPassword = md5(data.adminPassword)
+  return request({
+    url: '/cms/oauth2Client/platformAdd',
+    method: 'post',
+    data
   })
 }
 

@@ -181,7 +181,8 @@ import {
 } from '@/utils/common.js'
 import {
   clientTypeOptions,
-  statusTypeOptions
+  statusTypeOptions,
+  idSortOptions
 } from '@/config'
 
 
@@ -218,7 +219,7 @@ const defaultResourceTemp = {
   "list": []
 }
 export default {
-  name: 'table_demo',
+  name: 'authAccountList',
   directives: {
     waves
   },
@@ -276,17 +277,11 @@ export default {
         pageNo: 1,
         pageSize: 20,
         clientName: '',
-        sort: '+id'
+        sort: idSortOptions[0].key
       },
       temp: cloneJSON(defaultTemp),
       oldTemp: '',
-      sortOptions: [{
-        label: '按ID升序列',
-        key: '+id'
-      }, {
-        label: '按ID降序',
-        key: '-id'
-      }],
+      sortOptions: idSortOptions,
       dialogFormVisible: false,
       dialogStatus: '',
       dialogModifyStatusVisible: false,

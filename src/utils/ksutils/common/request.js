@@ -153,7 +153,7 @@ export function ajax(options, callback) {
   xhr.withCredentials = options.withCredentials
   xhr.responseType = options.responseType
   // 根据 Content-Type 头设置 data格式 https://segmentfault.com/a/1190000004982390
-  if (method !== 'GET') {
+  if (method === 'POST') {
     data = setPostContent(data, dataType, headers)
   }
   for (var name in headers) {
@@ -260,14 +260,12 @@ export async function fetchData(options) {
     responseType: options.responseType,
     cache: "force-cache"
   }
-
   if (method === 'POST') {
-    data = setPostContent(data, options.dataType, requestConfig.headers)
+    data = setPostContent(data, options.dataType, requestConfig.headers) 
     Object.defineProperty(requestConfig, 'body', {
       value: data
     })
   }
-
   try {
     let response = await fetch(url, requestConfig);
     switch (options.responseType) {

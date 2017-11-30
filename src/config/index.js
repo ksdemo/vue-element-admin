@@ -58,3 +58,13 @@ export const idcardCertStateOptions = [
     'tag': 'success'
   }
 ]
+
+export const idSortOptions =  [
+  {
+    label: '按ID升序列',
+    key: 1
+  }, {
+    label: '按ID降序',
+    key: 2
+  }
+]

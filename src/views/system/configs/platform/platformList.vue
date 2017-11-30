@@ -33,12 +33,12 @@
       </el-table-column>
       <el-table-column align="center" width="180px" label="创建时间">
         <template scope="scope">
-          <span>{{scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" width="180px" label="更新时间">
         <template scope="scope">
-          <span>{{scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
       <el-table-column width="100" align="center" label="状态">
@@ -64,7 +64,7 @@
           <el-input v-model="temp.clientName"></el-input>
         </el-form-item>
         <el-form-item label="平台号" class="ks-dialog-input" prop='clientCode'>
-          <el-input v-if="dialogStatus=='create'" v-model="temp.clientCode"></el-input>
+          <el-input  v-if="dialogStatus=='create'" v-model="temp.clientCode"></el-input>
           <el-input v-else v-model="temp.clientCode" readonly :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="平台标签" class="ks-dialog-input" style="display: block" prop='clientTag'>
@@ -121,7 +121,8 @@ import {
 } from '@/utils/common.js'
 
 import {
-  statusTypeOptions
+  statusTypeOptions,
+  idSortOptions
 } from '@/config'
 
 const defaultTemp = {
@@ -138,7 +139,7 @@ function adapt(data) {
 }
 
 export default {
-  name: 'table_demo',
+  name: 'platformList',
   directives: {
     waves
   },
@@ -152,14 +153,14 @@ export default {
     }
     const validateName = (rule, value, callback) => {
       if (!/^\w+$/.test(value)) {
-        callback(new Error('请输入正确的平台标签(英文或数字)'))
+        callback(new Error('请输入正确的平台标签'))
       } else {
         callback()
       }
     }
-    const validatePid = (rule, value, callback) => {
+    const validateCode = (rule, value, callback) => {
       if (!/^\d+$/.test(value)) {
-        callback(new Error('请输入正确的平台号码(纯数字)'))
+        callback(new Error('请输入正确的平台代码'))
       } else {
         callback()
       }
@@ -173,18 +174,12 @@ export default {
         pageNo: 1,
         pageSize: 20,
         clientName: undefined,
-        sort: '+id'
+        sort: idSortOptions[0].key
       },
       oldTemp: '',
       temp: cloneJSON(defaultTemp),
       statusTypeOptions,
-      sortOptions: [{
-        label: '按ID升序列',
-        key: '+id'
-      }, {
-        label: '按ID降序',
-        key: '-id'
-      }],
+      sortOptions: idSortOptions,
       dialogFormVisible: false,
       dialogStatus: '',
       dialogModifyStatusVisible: false,
@@ -209,8 +204,8 @@ export default {
         }],
         clientCode: [{
           required: true,
-          trigger: 'blur',
-          validator: validatePid
+          // trigger: 'blur',
+          validator: validateCode
         }]
       }
     }
@@ -228,7 +223,7 @@ export default {
       this.listLoading = true
       getPlatformList(this.listQuery).then(response => {
         let data = adapt(response.data)
-        this.list = data.data
+        this.list = data.content
         this.totalCount = data.totalCount
         this.listLoading = false
       })
@@ -280,11 +275,12 @@ export default {
           var createForm = cloneJSON({
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
+            description: this.temp.description,
             clientCode: this.temp.clientCode,
-            description: this.oldTemp.description,
             adminPassword: this.adminPassword
           })
           this.cancel();
+          console.log(createForm)
           createPlatform(createForm).then(() => {
             this.$notify({
               title: '成功',
@@ -299,7 +295,7 @@ export default {
             this.getList()
           })
         } else {
-          console.log('表单验证失败!!')
+          console.warn('表单验证失败!!')
           return false
         }
       })

@@ -98,8 +98,10 @@ export function jsonToFormdata(json) {
 
 export function jsonToUrl(json) {
   if (typeof json !== 'object') {
+    console.error("jsonToUrl中传参不合法: " , json)
     throw new Error('jsonToUrl 参数错误')
   }
+  
   var str = '';
   if (typeof json === 'object') {
     for (var key in json) {
