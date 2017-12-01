@@ -49,7 +49,7 @@ export const asyncRouterMap = [
     icon: 'user',
     children: [
       { path: 'itcUserList', component: _import('itc/itcUser/itcUserList'), name: 'itcUserList', meta: { label: '普通用户' }},
-      { path: 'itcDriverList', component: _import('itc/itcUser/itcUserList'), name: 'itcDriverList', meta: { label: '司机用户' } }
+      { path: 'itcDriverList', component: _import('itc/itcUser/itcDriverList'), name: 'itcDriverList', meta: { label: '司机用户' } }
     ]
   },
   {

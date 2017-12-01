@@ -32,19 +32,24 @@ export function createPlatform(query) {
 
 // 修改平台信息
 export function updatePlatform(query) {
-  return fetch({
-    url: '/system/configs/platform/platformList',
-    method: 'get',
-    params: query
+  var data = cloneJSON(query)
+  data.adminPassword = md5(data.adminPassword)
+  return request({
+    url: '/cms/oauth2Client/platformUpdate',
+    method: 'post',
+    data
   })
 }
+
 // 修改平台状态
 export function modifyStatusPlatform(query) {
-  return fetch({
-    url: '/system/configs/platform/platformList',
-    method: 'get',
-    params: query
-  })
+    var data = cloneJSON(query)
+    data.adminPassword = md5(data.adminPassword)
+    return request({
+      url: '/cms/oauth2Client/platformChangeState',
+      method: 'post',
+      data
+    })
 }
 /* 授权账号 相关 S */
 // 获取授权账号列表

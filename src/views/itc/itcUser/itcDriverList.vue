@@ -3,7 +3,8 @@
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="账号/手机号" v-model="listQuery.mainQuery">
       </el-input>
-      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.isIdcardCert" placeholder="实名认证">
+      <!-- 实名认证 S -->
+      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.isIdcardCert" placeholder="认证状态">
         <el-option v-for="item in idcardCertOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
@@ -11,6 +12,18 @@
         <el-option v-for="item in idcardCertStateOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
+      <!-- 实名认证 E -->
+      <!-- 司机认证 S -->
+      <el-select @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.isIdcardCert" placeholder="认证状态">
+        <el-option v-for="item in idcardCertOptions" :key="item.key" :label="item.label" :value="item.key">
+        </el-option>
+      </el-select>
+      <el-select v-show="listQuery.isIdcardCert == 1" @change='handleFilter' style="width: 160px" class="filter-item" v-model="listQuery.idcardCertState" placeholder="认证结果">
+        <el-option v-for="item in idcardCertStateOptions" :key="item.key" :label="item.label" :value="item.key">
+        </el-option>
+      </el-select>
+      <!-- 司机认证 E -->
+
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
@@ -43,7 +56,6 @@
       <el-table-column align="center" label="实名认证" width="200">
         <template scope="scope">
           <el-tag class="cursor" @click.native="handleIdcardcert(scope.row)" :type="scope.row.is_idcard_cert | idcardCertTagFilter">{{scope.row.is_idcard_cert | idcardCertFilter }}</el-tag>
-          <!-- <el-tag v-if="scope.row.is_idcard_cert == 1" :type="scope.row.idcard_cert_state | idcardCertStateTagFilter">{{scope.row.idcard_cert_state | idcardCertStateFilter }}</el-tag> -->
           <el-switch v-if="scope.row.is_idcard_cert == 1" v-model="scope.row.idcard_cert_state" :on-value="1" on-text="成功" :off-value="0" off-text="失败" @change="idcertChangeState(scope.row)"></el-switch>
         </template>
       </el-table-column>
@@ -52,10 +64,6 @@
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
           <el-button size="small" type="danger" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button size="small" type="danger" @click="handleChangePassword(scope.row)">修改密码</el-button>
-          <!--
-          <el-button size="small" type="danger" @click="handleChangeIdcert(scope.row)">实名信息</el-button>
-          <el-button size="small" type="danger" @click="handleChangeIdcert(scope.row)">认证结果</el-button>
-          -->
         </template>
       </el-table-column>
     </el-table>
@@ -67,7 +75,7 @@
 
     <!-- 创建/编辑用户信息-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
-      <el-form class="small-space" :inline="true" :model="temp" :rules="createItcUserRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createItcUser">
+      <el-form class="small-space" :inline="true" :model="temp" :rules="createItcDriverRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createItcDriver">
         <el-form-item v-if="dialogStatus=='create'" label="用户帐号" class="ks-dialog-input" prop='account'>
           <el-input v-model="temp.account"></el-input>
         </el-form-item> 
@@ -179,17 +187,17 @@
 <script>
 
 import {
-  getItcUserList,
-  createItcUser,
-  updateItcUser,
-  updateItcUserStatus,
-  updateItcUserPass,
+  getItcDriverList,
+  createItcDriver,
+  updateItcDriver,
+  updateItcDriverStatus,
+  updateItcDriverPass,
 
   getItcIdcertInfo,
   createItcIdcert,
   updateItcIdcert,
   updateItcIdcertState
-} from '@/api/itc/itcUser.js'
+} from '@/api/itc/itcDriver.js'
 
 
 import {
@@ -239,7 +247,7 @@ function adapt(data) {
 }
 
 export default {
-  name: 'ItcUserList',
+  name: 'ItcDriverList',
   components: { 
     Dropzone
     , ImageUpload 
@@ -316,7 +324,7 @@ export default {
       },
       createPasswordType: "password",
       tableKey: 0,
-      createItcUserRules: {
+      createItcDriverRules: {
         account: [{
           required: true,
           trigger: 'blur',
@@ -370,7 +378,7 @@ export default {
       if(this.listQuery.isIdcardCert == 0){
         this.listQuery.idcardCertState = undefined
       }
-      getItcUserList(this.listQuery).then(response => {
+      getItcDriverList(this.listQuery).then(response => {
         let data = adapt(response.data)
         this.list = data.data
         this.totalCount = data.totalCount
@@ -409,7 +417,7 @@ export default {
       }
     },
     create() {
-      this.$refs.createItcUser.validate(valid => {
+      this.$refs.createItcDriver.validate(valid => {
         if (valid) {
           this.listLoading = true
           var createForm = cloneJSON(this.temp)
@@ -417,7 +425,7 @@ export default {
 
           this.cancel();
           console.log(createForm)
-          createItcUser(createForm).then(() => {
+          createItcDriver(createForm).then(() => {
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -437,7 +445,7 @@ export default {
       })
     },
     update() {
-      this.$refs.createItcUser.validate(valid => {
+      this.$refs.createItcDriver.validate(valid => {
         if (valid) {
           this.listLoading = true
           var updateForm = cloneJSON(this.temp)
@@ -451,7 +459,7 @@ export default {
           updateForm.adminPassword = this.adminPassword
           this.cancel();
           console.log(updateForm)
-          updateItcUser(updateForm).then(() => {
+          updateItcDriver(updateForm).then(() => {
             this.$notify({
               title: '成功',
               message: '更新成功',
@@ -503,7 +511,7 @@ export default {
 
       this.listLoading = true
       this.cancelModifyStatus();
-      updateItcUserStatus(updateForm).then(() => {
+      updateItcDriverStatus(updateForm).then(() => {
         this.$notify({
           title: '成功',
           message: '更新成功',
@@ -547,7 +555,7 @@ export default {
           updateForm.adminPassword = this.adminPassword
           this.cancelChangePassword();
           console.log(updateForm)
-          updateItcUserPass(updateForm).then(() => {
+          updateItcDriverPass(updateForm).then(() => {
             this.$notify({
               title: '成功',
               message: '密码修改成功',

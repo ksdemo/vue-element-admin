@@ -126,6 +126,7 @@ import {
 } from '@/config'
 
 const defaultTemp = {
+  id: '',
   clientName: '',
   clientCode: undefined,
   clientTag: '',
@@ -305,12 +306,14 @@ export default {
         if (valid) {
           this.listLoading = true
           var updateForm = cloneJSON({
+            id: this.temp.id,
             clientName: this.temp.clientName,
             clientTag: this.temp.clientTag,
             description: this.temp.description,
             adminPassword: this.adminPassword
           })
           var oldForm = cloneJSON({
+            id: this.oldTemp.id,
             clientName: this.oldTemp.clientName,
             clientTag: this.oldTemp.clientTag,
             description: this.oldTemp.description,
@@ -349,8 +352,10 @@ export default {
     },
     resetTemp() {
       this.temp = cloneJSON(defaultTemp)
+      this.oldTemp = cloneJSON(defaultTemp)
       this.$store.commit('SET_ADMINPASSWORD', "")
     },
+    // 修改平台启用状态
     handleModifyStatus(row) {
       this.resetTemp()
       this.oldTemp = cloneJSON( row)
@@ -364,13 +369,14 @@ export default {
     updateModifyStatus() {
         this.listLoading = true
         var updateForm = cloneJSON({
+          id: this.temp.id,
           clientState: this.temp.clientState,
           adminPassword: this.adminPassword
         })
         if (compareObj(this.oldTemp.clientState, this.temp.clientState)) {
           this.cancelModifyStatus();
           this.listLoading = false
-          console.log('更新状态无变化!!')
+          this.$notify({ title: '取消', message: '更新数据无变化', type: 'warning', duration: 2000 })
           return;
         }
         this.cancelModifyStatus();
