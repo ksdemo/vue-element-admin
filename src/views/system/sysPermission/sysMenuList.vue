@@ -39,7 +39,7 @@
       <el-button @click="handleChangeMenu" size="medium" type="primary">提交更改</el-button>
     </div>
     <!-- 确认弹窗 -->
-    <el-dialog title="更新菜单" :visible.sync="dialogFormVisible" @close="cancelChangeMenu">
+    <el-dialog top="100px" title="更新菜单" :visible.sync="dialogFormVisible" @close="cancelChangeMenu">
       <h3><center>提示: 确认要更新菜单吗? 部分操作仅修改数据库,需更改对应前端路由才有显示效果</center></h3>
       <dialog-footer-admin slot="footer"
         @onenter = 'updateChangeMenu'

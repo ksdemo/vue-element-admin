@@ -58,7 +58,7 @@
       </el-pagination>
     </div>
     <!-- 创建/编辑平台信息-->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
+    <el-dialog top="100px" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form class="small-space" :inline="true" :model="temp" :rules="createPlatformRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createPlatform">
         <el-form-item label="平台名称" class="ks-dialog-input" prop='clientName'>
           <el-input v-model="temp.clientName"></el-input>
@@ -81,7 +81,7 @@
       </dialog-footer-admin>
     </el-dialog>
     <!-- 创建/编辑平台状态-->
-    <el-dialog title="修改平台启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+    <el-dialog top="100px" title="修改平台启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
       <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>

@@ -43,7 +43,7 @@
     </div>
 
     <!-- 创建/编辑用户信息-->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
+    <el-dialog top="100px" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form class="small-space" :inline="true" :model="temp" :rules="createSysRoleRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createSysRole">
 
         <el-form-item label="角色名称" class="ks-dialog-input" prop='name'>
@@ -61,7 +61,7 @@
     </el-dialog>
 
     <!-- 删除角色 -->
-    <el-dialog title="删除角色" :visible.sync="deleteRoleVisible" @close="cancelDeleteRole">
+    <el-dialog top="100px" title="删除角色" :visible.sync="deleteRoleVisible" @close="cancelDeleteRole">
       <h3><center>确认要删除 {{ temp.name }} 吗?</center></h3>
       <dialog-footer-admin slot="footer"
         @onenter = 'updateDeleteRole'
@@ -71,7 +71,7 @@
     </el-dialog>
 
     <!-- 修改角色关联菜单-->
-    <el-dialog title="修改关联菜单" :visible.sync="dialogRoleMenuVisible" @close="cancelRoleMenu">
+    <el-dialog top="100px" title="修改关联菜单" :visible.sync="dialogRoleMenuVisible" @close="cancelRoleMenu">
       <el-tree
         :data="menuTemp"
         ref="menuTree"

@@ -16,9 +16,30 @@
 						首页
 					</el-dropdown-item>
 				</router-link>
+        <el-dropdown-item divided><span @click="handleChangePassword" style="display:block;">修改密码</span></el-dropdown-item>
 				<el-dropdown-item divided><span @click="logout" style="display:block;">退出登录</span></el-dropdown-item>
 			</el-dropdown-menu>
 		</el-dropdown>
+
+    <!-- 修改密码 -->
+    <el-dialog top="100px" title="修改密码" :visible.sync="changePasswordVisible" @close="cancelChangePassword" size='tiny'>
+      <el-form class="small-space" :model="changePasswordTemp" :rules="changePasswordRules" ref="changePassword" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
+          <el-form-item label="原密码" prop="oldPass">
+            <el-input type="password" v-model="changePasswordTemp.oldPass" auto-complete="off" style="width: 179px"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码" prop="password">
+            <el-input type="password" v-model="changePasswordTemp.password" auto-complete="off" style="width: 179px"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="checkPass">
+            <el-input type="password" v-model="changePasswordTemp.checkPass" auto-complete="off" style="width: 179px"></el-input>
+          </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelChangePassword">取 消</el-button>
+        <el-button type="primary" @click="updateChangePassword">确 定</el-button>
+      </div>
+    </el-dialog>
+
 	</el-menu>
 </template>
 
@@ -30,6 +51,10 @@ import Hamburger from 'components/Hamburger'
 import Screenfull from 'components/Screenfull'
 import ErrorLog from 'components/ErrLog'
 import errLogStore from 'store/errLog'
+import {
+  validatePassword,
+  validateRequired
+} from '@/utils/validate'
 
 export default {
   components: {
@@ -40,8 +65,63 @@ export default {
     Screenfull
   },
   data() {
+    var validateOldPass = (rule, value, callback) => {
+      if (!validatePassword(value)) {
+        callback(new Error('请输入正确的旧密码'))
+      } else{
+        if (this.changePasswordTemp.password !== '') {
+          this.$refs.changePassword.validateField('password');
+        }
+        callback();
+      }
+    };
+    var validatePass = (rule, value, callback) => {
+      if (!validatePassword(value)) {
+        callback(new Error('请输入正确的新密码'))
+      } else if(value === this.changePasswordTemp.oldPass){
+        callback(new Error('新密码不能和旧密码相同'))
+      } else {
+        if (this.changePasswordTemp.checkPass !== '') {
+          this.$refs.changePassword.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    var validateCheckPass = (rule, value, callback) => {
+      if (!validateRequired(value)) {
+        callback(new Error('请再次输入新密码'))
+      } else if (value !== this.changePasswordTemp.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+
     return {
-      log: errLogStore.state.errLog
+      log: errLogStore.state.errLog,
+      changePasswordVisible: false,
+      changePasswordTemp: {
+        oldPass: '',
+        password: '',
+        checkPass: ''
+      },
+      changePasswordRules: {
+        oldPass: [{
+          required: true,
+          trigger: 'blur',
+          validator: validateOldPass
+        }],
+        password: [{
+          required: true,
+          trigger: 'blur',
+          validator: validatePass
+        }],
+        checkPass: [{
+          required: true,
+          trigger: 'blur',
+          validator: validateCheckPass
+        }]
+      }
     }
   },
   computed: {
@@ -55,6 +135,24 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
+    resetChangePasswordTemp(){
+      this.changePasswordTemp = {
+        oldPass: '',
+        password: '',
+        checkPass: ''
+      }
+    },
+    handleChangePassword(){
+      this.changePasswordVisible = true
+    },
+    updateChangePassword(){
+
+    },
+    cancelChangePassword(){
+      this.changePasswordVisible = false
+      this.resetChangePasswordTemp()
+    },
+
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()// 为了重新实例化vue-router对象 避免bug

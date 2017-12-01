@@ -50,7 +50,7 @@
     </div>
 
     <!-- 创建/编辑授权接口信息   -->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
+    <el-dialog top="100px" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel" custom-class="ks-big_dialog">
       <el-form class="small-space" :inline="true" :model="temp" label-position="left" label-width="140px" style='width: 850px; margin-left:50px;' ref="createResource" :rules="createResourceRules">
         <el-form-item label="服务名称" class="ks-dialog-input" prop='service'>
           <el-select class="filter-item" v-model="temp.service" placeholder="请选择" style="width: 179px">
@@ -76,7 +76,7 @@
     </el-dialog>
 
     <!-- 创建/编辑帐号状态-->
-    <el-dialog title="修改接口启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+    <el-dialog top="100px" title="修改接口启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
       <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='resState'>
@@ -95,7 +95,7 @@
 
 
     <!-- 编辑关联帐号-->
-    <el-dialog title="修改关联帐号" :visible.sync="dialogResourceVisible" @close="cancelResource">
+    <el-dialog top="100px" title="修改关联帐号" :visible.sync="dialogResourceVisible" @close="cancelResource">
       <el-form class="small-space" :model="resourceTemp" label-position="left" label-width="200px" style='width: 850px; margin-left:50px;'>
         <el-form-item v-for="item in resourceTemp.list" :key="item.platfromName" :label="item.platfromName+':'">
           <el-checkbox-group v-for="checkItem in item.list" v-model="checkItem.checkbox" :key="checkItem.clientName">

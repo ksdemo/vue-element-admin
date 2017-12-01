@@ -62,7 +62,7 @@
     </div>
 
     <!-- 创建/编辑用户信息-->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
+    <el-dialog top="100px" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @close="cancel">
       <el-form class="small-space" :inline="true" :model="temp" :rules="createSysUserRules" label-position="left" label-width="80px" style='width: 650px; margin-left:50px;' ref="createSysUser">
         <el-form-item label="用户帐号" class="ks-dialog-input" prop='account'>
           <el-input v-model="temp.account"></el-input>
@@ -92,7 +92,7 @@
     </el-dialog>
 
     <!-- 编辑用户状态-->
-    <el-dialog title="修改帐号启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
+    <el-dialog top="100px" title="修改帐号启用状态" :visible.sync="dialogModifyStatusVisible" @close="cancelModifyStatus">
       <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
         <h3 color="red">温馨提示: 请慎重修改启用状态</h3>
         <el-form-item label="状态" class="ks-dialog-input" prop='clientState'>
@@ -110,7 +110,7 @@
     </el-dialog>
 
     <!-- 修改密码 -->
-    <el-dialog title="修改密码" :visible.sync="changePasswordVisible" @close="cancelChangePassword">
+    <el-dialog top="100px" title="修改密码" :visible.sync="changePasswordVisible" @close="cancelChangePassword"  size='tiny'>
       <el-form class="small-space" :model="changePasswordTemp" :rules="changePasswordRules" ref="changePassword" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
           <el-form-item label="密码" prop="password">
             <el-input type="password" v-model="changePasswordTemp.password" auto-complete="off" style="width: 179px"></el-input>
@@ -127,7 +127,7 @@
     </el-dialog>
 
     <!-- 修改用户角色-->
-    <el-dialog title="修改用户角色" :visible.sync="dialogUserRoleVisible" @close="cancelChangeUserRole">
+    <el-dialog top="100px" title="修改用户角色" :visible.sync="dialogUserRoleVisible" @close="cancelChangeUserRole">
       <el-form class="small-space" :model="temp" label-position="left" label-width="80px" style='width: 500px; margin-left:50px;'>
           <el-form-item label="用户角色" class="ks-dialog-input" prop='roleId'>
             <el-select style="width: 200px" class="filter-item" v-model="temp.roleId" placeholder="请选择">

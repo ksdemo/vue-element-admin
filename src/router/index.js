@@ -115,7 +115,7 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: _import('permission/index'), name: '权限测试页' }]
   }, 
-  /*
+  /* */
   {
     path: '/icon',
     component: Layout,
