@@ -16,14 +16,14 @@
           <span>{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帐号标签" width="100">
-        <template scope="scope">
-          <span>{{scope.row.clientTag}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" min-width="150" label="授权账号名称">
+      <el-table-column align="center" min-width="200" label="授权账号名称">
         <template scope="scope">
           <span>{{scope.row.description}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="帐号标签" min-width="200">
+        <template scope="scope">
+          <span>{{scope.row.clientTag}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" width="150" label="令牌失效时间(秒)">
@@ -41,7 +41,7 @@
           <el-tag :type="scope.row.clientState | statusTagFilter">{{scope.row.clientState | statusNameFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="240">
+      <el-table-column align="center" label="操作" min-width="200">
         <template scope="scope">
           <el-button size="small" type="danger" @click="handleUpdateResource(scope.row)">关联接口</el-button>
           <el-button size="small" type="danger" @click="handleModifyStatus(scope.row)"> 禁用 </el-button>
@@ -166,7 +166,7 @@ import {
   updateResource,
   updateAuthAccountResource,
   modifyStatusAuthAccount
-} from '@/api/system/sysConfigsPlatform.js'
+} from '@/api/system/configs/authAccount.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
   parseTime
@@ -357,7 +357,7 @@ export default {
       this.listLoading = true
       getAuthAccountList(this.listQuery).then(response => {
         let data = adapt(response.data)
-        this.list = data.data
+        this.list = data.content
         this.totalCount = data.totalCount
         this.listLoading = false
       })

@@ -21,7 +21,7 @@
           <span>{{scope.row.clientCode}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="平台标签" width="100">
+      <el-table-column align="center" label="平台标签" width="200">
         <template scope="scope">
           <span>{{scope.row.clientTag}}</span>
         </template>
@@ -106,7 +106,7 @@ import {
   createPlatform,
   updatePlatform,
   modifyStatusPlatform
-} from '@/api/system/sysConfigsPlatform.js'
+} from '@/api/system/configs/platform.js'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {
   parseTime
